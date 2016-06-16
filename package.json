@@ -1,0 +1,33 @@
+{
+  "name": "spaaace",
+  "version": "1.0.0",
+  "description": "An HTML5 multiplayer space shooter based on Incheon",
+  "main": "index.html",
+  "dependencies": {
+    "browserify": "^13.0.1",
+    "express": "^4.14.0",
+    "socket.io": "^1.4.6"
+  },
+  "devDependencies": {
+    "watchify": "^3.7.0"
+  },
+  "scripts": {
+    "start": "node main.js",
+    "postinstall": "browserify src/clientMain.js -o dist/bundle.js -t [ babelify --presets [ es2015 ] ",
+    "watchify": "watchify src/clientMain.js -o dist/bundle.js -v -d -t [ babelify --presets [ es2015 ]"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpherV/spaaace.git"
+  },
+  "keywords": [
+    "game",
+    "websockets"
+  ],
+  "author": "Opher Vishnia",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OpherV/spaaace/issues"
+  },
+  "homepage": "https://github.com/OpherV/spaaace#readme"
+}
