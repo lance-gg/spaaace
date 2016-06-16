@@ -3,11 +3,8 @@ const GameWorld = require('Incheon').GameWorld;
 var Ship = require("./Ship");
 
 class SpaaaceClientEngine extends ClientEngine{
-    constructor(socket, gameEngine){         
-        super(socket, gameEngine);
-
-
-        this.worldBuffer=[];
+    constructor(gameEngine){
+        super(gameEngine);
 
         this.sprites = {};
     }
@@ -25,7 +22,7 @@ class SpaaaceClientEngine extends ClientEngine{
         this.processInputs();
         super.step();
 
-        //client prediction
+        //update player object
         var world = this.gameEngine.world;
         for (var objId in world.objects) {
             if (world.objects.hasOwnProperty(objId)) {
@@ -73,6 +70,8 @@ class SpaaaceClientEngine extends ClientEngine{
                     if (this.sprites[objId] == null){
                         let localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
                         localObj.velocity.set(nextObj.velX, nextObj.velY);
+                        localObj.isPlayerControlled  = this.playerId == nextObj.id;
+
 
                         sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'ship');
                         this.sprites[objId] = sprite;
@@ -89,6 +88,8 @@ class SpaaaceClientEngine extends ClientEngine{
                         sprite = this.sprites[objId];
                     }
 
+                    //update other objects with interpolation
+                    //todo refactor into general interpolation class
                     if (this.playerId != nextObj.id){
 
                         var playPercentage = (stepToPlay - previousWorld.stepCount)/(nextWorld.stepCount - previousWorld.stepCount);
@@ -128,60 +129,6 @@ class SpaaaceClientEngine extends ClientEngine{
 
 
     }
-
-    handleInboundMessage(worldData) {
-        var worldSnapshot = GameWorld.deserialize(this.gameEngine, worldData);
-        // console.log(world.stepCount - this.gameEngine.world.stepCount);
-        // console.log("last handled input", world.lastHandledInput);
-
-        this.worldBuffer.push(worldSnapshot);
-        if (this.worldBuffer.length >= 5) {
-            this.worldBuffer.shift();
-        }
-
-        for (var objId in worldSnapshot.objects) {
-            if (worldSnapshot.objects.hasOwnProperty(objId)) {
-
-                //update player character
-                if (worldSnapshot.objects[objId].id == this.playerId && this.sprites[objId]) {
-                    let localObj = this.gameEngine.world.objects[objId];
-
-                    // console.log(worldSnapshot.objects[objId]);
-                    localObj.x = worldSnapshot.objects[objId].x;
-                    localObj.y = worldSnapshot.objects[objId].y;
-                    localObj.velX = worldSnapshot.objects[objId].velX;
-                    localObj.velY = worldSnapshot.objects[objId].velY;
-                    localObj.velocity.set(worldSnapshot.objects[objId].velX, worldSnapshot.objects[objId].velY);
-                    localObj.angle = worldSnapshot.objects[objId].angle;
-
-                    // console.log("velx", worldSnapshot.objects[objId].velX);
-
-                    // Server Reconciliation. Re-apply all the inputs not yet processed by
-                    // the server.
-                    var j = 0;
-                    while (j < this.pendingInput.length) {
-                        var message = this.pendingInput[j];
-                        if (message.data.messageIndex <= worldSnapshot.lastHandledInput) {
-                            // Already processed. Its effect is already taken into account
-                            // into the world update we just got, so we can drop it.
-                            this.pendingInput.splice(j, 1);
-                        } else {
-                            // Not processed by the server yet. Re-apply it.
-                            // console.log("S last input", worldSnapshot.lastHandledInput ,"rerun input", message.data.messageIndex, "server step ",worldSnapshot.stepCount, "current step", this.gameEngine.world.stepCount);
-                            this.gameEngine.processInput(message.data, this.playerId);
-                            this.gameEngine.world.objects[this.playerId].step(this.gameEngine.worldSettings);
-
-                            j++;
-                        }
-                    }
-
-                }
-            }
-        }
-
-        //finally update the stepCount
-        this.gameEngine.world.stepCount = worldSnapshot.stepCount;
-    };
 
     processInputs(){
         if (this.cursors.up.isDown)

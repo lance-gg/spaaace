@@ -5,8 +5,8 @@ const Ship = require('./Ship');
 const ServerEngine = require('Incheon').ServerEngine;
 
 class SpaaaceServerEngine extends ServerEngine{
-    constructor(io, gameEngine){
-        super(io, gameEngine);
+    constructor(io, gameEngine, inputOptions){
+        super(io, gameEngine, inputOptions);
     };
 
     start(){

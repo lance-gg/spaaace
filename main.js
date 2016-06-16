@@ -29,19 +29,11 @@ const SpaaaceServerEngine = require(path.join(__dirname, 'src/SpaaaceServerEngin
 const SpaaaceGameEngine = require(path.join(__dirname, 'src/SpaaaceGameEngine.js'));
 
 const gameEngine = new SpaaaceGameEngine();
-const serverEngine = new SpaaaceServerEngine(io, gameEngine);
+const serverEngine = new SpaaaceServerEngine(io, gameEngine, {
+    debug:{
+        // serverSendLag: 600
+    }
+});
+
+//start the game
 serverEngine.start();
-
-/*
-    Server IO
- */
-
-io.on('connection', onClientConnect);
-
-function onClientConnect(socket){
-    serverEngine.onPlayerConnected(socket);
-}
-
-
-
-// setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
