@@ -1,26 +1,28 @@
-const Point= require('./Point');
+const Point= require('Incheon').Point;
+const Serializable= require('Incheon').Composables.Serializable;
 
-class Ship {
+class Ship extends Serializable {
 
     static get properties(){
         return  {
-            id: 0, //class id
+            id: 7, //class id
             name: "ship"
         }
     }
 
     static get netScheme(){
         return {
-            id: Uint8Array,
-            x: Int16Array,
-            y: Int16Array,
-            velX: Float32Array,
-            velY: Float32Array,
-            angle: Int16Array
+            id: { type: Serializable.TYPES.UINT8 },
+            x: { type: Serializable.TYPES.INT16 },
+            y: { type: Serializable.TYPES.INT16 },
+            velX: { type: Serializable.TYPES.FLOAT32 },
+            velY: { type: Serializable.TYPES.FLOAT32 },
+            angle: { type: Serializable.TYPES.INT16 }
         }
     }
 
     constructor(id, x,y){
+        super();
         this.id = id; //instance id
         this.x = x;
         this.y = y;
@@ -37,6 +39,7 @@ class Ship {
         this.temp={
             accelerationVector: new Point()
         };
+
 
         this.class = Ship;
     };
@@ -80,98 +83,7 @@ class Ship {
         else if (this.x < 0){ this.x = worldSettings.width + this.x;}
         else if (this.y<0){ this.y = worldSettings.width + this.y;}
     };
-
-    serialize(){
-        //todo define behaviour when a netScheme is undefined
-        if (typeof Ship.netScheme == "undefined"){
-            console.warn("no netScheme defined! This will result in awful performance");
-        }
-
-        //buffer has one Uint8Array for class id, then payload
-        var dataBuffer = new ArrayBuffer(Ship.getNetSchemeBufferSize());
-        var dataView = new DataView(dataBuffer);
-
-        //first set the id of the class, so that the deserializer can fetch information about it
-        dataView.setUint8(0, Ship.properties.id);
-        //advance the offset counter
-        var dataByteOffset = Uint8Array.BYTES_PER_ELEMENT;
-
-        for (var property in Ship.netScheme) {
-            if (Ship.netScheme.hasOwnProperty(property)) {
-
-                //create bytearrays of the required properties
-                // console.log(property, dataBufferIndex);
-                if (Ship.netScheme[property]==Float32Array){
-                    dataView.setFloat32(dataByteOffset, this[property]);
-                }
-                if (Ship.netScheme[property]==Int16Array){
-                    dataView.setInt16(dataByteOffset, this[property]);
-                }
-                else if (Ship.netScheme[property]==Int8Array){
-                    dataView.setInt8(dataByteOffset, this[property]);
-                }
-                else if (Ship.netScheme[property]==Uint8Array){
-                    dataView.setUint8(dataByteOffset, this[property]);
-                }
-
-                dataByteOffset += Ship.netScheme[property].BYTES_PER_ELEMENT;
-            }
-        }
-
-        return dataBuffer;
-    };
-
-    static deserialize(dataBuffer){
-        var dataBufferIndex = Uint8Array.BYTES_PER_ELEMENT;
-        var dataView = new DataView(dataBuffer);
-        var data = {};
-
-        for (var property in Ship.netScheme) {
-            if (Ship.netScheme.hasOwnProperty(property)) {
-
-                //TODO refactor this ugly if clause
-                //TODO type checking and warnings
-                if (Ship.netScheme[property]==Float32Array){
-                    data[property] = dataView.getFloat32(dataBufferIndex);
-                }
-                if (Ship.netScheme[property]==Int16Array){
-                    data[property] = dataView.getInt16(dataBufferIndex);
-                }
-                else if (Ship.netScheme[property]==Int8Array){
-                    data[property] = dataView.getInt8(dataBufferIndex);
-                }
-                else if (Ship.netScheme[property]==Uint8Array){
-                    data[property] = dataView.getUint8(dataBufferIndex);
-                }
-
-                dataBufferIndex += Ship.netScheme[property].BYTES_PER_ELEMENT;
-            }
-        }
-
-        var ship = new Ship(data.id, data.x, data.y);
-        ship.angle = data.angle;
-        ship.velX = data.velX;
-        ship.velY = data.velY;
-        ship.velocity.set(data.velX, data.velY);
-
-        return ship;
-    };
-
-    static getNetSchemeBufferSize(){
-
-        if (typeof Ship.netSchemeBufferSize=="undefined"){
-            Ship.netSchemeBufferSize = Uint8Array.BYTES_PER_ELEMENT; //every scheme starts with the class id
-
-            for (var property in Ship.netScheme) {
-                if (Ship.netScheme.hasOwnProperty(property)) {
-                    //count the bytesize required for the netScheme buffer
-                    Ship.netSchemeBufferSize += Ship.netScheme[property].BYTES_PER_ELEMENT
-                }
-            }
-        }
-
-        return Ship.netSchemeBufferSize;
-    };
+    
 }
 
 

@@ -2,7 +2,7 @@
 
 const GameEngine = require('Incheon').GameEngine;
 const Ship = require('./Ship');
-const Point= require('./Point');
+const Point= require('Incheon').Point;
 
 class SpaaaceGameEngine extends GameEngine {
     constructor(){
