@@ -1,3 +1,6 @@
+"use strict";
+
+
 const Point= require('Incheon').Point;
 const Serializable= require('Incheon').Composables.Serializable;
 
