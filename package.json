@@ -5,7 +5,8 @@
   "main": "main.js",
   "dependencies": {
     "browserify": "^13.0.1",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "Incheon": "*"
   },
   "devDependencies": {
     "watchify": "^3.7.0"
