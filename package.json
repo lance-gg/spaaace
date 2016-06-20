@@ -13,8 +13,8 @@
   },
   "scripts": {
     "start": "node main.js",
-    "postinstall": "browserify src/clientMain.js -o dist/bundle.js -t [ babelify --presets [ es2015 ] ",
-    "watchify": "watchify src/clientMain.js -o dist/bundle.js -v -d -t [ babelify --presets [ es2015 ]"
+    "postinstall": "browserify src/client/clientMain.js -o dist/bundle.js -t [ babelify --presets [ es2015 ] ",
+    "watchify": "watchify src/client/clientMain.js -o dist/bundle.js -v -d -t [ babelify --presets [ es2015 ]"
   },
   "repository": {
     "type": "git",
