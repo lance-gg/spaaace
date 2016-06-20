@@ -29,7 +29,7 @@ class SpaaaceClientEngine extends ClientEngine{
         var world = this.gameEngine.world;
         for (var objId in world.objects) {
             if (world.objects.hasOwnProperty(objId)) {
-                if (this.playerId == objId){
+                if (world.objects[objId].isPlayerControlled){
                     let objectData = world.objects[objId];
 
                     this.sprites[objectData.id].x = objectData.x;
