@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require('path');
-const Ship = require('./Ship');
+const Ship = require('../common/Ship');
 const ServerEngine = require('Incheon').ServerEngine;
 
 class SpaaaceServerEngine extends ServerEngine{

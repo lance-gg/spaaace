@@ -1,5 +1,5 @@
-const SpaaaceClientEngine = require("./SpaaaceClientEngine");
-const SpaaaceGameEngine = require('./SpaaaceGameEngine');
+const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
+const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 
 var gameEngine = new SpaaaceGameEngine();
 var spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);

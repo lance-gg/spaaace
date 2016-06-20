@@ -25,8 +25,8 @@ const io = socketIO(requestHandler);
     Game logic
  */
 
-const SpaaaceServerEngine = require(path.join(__dirname, 'src/SpaaaceServerEngine.js'));
-const SpaaaceGameEngine = require(path.join(__dirname, 'src/SpaaaceGameEngine.js'));
+const SpaaaceServerEngine = require(path.join(__dirname, 'src/server/SpaaaceServerEngine.js'));
+const SpaaaceGameEngine = require(path.join(__dirname, 'src/common/SpaaaceGameEngine.js'));
 
 const gameEngine = new SpaaaceGameEngine();
 const serverEngine = new SpaaaceServerEngine(io, gameEngine, {

@@ -4,14 +4,10 @@
 const Point= require('Incheon').Point;
 const Serializable= require('Incheon').Composables.Serializable;
 
-class Ship extends Serializable {
-
-    static get properties(){
-        return  {
-            id: 7, //class id
-            name: "ship"
-        }
-    }
+/**
+ * Defines an objects which can move about in the game world
+ */
+class DynamicObject extends Serializable {
 
     static get netScheme(){
         return {
@@ -24,7 +20,7 @@ class Ship extends Serializable {
         }
     }
 
-    constructor(id, x,y){
+    constructor(id, x, y){
         super();
         this.id = id; //instance id
         this.x = x;
@@ -43,8 +39,6 @@ class Ship extends Serializable {
             accelerationVector: new Point()
         };
 
-
-        this.class = Ship;
     };
 
     step(worldSettings){
@@ -86,8 +80,8 @@ class Ship extends Serializable {
         else if (this.x < 0){ this.x = worldSettings.width + this.x;}
         else if (this.y<0){ this.y = worldSettings.width + this.y;}
     };
-    
+
 }
 
 
-module.exports = Ship;
+module.exports = DynamicObject;

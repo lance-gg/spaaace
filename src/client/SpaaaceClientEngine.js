@@ -1,6 +1,6 @@
 const ClientEngine = require('Incheon').ClientEngine;
 const GameWorld = require('Incheon').GameWorld;
-var Ship = require("./Ship");
+var Ship = require("./common/Ship");
 
 class SpaaaceClientEngine extends ClientEngine{
     constructor(gameEngine){
