@@ -23,6 +23,7 @@ class SpaaaceGameEngine extends GameEngine {
     };
 
     step(){
+        super.step();
         this.world.stepCount++;
         this.updateGameWorld();
     };
@@ -72,16 +73,20 @@ class SpaaaceGameEngine extends GameEngine {
     };
 
     makeMissile(playerShip){
-
         //todo proper ID generation....
-        var missile = new Missile(Math.round(Math.random() * 1000));
+        var missile = new Missile(Math.round(Math.random() * 100000));
         missile.x = playerShip.x;
         missile.y = playerShip.y;
         missile.angle = playerShip.angle;
 
         this.world.objects[missile.id] = missile;
+        this.timer.add(40, this.destroyMissile, this, [missile.id]);
 
         return missile;
+    }
+
+    destroyMissile(missileId){
+        delete this.world.objects[missileId];
     }
 }
 

@@ -16,8 +16,8 @@ class SpaaaceClientEngine extends ClientEngine{
 
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();
-        game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-        
+        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
     }
 
     step(){
@@ -102,9 +102,9 @@ class SpaaaceClientEngine extends ClientEngine{
                             //     sprite.tint = 0XFF00FF;
                             // }
 
+                            sprite.width = 81 * 0.5;
+                            sprite.height = 46 * 0.5;
                             sprite.anchor.setTo(0.5, 0.5);
-                            sprite.width = 27;
-                            sprite.height = 15;
                         }
 
                     }
@@ -155,6 +155,7 @@ class SpaaaceClientEngine extends ClientEngine{
     }
 
     processInputs(){
+        //continuous press
         if (this.cursors.up.isDown) {
             this.sendInput('up');
         }
@@ -167,9 +168,10 @@ class SpaaaceClientEngine extends ClientEngine{
             this.sendInput('right');
         }
 
-       if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-           this.sendInput('space');
-       }
+        //single press
+        if (this.spaceKey.isDown && this.spaceKey.repeats == 0){
+            this.sendInput('space');
+        }
     }
 
 }
