@@ -9,7 +9,7 @@ class Missile extends DynamicObject {
     static get properties(){
         return  {
             id: 9, //class id
-            name: "shot"
+            name: "missile"
         }
     }
 
