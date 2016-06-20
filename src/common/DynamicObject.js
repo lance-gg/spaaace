@@ -61,10 +61,23 @@ class DynamicObject extends Serializable {
         // console.log(this.temp.accelerationVector.x,this.temp.accelerationVector.y);
         // console.log(this.temp.accelerationVector.x, this.temp.accelerationVector.y);
         // console.log(this.temp.accelerationVector.x, this.temp.accelerationVector.y);
-        Point.add(this.velocity,this.temp.accelerationVector, this.velocity);
-        this.velocity.multiply(this.deceleration, this.deceleration);
-        this.velocity.x = Math.round(this.velocity.x * 100)/100;
-        this.velocity.y = Math.round(this.velocity.y * 100)/100;
+
+        //constant velocity, like a missile
+        if (this.constantVelocity){
+            this.velocity.set(
+                Math.cos( this.angle * (Math.PI / 180) ),
+                Math.sin( this.angle * (Math.PI / 180) )
+            ).setMagnitude(this.constantVelocity);
+        }
+        else{
+            //acceleration
+            Point.add(this.velocity,this.temp.accelerationVector, this.velocity);
+            this.velocity.multiply(this.deceleration, this.deceleration);
+            this.velocity.x = Math.round(this.velocity.x * 100)/100;
+            this.velocity.y = Math.round(this.velocity.y * 100)/100;
+        }
+
+
 
         this.velX = this.velocity.x;
         this.velY = this.velocity.y;

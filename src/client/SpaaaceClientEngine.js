@@ -1,6 +1,8 @@
 const ClientEngine = require('Incheon').ClientEngine;
 const GameWorld = require('Incheon').GameWorld;
-var Ship = require("./common/Ship");
+
+var Ship = require("../common/Ship");
+var Missile = require("../common/Missile");
 
 class SpaaaceClientEngine extends ClientEngine{
     constructor(gameEngine){
@@ -69,21 +71,42 @@ class SpaaaceClientEngine extends ClientEngine{
                     }
 
                     if (this.sprites[objId] == null){
-                        let localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
-                        localObj.velocity.set(nextObj.velX, nextObj.velY);
-                        localObj.isPlayerControlled  = this.playerId == nextObj.id;
+
+                        if (nextObj.class == Ship) {
+                            let localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
+                            localObj.velocity.set(nextObj.velX, nextObj.velY);
+                            localObj.isPlayerControlled = this.playerId == nextObj.id;
 
 
-                        sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'ship');
-                        this.sprites[objId] = sprite;
-                        //if own player's ship - color it
-                        if (this.playerId == nextObj.id){
-                            sprite.tint = 0XFF00FF;
+                            sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'ship');
+                            this.sprites[objId] = sprite;
+                            //if own player's ship - color it
+                            if (this.playerId == nextObj.id) {
+                                sprite.tint = 0XFF00FF;
+                            }
+
+                            sprite.anchor.setTo(0.5, 0.5);
+                            sprite.width = 50;
+                            sprite.height = 45;
                         }
 
-                        sprite.anchor.setTo(0.5, 0.5);
-                        sprite.width = 50;
-                        sprite.height = 45;
+                        if (nextObj.class == Missile) {
+                            let localObj = this.gameEngine.world.objects[objId] = new Missile(nextObj.id, nextObj.x, nextObj.y);
+                            localObj.angle = nextObj.angle;
+
+
+                            sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'missile');
+                            this.sprites[objId] = sprite;
+                            //if own player's ship - color it
+                            // if (this.playerId == nextObj.id) {
+                            //     sprite.tint = 0XFF00FF;
+                            // }
+
+                            sprite.anchor.setTo(0.5, 0.5);
+                            sprite.width = 27;
+                            sprite.height = 15;
+                        }
+
                     }
                     else{
                         sprite = this.sprites[objId];

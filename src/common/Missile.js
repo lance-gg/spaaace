@@ -4,12 +4,12 @@
 const Point= require('Incheon').Point;
 const DynamicObject= require('./DynamicObject');
 
-class Ship extends DynamicObject {
+class Missile extends DynamicObject {
 
     static get properties(){
         return  {
-            id: 7, //class id
-            name: "ship"
+            id: 9, //class id
+            name: "shot"
         }
     }
 
@@ -19,11 +19,12 @@ class Ship extends DynamicObject {
 
     constructor(id, x, y){
         super(id, x, y);
+        this.constantVelocity = 4;
 
-        this.class = Ship;
+        this.class = Missile;
     };
-    
+
 }
 
 
-module.exports = Ship;
+module.exports = Missile;

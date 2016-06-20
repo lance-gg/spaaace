@@ -8,7 +8,7 @@ var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { pre
 
 function preload() {
     game.load.image('ship', 'assets/ship1.png');
-    game.load.image('shot', 'assets/shot.png');
+    game.load.image('missile', 'assets/shot.png');
 }
 
 
