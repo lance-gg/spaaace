@@ -24,7 +24,6 @@ class SpaaaceGameEngine extends GameEngine {
 
     step(){
         super.step();
-        this.world.stepCount++;
         this.updateGameWorld();
     };
 
