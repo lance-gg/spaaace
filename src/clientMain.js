@@ -8,6 +8,7 @@ var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { pre
 
 function preload() {
     game.load.image('ship', 'assets/ship1.png');
+    game.load.image('shot', 'assets/shot.png');
 }
 
 
@@ -23,11 +24,5 @@ function create() {
 
 function update() {
 
-    //            if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
-    //            {
-    //                fireBullet();
-    //            }
-    //
-    //
     spaaaceClientEngine.step();
 }

@@ -15,6 +15,7 @@ class SpaaaceClientEngine extends ClientEngine{
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();
         game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+        
     }
 
     step(){
@@ -131,20 +132,21 @@ class SpaaaceClientEngine extends ClientEngine{
     }
 
     processInputs(){
-        if (this.cursors.up.isDown)
-        {
+        if (this.cursors.up.isDown) {
             this.sendInput('up');
         }
 
-        if (this.cursors.left.isDown)
-        {
+        if (this.cursors.left.isDown) {
             this.sendInput('left');
         }
 
-        if (this.cursors.right.isDown)
-        {
+        if (this.cursors.right.isDown) {
             this.sendInput('right');
         }
+
+       if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+           this.sendInput('space');
+       }
     }
 
 }
