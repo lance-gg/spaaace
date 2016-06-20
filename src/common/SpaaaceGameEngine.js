@@ -79,6 +79,7 @@ class SpaaaceGameEngine extends GameEngine {
         missile.angle = playerShip.angle;
 
         this.world.objects[missile.id] = missile;
+        missile.step(this.worldSettings); //hack to step the missile velocity
         this.timer.add(40, this.destroyMissile, this, [missile.id]);
 
         return missile;
