@@ -12,6 +12,7 @@ class DynamicObject extends Serializable {
     static get netScheme(){
         return {
             id: { type: Serializable.TYPES.UINT8 },
+            playerId: { type: Serializable.TYPES.UINT8 },
             x: { type: Serializable.TYPES.INT16 },
             y: { type: Serializable.TYPES.INT16 },
             velX: { type: Serializable.TYPES.FLOAT32 },
@@ -23,6 +24,7 @@ class DynamicObject extends Serializable {
     constructor(id, x, y){
         super();
         this.id = id; //instance id
+        this.playerId = 0;
         this.x = x;
         this.y = y;
         this.velX = 0;

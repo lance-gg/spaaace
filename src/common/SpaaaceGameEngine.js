@@ -56,30 +56,31 @@ class SpaaaceGameEngine extends GameEngine {
         }
     };
 
-    makeShip(id) {
-        if (id in this.world.objects){
-            console.log("warning, object with id ", id, " alraedy exists");
+    makeShip(playerId) {
+        if (playerId in this.world.objects){
+            console.log("warning, object with id ", playerId, " alraedy exists");
             return null;
         }
 
         var newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         var newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        var ship = new Ship(id, newShipX, newShipY);
-        this.world.objects[id]=ship;
+        var ship = new Ship(++this.world.idCount, newShipX, newShipY);
+        ship.playerId = playerId;
+        this.world.objects[playerId]=ship;
 
         return ship;
     };
 
     makeMissile(playerShip){
-        //todo proper ID generation....
-        var missile = new Missile(Math.round(Math.random() * 100000));
+        var missile = new Missile(++this.world.idCount);
         missile.x = playerShip.x;
         missile.y = playerShip.y;
         missile.angle = playerShip.angle;
+        missile.playerId = playerShip.playerId;
 
         this.world.objects[missile.id] = missile;
-        missile.step(this.worldSettings); //hack to step the missile velocity
+        // missile.step(this.worldSettings); //hack to step the missile velocity\
         this.timer.add(40, this.destroyMissile, this, [missile.id]);
 
         return missile;

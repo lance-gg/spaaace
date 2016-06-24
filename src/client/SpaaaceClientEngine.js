@@ -58,7 +58,7 @@ class SpaaaceClientEngine extends ClientEngine{
             }
         }
 
-        
+
         if (previousWorld && nextWorld){
             let sprite;
             for (let objId in nextWorld.objects) {
@@ -75,13 +75,13 @@ class SpaaaceClientEngine extends ClientEngine{
                         if (nextObj.class == Ship) {
                             let localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
                             localObj.velocity.set(nextObj.velX, nextObj.velY);
-                            localObj.isPlayerControlled = this.playerId == nextObj.id;
+                            localObj.isPlayerControlled = this.playerId == nextObj.playerId;
 
 
                             sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'ship');
                             this.sprites[objId] = sprite;
                             //if own player's ship - color it
-                            if (this.playerId == nextObj.id) {
+                            if (localObj.isPlayerControlled) {
                                 sprite.tint = 0XFF00FF;
                             }
 
@@ -97,10 +97,6 @@ class SpaaaceClientEngine extends ClientEngine{
 
                             sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'missile');
                             this.sprites[objId] = sprite;
-                            //if own player's ship - color it
-                            // if (this.playerId == nextObj.id) {
-                            //     sprite.tint = 0XFF00FF;
-                            // }
 
                             sprite.width = 81 * 0.5;
                             sprite.height = 46 * 0.5;
@@ -114,8 +110,7 @@ class SpaaaceClientEngine extends ClientEngine{
 
                     //update other objects with interpolation
                     //todo refactor into general interpolation class
-                    if (this.playerId != nextObj.id){
-
+                    if (nextObj.isPlayerControlled != true){
                         var playPercentage = (stepToPlay - previousWorld.stepCount)/(nextWorld.stepCount - previousWorld.stepCount);
 
                         if (Math.abs(nextObj.x - prevObj.x) > this.gameEngine.worldSettings.height /2){ //fix for world wraparound
