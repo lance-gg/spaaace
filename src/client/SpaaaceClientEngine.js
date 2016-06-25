@@ -12,6 +12,8 @@ class SpaaaceClientEngine extends ClientEngine{
     }
 
     start(){
+        var that = this;
+
         super.start();
 
         this.gameEngine.world.idCount = 1000; //to solve - partial solution so client and server ids don't clash
@@ -21,6 +23,14 @@ class SpaaaceClientEngine extends ClientEngine{
         this.cursors = game.input.keyboard.createCursorKeys();
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+        this.sounds = {
+            fireMissile: game.add.audio('fireMissile'),
+            missileHit: game.add.audio('missileHit')
+        };
+
+        this.gameEngine.on("fireMissile",function(){
+            that.sounds.fireMissile.play();
+        })
     }
 
     step(){

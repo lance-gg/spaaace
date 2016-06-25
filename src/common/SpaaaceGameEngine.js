@@ -40,6 +40,7 @@ class SpaaaceGameEngine extends GameEngine {
             }
             else if (inputData.input == "space") {
                 this.makeMissile(playerShip);
+                this.emit("fireMissile");
             }
         }
     };
