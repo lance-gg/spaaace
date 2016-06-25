@@ -3,7 +3,7 @@
 const GameEngine = require('Incheon').GameEngine;
 const Ship = require('./Ship');
 const Missile= require('./Missile');
-const Point= require('Incheon').Point;
+const BruteForce = require('./collisionDetection/BruteForce');
 
 class SpaaaceGameEngine extends GameEngine {
     constructor(){
@@ -11,6 +11,8 @@ class SpaaaceGameEngine extends GameEngine {
 
         this.registerClass(Ship);
         this.registerClass(Missile);
+
+        this.bruteForce = new BruteForce(this);
     }
     
     start(){
