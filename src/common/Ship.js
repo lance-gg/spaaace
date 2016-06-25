@@ -17,6 +17,13 @@ class Ship extends DynamicObject {
         return Object.assign({}, super.netScheme);
     }
 
+    static newFrom(sourceObj){
+        var newShip = new Ship();
+        newShip.copyFrom(sourceObj);
+
+        return newShip;
+    }
+
     constructor(id, x, y){
         super(id, x, y);
 

@@ -22,20 +22,6 @@ class SpaaaceGameEngine extends GameEngine {
         };
     };
 
-    step(){
-        super.step();
-        this.updateGameWorld();
-    };
-
-    updateGameWorld (){
-        for (var objId in this.world.objects) {
-            if (this.world.objects.hasOwnProperty(objId)) {
-                this.world.objects[objId].step(this.worldSettings);
-            }
-        }
-
-    };
-
     processInput(inputData, playerId){
         //get the player ship tied to the player socket
         var playerShip = this.world.objects[playerId];
@@ -67,7 +53,7 @@ class SpaaaceGameEngine extends GameEngine {
 
         var ship = new Ship(++this.world.idCount, newShipX, newShipY);
         ship.playerId = playerId;
-        this.world.objects[playerId]=ship;
+        this.addObjectToWorld(ship);
 
         return ship;
     };
@@ -79,7 +65,7 @@ class SpaaaceGameEngine extends GameEngine {
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
 
-        this.world.objects[missile.id] = missile;
+        this.addObjectToWorld(missile);
         // missile.step(this.worldSettings); //hack to step the missile velocity\
         this.timer.add(40, this.destroyMissile, this, [missile.id]);
 

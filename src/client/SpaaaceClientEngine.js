@@ -14,6 +14,9 @@ class SpaaaceClientEngine extends ClientEngine{
     start(){
         super.start();
 
+        this.gameEngine.world.idCount = 1000; //to solve - partial solution so client and server ids don't clash
+
+
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -29,13 +32,28 @@ class SpaaaceClientEngine extends ClientEngine{
         var world = this.gameEngine.world;
         for (var objId in world.objects) {
             if (world.objects.hasOwnProperty(objId)) {
-                if (world.objects[objId].isPlayerControlled){
-                    let objectData = world.objects[objId];
+                let localObj = world.objects[objId];
+                let sprite = this.sprites[objId];
 
-                    this.sprites[objectData.id].x = objectData.x;
-                    this.sprites[objectData.id].y = objectData.y;
-                    this.sprites[objectData.id].angle = objectData.angle;
+                if (sprite == null) {
+                    sprite = this.createSprite(localObj);
                 }
+
+                if (localObj.isPlayerControlled) {
+                    sprite.x = localObj.x;
+                    sprite.y = localObj.y;
+                    sprite.angle = localObj.angle;
+                }
+            }
+        }
+
+        //destroy sprites of non existing objects
+        for (let objId in this.sprites) {
+            if (this.sprites.hasOwnProperty(objId) && !world.objects.hasOwnProperty(objId)) {
+                if (this.sprites[objId]) {
+                    this.sprites[objId].destroy();
+                }
+                delete this.sprites[objId];
             }
         }
 
@@ -71,37 +89,20 @@ class SpaaaceClientEngine extends ClientEngine{
                     }
 
                     if (this.sprites[objId] == null){
+                        let localObj;
 
                         if (nextObj.class == Ship) {
-                            let localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
+                            localObj = this.gameEngine.world.objects[objId] = new Ship(nextObj.id, nextObj.x, nextObj.y);
                             localObj.velocity.set(nextObj.velX, nextObj.velY);
                             localObj.isPlayerControlled = this.playerId == nextObj.playerId;
-
-
-                            sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'ship');
-                            this.sprites[objId] = sprite;
-                            //if own player's ship - color it
-                            if (localObj.isPlayerControlled) {
-                                sprite.tint = 0XFF00FF;
-                            }
-
-                            sprite.anchor.setTo(0.5, 0.5);
-                            sprite.width = 50;
-                            sprite.height = 45;
                         }
 
                         if (nextObj.class == Missile) {
-                            let localObj = this.gameEngine.world.objects[objId] = new Missile(nextObj.id, nextObj.x, nextObj.y);
+                            localObj = this.gameEngine.world.objects[objId] = new Missile(nextObj.id, nextObj.x, nextObj.y);
                             localObj.angle = nextObj.angle;
-
-
-                            sprite = window.game.add.sprite(nextObj.x, nextObj.y, 'missile');
-                            this.sprites[objId] = sprite;
-
-                            sprite.width = 81 * 0.5;
-                            sprite.height = 46 * 0.5;
-                            sprite.anchor.setTo(0.5, 0.5);
                         }
+
+                        sprite = this.createSprite(localObj);
 
                     }
                     else{
@@ -167,6 +168,35 @@ class SpaaaceClientEngine extends ClientEngine{
         if (this.spaceKey.isDown && this.spaceKey.repeats == 0){
             this.sendInput('space');
         }
+    }
+
+    createSprite(objData){
+        let sprite;
+
+        if (objData.class == Ship) {
+            sprite = window.game.add.sprite(objData.x, objData.y, 'ship');
+            this.sprites[objData.id] = sprite;
+            //if own player's ship - color it
+
+            if (objData.isPlayerControlled) {
+                sprite.tint = 0XFF00FF;
+            }
+
+            sprite.anchor.setTo(0.5, 0.5);
+            sprite.width = 50;
+            sprite.height = 45;
+        }
+
+        if (objData.class == Missile) {
+            sprite = window.game.add.sprite(objData.x, objData.y, 'missile');
+            this.sprites[objData.id] = sprite;
+
+            sprite.width = 81 * 0.5;
+            sprite.height = 46 * 0.5;
+            sprite.anchor.setTo(0.5, 0.5);
+        }
+
+        return sprite;
     }
 
 }

@@ -43,6 +43,23 @@ class DynamicObject extends Serializable {
 
     };
 
+    copyFrom(sourceObj){
+        this.id = sourceObj.id;
+        this.playerId = sourceObj.playerId;
+        this.isPlayerControlled = sourceObj.isPlayerControlled;
+
+        this.x = sourceObj.x;
+        this.y = sourceObj.y;
+        this.velX = sourceObj.velX;
+        this.velY = sourceObj.velY;
+        this.velocity.set(sourceObj.velX, sourceObj.velY);
+        this.angle = sourceObj.angle;
+        this.rotationSpeed = sourceObj.rotationSpeed;
+        this.acceleration = sourceObj.acceleration;
+        this.deceleration = sourceObj.deceleration;
+        this.maxSpeed = sourceObj.maxSpeed;
+    }
+
     step(worldSettings){
         if (this.isRotatingRight){ this.angle += this.rotationSpeed; }
         if (this.isRotatingLeft){this.angle -= this.rotationSpeed; }

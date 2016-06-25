@@ -17,6 +17,13 @@ class Missile extends DynamicObject {
         return Object.assign({}, super.netScheme);
     }
 
+    static newFrom(sourceObj){
+        var newMissile = new Missile();
+        newMissile.copyFrom(sourceObj);
+
+        return newMissile;
+    }
+
     constructor(id, x, y){
         super(id, x, y);
         this.constantVelocity = 10;
