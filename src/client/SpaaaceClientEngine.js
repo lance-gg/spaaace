@@ -31,6 +31,10 @@ class SpaaaceClientEngine extends ClientEngine{
         this.gameEngine.on("fireMissile",function(){
             that.sounds.fireMissile.play();
         })
+
+        this.gameEngine.on("missileHit",function(){
+            that.sounds.missileHit.play();
+        })
     }
 
     step(){
