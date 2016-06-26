@@ -2,7 +2,7 @@
 
 
 const Point= require('incheon').Point;
-const Serializable= require('incheon').Composables.Serializable;
+const Serializable= require('incheon').composables.Serializable;
 
 /**
  * Defines an objects which can move about in the game world
