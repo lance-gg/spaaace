@@ -1,6 +1,6 @@
 "use strict";
 
-const GameEngine = require('Incheon').GameEngine;
+const GameEngine = require('incheon').GameEngine;
 const Ship = require('./Ship');
 const Missile= require('./Missile');
 const BruteForce = require('./collisionDetection/BruteForce');

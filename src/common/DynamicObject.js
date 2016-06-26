@@ -1,8 +1,8 @@
 "use strict";
 
 
-const Point= require('Incheon').Point;
-const Serializable= require('Incheon').Composables.Serializable;
+const Point= require('incheon').Point;
+const Serializable= require('incheon').Composables.Serializable;
 
 /**
  * Defines an objects which can move about in the game world

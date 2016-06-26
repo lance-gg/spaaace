@@ -1,7 +1,7 @@
 "use strict";
 
 
-const Point= require('Incheon').Point;
+const Point= require('incheon').Point;
 const DynamicObject= require('./DynamicObject');
 
 class Missile extends DynamicObject {

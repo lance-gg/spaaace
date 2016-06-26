@@ -1,5 +1,5 @@
-const ClientEngine = require('Incheon').ClientEngine;
-const GameWorld = require('Incheon').GameWorld;
+const ClientEngine = require('incheon').ClientEngine;
+const GameWorld = require('incheon').GameWorld;
 
 var Ship = require("../common/Ship");
 var Missile = require("../common/Missile");
