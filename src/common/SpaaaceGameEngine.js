@@ -16,12 +16,38 @@ class SpaaaceGameEngine extends GameEngine {
     }
     
     start(){
+        var that = this;
         super.start();
 
         this.worldSettings = {
             width: 800,
             height: 600
         };
+
+        this.on("collisionStart",function(objects){
+            let ship, missile;
+
+            if (objects.a.class == Ship && objects.b.class == Missile){
+                ship = objects.a;
+                missile = objects.b;
+            }
+            else if (objects.b.class == Ship && objects.a.class == Missile){
+                ship = objects.b;
+                missile = objects.a;
+            }
+
+
+            if (ship && missile) {
+                if (missile.playerId != ship.playerId) {
+                    that.destroyMissile(missile.id);
+                    that.emit("missileHit",{
+                        missile: missile,
+                        ship: ship
+                    })
+                }
+            }
+
+        })
     };
 
     processInput(inputData, playerId){
