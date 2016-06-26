@@ -6,7 +6,7 @@
   "dependencies": {
     "browserify": "^13.0.1",
     "express": "^4.14.0",
-    "incheon": "git://github.com/opherv/Incheon.git"
+    "incheon": "OpherV/Incheon.git"
   },
   "devDependencies": {
     "watchify": "^3.7.0"
