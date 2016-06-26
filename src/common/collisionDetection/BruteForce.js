@@ -26,7 +26,7 @@ class BruteForce {
                 let distance = Math.sqrt( (x2-=x1)*x2 + (y2-=y1)*y2 );
                 let pairId =[objAId, objBId].sort().join(",");
 
-                if (distance < 50){
+                if (distance < 28){
                     if (!(pairId in this.collisionPairs)){
                         this.collisionPairs[pairId] = true;
                         this.gameEngine.emit("collisionStart", {
