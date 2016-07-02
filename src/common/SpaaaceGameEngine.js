@@ -52,7 +52,14 @@ class SpaaaceGameEngine extends GameEngine {
 
     processInput(inputData, playerId){
         //get the player ship tied to the player socket
-        var playerShip = this.world.objects[playerId];
+        var playerShip;
+
+        for (let objId in this.world.objects) {
+            if (this.world.objects[objId].playerId == playerId){
+                playerShip = this.world.objects[objId];
+                break;
+            }
+        }
 
         if (playerShip) {
             if (inputData.input == "up") {
