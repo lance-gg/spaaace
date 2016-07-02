@@ -104,20 +104,8 @@ class SpaaaceClientEngine extends ClientEngine{
 
                     if (this.sprites[objId] == null){
                         let localObj;
-
-                        if (nextObj.class == Ship) {
-                            localObj = new Ship(nextObj.id, nextObj.x, nextObj.y);
-                            this.gameEngine.addObjectToWorld(localObj);
-
-                            localObj.velocity.set(nextObj.velX, nextObj.velY);
-                            localObj.isPlayerControlled = this.playerId == nextObj.playerId;
-                        }
-
-                        if (nextObj.class == Missile) {
-                            localObj = new Missile(nextObj.id, nextObj.x, nextObj.y);
-                            this.gameEngine.addObjectToWorld(localObj);
-                            localObj.angle = nextObj.angle;
-                        }
+                        localObj = nextObj.class.newFrom(nextObj);
+                        this.gameEngine.addObjectToWorld(localObj);
 
                         sprite = this.createSprite(localObj);
 
