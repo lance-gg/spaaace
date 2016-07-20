@@ -2,7 +2,8 @@
 
 
 const Point= require('incheon').Point;
-const Serializable= require('incheon').composables.Serializable;
+const Serializable= require('incheon').serialize.Serializable;
+const Serializer= require('incheon').serialize.Serializer;
 
 /**
  * Defines an objects which can move about in the game world
@@ -11,13 +12,13 @@ class DynamicObject extends Serializable {
 
     static get netScheme(){
         return {
-            id: { type: Serializable.TYPES.UINT8 },
-            playerId: { type: Serializable.TYPES.UINT8 },
-            x: { type: Serializable.TYPES.INT16 },
-            y: { type: Serializable.TYPES.INT16 },
-            velX: { type: Serializable.TYPES.FLOAT32 },
-            velY: { type: Serializable.TYPES.FLOAT32 },
-            angle: { type: Serializable.TYPES.INT16 }
+            id: { type: Serializer.TYPES.UINT8 },
+            playerId: { type: Serializer.TYPES.UINT8 },
+            x: { type: Serializer.TYPES.INT16 },
+            y: { type: Serializer.TYPES.INT16 },
+            velX: { type: Serializer.TYPES.FLOAT32 },
+            velY: { type: Serializer.TYPES.FLOAT32 },
+            angle: { type: Serializer.TYPES.INT16 }
         }
     }
 
