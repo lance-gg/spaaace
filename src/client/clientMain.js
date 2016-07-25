@@ -1,13 +1,12 @@
 const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
+const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 const InterpolateStrategy = require('incheon').syncStrategies.InterpolateStrategy;
 
-var gameEngine = new SpaaaceGameEngine();
-var spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
+const renderer = new SpaaaceRenderer();
+const gameEngine = new SpaaaceGameEngine({ renderer });
+const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
 new InterpolateStrategy(spaaaceClientEngine, {});
-
-// TODO: temporary: the renderer is the client engine
-gameEngine.renderer = spaaaceClientEngine;
 
 var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
 
@@ -17,10 +16,7 @@ function preload() {
 
     game.load.audio('missileHit', 'assets/audio/193429__unfa__projectile-hit.mp3');
     game.load.audio('fireMissile', 'assets/audio/248293__chocobaggy__weird-laser-gun.mp3');
-
-
 }
-
 
 function create() {
 

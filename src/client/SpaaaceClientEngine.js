@@ -1,14 +1,11 @@
 const ClientEngine = require('incheon').ClientEngine;
 const GameWorld = require('incheon').GameWorld;
 
-var Ship = require("../common/Ship");
-var Missile = require("../common/Missile");
 
 class SpaaaceClientEngine extends ClientEngine{
     constructor(gameEngine){
         super(gameEngine);
 
-        this.sprites = {};
         this.gameEngine.on('client.preStep', this.preStep.bind(this));
     }
 
@@ -38,24 +35,21 @@ class SpaaaceClientEngine extends ClientEngine{
         })
     }
 
-    // TODO: remove this when spaaace client engine stops pretending to be a renderer
-    draw() {}
-
     updatePlayerObject() {
         var world = this.gameEngine.world;
         for (var objId in world.objects) {
             if (world.objects.hasOwnProperty(objId)) {
                 let localObj = world.objects[objId];
-                let sprite = this.sprites[objId];
+                let renderObject = localObj.renderObject;
 
-                if (sprite == null) {
-                    sprite = this.createSprite(localObj);
+                if (renderObject == null) {
+                    renderObject = this.gameEngine.renderer.addObject(localObj);
                 }
 
                 if (localObj.isPlayerControlled) {
-                    sprite.x = localObj.x;
-                    sprite.y = localObj.y;
-                    sprite.angle = localObj.angle;
+                    renderObject.x = localObj.x;
+                    renderObject.y = localObj.y;
+                    renderObject.angle = localObj.angle;
                 }
             }
         }
@@ -88,40 +82,6 @@ class SpaaaceClientEngine extends ClientEngine{
 
     postStep() {
 
-    }
-
-
-    removeSprite(objId) {
-        delete this.sprites[objId];
-    }
-
-    createSprite(objData){
-        let sprite;
-
-        if (objData.class == Ship) {
-            sprite = window.game.add.sprite(objData.x, objData.y, 'ship');
-            this.sprites[objData.id] = sprite;
-            //if own player's ship - color it
-
-            if (objData.isPlayerControlled) {
-                sprite.tint = 0XFF00FF;
-            }
-
-            sprite.anchor.setTo(0.5, 0.5);
-            sprite.width = 50;
-            sprite.height = 45;
-        }
-
-        if (objData.class == Missile) {
-            sprite = window.game.add.sprite(objData.x, objData.y, 'missile');
-            this.sprites[objData.id] = sprite;
-
-            sprite.width = 81 * 0.5;
-            sprite.height = 46 * 0.5;
-            sprite.anchor.setTo(0.5, 0.5);
-        }
-
-        return sprite;
     }
 
 }

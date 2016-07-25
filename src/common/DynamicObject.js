@@ -114,6 +114,57 @@ class DynamicObject extends Serializable {
         else if (this.y<0){ this.y = worldSettings.width + this.y;}
     };
 
+    init(options) {
+        Object.assign(this, options);
+    }
+
+    initRenderObject(renderer) {
+        this.renderer = renderer;
+        this.renderObject = this.renderer.addObject(this);
+    }
+
+    updateRenderObject() {}
+
+    interpolate(prevObj, nextObj, playPercentage) {
+
+        // update other objects with interpolation
+        // TODO refactor into general interpolation class
+        // TODO: this interpolate function should not care about worldSettings.
+        if (nextObj.isPlayerControlled != true){
+
+            if (Math.abs(nextObj.x - prevObj.x) > this.renderer.worldSettings.height /2){ //fix for world wraparound
+                this.renderObject.x = nextObj.x;
+            } else{
+                this.renderObject.x = (nextObj.x - prevObj.x) * playPercentage + prevObj.x;
+            }
+
+            if (Math.abs(nextObj.y - prevObj.y) > this.renderer.worldSettings.height/2) { //fix for world wraparound
+                this.renderObject.y = nextObj.y;
+            } else{
+                this.renderObject.y = (nextObj.y - prevObj.y) * playPercentage + prevObj.y;
+            }
+
+            var shortest_angle=((((nextObj.angle - prevObj.angle) % 360) + 540) % 360) - 180; //todo wrap this in a util
+            this.renderObject.angle = prevObj.angle + shortest_angle *  playPercentage;
+        }
+    }
+
+    // release resources
+    destroy() {
+        console.log(`destroying object ${this.id}`);
+
+        // destroy the physicalObject
+        if (this.physicalObject) {
+            this.physicsEngine.removeObject(this.physicalObject);
+        }
+
+        // destroy the renderObject
+        if (this.renderObject) {
+            this.renderer.removeObject(this.renderObject);
+        }
+    }
+
+
 }
 
 
