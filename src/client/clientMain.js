@@ -1,8 +1,13 @@
 const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
+const InterpolateStrategy = require('incheon').syncStrategies.InterpolateStrategy;
 
 var gameEngine = new SpaaaceGameEngine();
 var spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
+new InterpolateStrategy(spaaaceClientEngine, {});
+
+// TODO: temporary: the renderer is the client engine
+gameEngine.renderer = spaaaceClientEngine;
 
 var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
 
