@@ -6,15 +6,15 @@ const Missile= require('./Missile');
 const BruteForce = require('./collisionDetection/BruteForce');
 
 class SpaaaceGameEngine extends GameEngine {
-    constructor(){
-        super();
+    constructor(options){
+        super(options);
 
         this.registerClass(Ship);
         this.registerClass(Missile);
 
         this.bruteForce = new BruteForce(this);
     }
-    
+
     start(){
         var that = this;
         super.start();
