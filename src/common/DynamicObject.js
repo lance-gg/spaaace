@@ -153,11 +153,6 @@ class DynamicObject extends Serializable {
     destroy() {
         console.log(`destroying object ${this.id}`);
 
-        // destroy the physicalObject
-        if (this.physicalObject) {
-            this.physicsEngine.removeObject(this.physicalObject);
-        }
-
         // destroy the renderObject
         if (this.renderObject) {
             this.renderer.removeObject(this.renderObject);
