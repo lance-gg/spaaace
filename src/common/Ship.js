@@ -2,7 +2,7 @@
 
 
 const Point= require('incheon').Point;
-const DynamicObject= require('./DynamicObject');
+const DynamicObject= require('incheon').serialize.DynamicObject;
 
 class Ship extends DynamicObject {
 
