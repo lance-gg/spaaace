@@ -123,7 +123,11 @@ class DynamicObject extends Serializable {
         this.renderObject = this.renderer.addObject(this);
     }
 
-    updateRenderObject() {}
+    updateRenderObject() {
+        this.renderObject.x = this.x;
+        this.renderObject.y = this.y;
+        this.renderObject.angle = this.angle;
+    }
 
     interpolate(prevObj, nextObj, playPercentage) {
 
