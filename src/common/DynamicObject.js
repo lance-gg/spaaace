@@ -130,7 +130,7 @@ class DynamicObject extends Serializable {
         // update other objects with interpolation
         // TODO refactor into general interpolation class
         // TODO: this interpolate function should not care about worldSettings.
-        if (nextObj.isPlayerControlled != true){
+        if (this.isPlayerControlled != true){
 
             if (Math.abs(nextObj.x - prevObj.x) > this.renderer.worldSettings.height /2){ //fix for world wraparound
                 this.renderObject.x = nextObj.x;

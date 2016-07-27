@@ -35,27 +35,8 @@ class SpaaaceClientEngine extends ClientEngine{
         })
     }
 
-    updatePlayerObject() {
-        var world = this.gameEngine.world;
-        for (var objId in world.objects) {
-            if (world.objects.hasOwnProperty(objId)) {
-                let localObj = world.objects[objId];
-                let renderObject = localObj.renderObject;
-
-                if (renderObject == null) {
-                    renderObject = this.gameEngine.renderer.addObject(localObj);
-                }
-
-                if (localObj.isPlayerControlled) {
-                    renderObject.x = localObj.x;
-                    renderObject.y = localObj.y;
-                    renderObject.angle = localObj.angle;
-                }
-            }
-        }
-    }
-
-    processInputs(){
+    // our pre-step is to process all inputs
+    preStep(){
         //continuous press
         if (this.cursors.up.isDown) {
             this.sendInput('up');
@@ -73,15 +54,6 @@ class SpaaaceClientEngine extends ClientEngine{
         if (this.spaceKey.isDown && this.spaceKey.repeats == 0){
             this.sendInput('space');
         }
-    }
-
-    preStep() {
-        this.processInputs();
-        this.updatePlayerObject();
-    }
-
-    postStep() {
-
     }
 
 }
