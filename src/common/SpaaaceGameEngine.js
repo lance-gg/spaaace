@@ -109,8 +109,7 @@ class SpaaaceGameEngine extends GameEngine {
     }
 
     destroyMissile(missileId){
-        this.world.objects[missileId].destroy();
-        delete this.world.objects[missileId];
+        this.removeObjectFromWorld(missileId);
     }
 }
 
