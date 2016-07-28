@@ -57,8 +57,9 @@ class SpaaaceRenderer extends Renderer {
         return sprite;
     }
 
-    removeObject(o) {
-        delete this.sprites[o.id];
+    removeObject(obj) {
+        obj.destroy();
+        delete this.sprites[obj.id];
     }
 
 }
