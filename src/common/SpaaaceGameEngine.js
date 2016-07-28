@@ -80,7 +80,7 @@ class SpaaaceGameEngine extends GameEngine {
 
     makeShip(playerId) {
         if (playerId in this.world.objects){
-            console.log("warning, object with id ", playerId, " alraedy exists");
+            console.log("warning, object with id ", playerId, " already exists");
             return null;
         }
 

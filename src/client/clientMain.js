@@ -2,11 +2,13 @@ const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 const InterpolateStrategy = require('incheon').syncStrategies.InterpolateStrategy;
+const ClientPredictionStrategy = require('incheon').syncStrategies.ClientPredictionStrategy;
 
 const renderer = new SpaaaceRenderer();
 const gameEngine = new SpaaaceGameEngine({ renderer });
 const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
 new InterpolateStrategy(spaaaceClientEngine, {});
+new ClientPredictionStrategy(spaaaceClientEngine, {});
 
 var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
 
