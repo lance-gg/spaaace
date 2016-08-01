@@ -6,13 +6,6 @@ const DynamicObject= require('incheon').serialize.DynamicObject;
 
 class Missile extends DynamicObject {
 
-    static get properties(){
-        return  {
-            id: 9, //class id
-            name: "missile"
-        }
-    }
-
     static get netScheme(){
         return Object.assign({}, super.netScheme);
     }

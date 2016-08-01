@@ -9,9 +9,6 @@ class SpaaaceGameEngine extends GameEngine {
     constructor(options){
         super(options);
 
-        this.registerClass(Ship);
-        this.registerClass(Missile);
-
         this.bruteForce = new BruteForce(this);
     }
 
