@@ -1,10 +1,12 @@
 const ClientEngine = require('incheon').ClientEngine;
-const GameWorld = require('incheon').GameWorld;
 
 
 class SpaaaceClientEngine extends ClientEngine{
     constructor(gameEngine){
         super(gameEngine);
+
+        this.serializer.registerClass(require('../common/Ship'));
+        this.serializer.registerClass(require('../common/Missile'));
 
         this.gameEngine.on('client.preStep', this.preStep.bind(this));
     }
@@ -12,10 +14,9 @@ class SpaaaceClientEngine extends ClientEngine{
     start(){
         var that = this;
 
-        super.start();
+         super.start();
 
         this.gameEngine.world.idCount = 1000; //to solve - partial solution so client and server ids don't clash
-
 
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();

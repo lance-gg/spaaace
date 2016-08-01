@@ -13,21 +13,7 @@ class SpaaaceServerEngine extends ServerEngine{
     };
 
     start(){
-        // super.start();
-
-        var ship = new Ship(1, 2, 3);
-
-
-        var createEvent = this.networkTransmitter.addNetworkedEvent("objectUpdate",{
-            stepCount: 777,
-            objectInstance: ship
-        });
-
-
-
-        let dataBuffer = createEvent.serialize(this.serializer);
-        // var deser = this.serializer.deserialize(dataBuffer);
-        // console.log(deser.stepCount);
+        super.start();
     };
 
     onPlayerConnected(socket){
