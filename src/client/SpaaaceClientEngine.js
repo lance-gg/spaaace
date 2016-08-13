@@ -14,9 +14,7 @@ class SpaaaceClientEngine extends ClientEngine{
     start(){
         var that = this;
 
-         super.start();
-
-        this.gameEngine.world.idCount = 1000; //to solve - partial solution so client and server ids don't clash
+        super.start();
 
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();
