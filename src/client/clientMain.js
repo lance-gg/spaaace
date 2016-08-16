@@ -10,10 +10,7 @@ const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
 const synchronizer = new Synchronizer(spaaaceClientEngine);
 
 // object synchronization:
-// use client prediction for objects controlled by the client
-// interpolate all the rest
-synchronizer.interpolateObjectSelector = (obj) => { return !obj.isPlayerControlled; };
-synchronizer.clientPredictionSelector = (obj) => { return obj.isPlayerControlled; };
+synchronizer.extrapolateObjectSelector = (obj) => { return true; };
 
 var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
 
