@@ -6,7 +6,7 @@ const Synchronizer = require('incheon').Synchronizer;
 // create a client engine, a game engine, a synchronizer, and a renderer
 const renderer = new SpaaaceRenderer();
 const gameEngine = new SpaaaceGameEngine({ renderer, clientIDSpace: 1000000 });
-const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
+const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, { delayInputCount: 1 });
 const synchronizer = new Synchronizer(spaaaceClientEngine);
 
 // object synchronization:
