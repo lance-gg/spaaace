@@ -1,3 +1,4 @@
+const qsOptions = require("query-string").parse(location.search);
 const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
@@ -5,7 +6,8 @@ const Synchronizer = require('incheon').Synchronizer;
 
 // create a client engine, a game engine, a synchronizer, and a renderer
 const renderer = new SpaaaceRenderer();
-const gameEngine = new SpaaaceGameEngine({ renderer, clientIDSpace: 1000000 });
+const gameOptions = Object.assign({ renderer, clientIDSpace: 1000000 }, qsOptions);
+const gameEngine = new SpaaaceGameEngine(gameOptions);
 const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, { delayInputCount: 1 });
 const synchronizer = new Synchronizer(spaaaceClientEngine);
 

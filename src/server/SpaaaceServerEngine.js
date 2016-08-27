@@ -19,12 +19,8 @@ class SpaaaceServerEngine extends ServerEngine{
     onPlayerConnected(socket){
         super.onPlayerConnected(socket);
 
-        var that=this;
-
+        var that = this;
         this.gameEngine.makeShip(socket.playerId);
-
-
-
     };
 
     onPlayerDisconnected(socketId, playerId){
@@ -33,6 +29,11 @@ class SpaaaceServerEngine extends ServerEngine{
         delete this.gameEngine.world.objects[playerId];
     };
 
+    // TODO:
+    // 1. rather than tell the gameEngine to process the input now, it should
+    //    be queued with a list of inputs to be processed at the beginning of the
+    //    next step
+    // 2. this should actually be done by the base class ServerEngine
     onReceivedInput(inputData, socket){
         super.onReceivedInput(inputData, socket);
         this.gameEngine.processInput(inputData, socket.playerId)
