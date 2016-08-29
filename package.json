@@ -9,7 +9,7 @@
   "dependencies": {
     "browserify": "^13.0.1",
     "express": "^4.14.0",
-    "incheon": "OpherV/Incheon.git#lagMeasure",
+    "incheon": "OpherV/Incheon.git#feature/lagMeasure",
     "socket.io": "^1.4.8"
   },
   "devDependencies": {
