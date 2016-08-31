@@ -4,11 +4,20 @@ const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 const Synchronizer = require('incheon').Synchronizer;
 
+// default options, overwritten by query-string options
+// is sent to both game engine and client engine
+const defaults = {
+    traceLevel: 1,
+    delayInputCount: 3,
+    clientIDSpace: 1000000
+};
+let options = Object.assign(defaults, qsOptions);
+
 // create a client engine, a game engine, a synchronizer, and a renderer
 const renderer = new SpaaaceRenderer();
-const gameOptions = Object.assign({ renderer, clientIDSpace: 1000000 }, qsOptions);
+const gameOptions = Object.assign({ renderer }, options);
 const gameEngine = new SpaaaceGameEngine(gameOptions);
-const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, { delayInputCount: 1 });
+const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, options);
 const synchronizer = new Synchronizer(spaaaceClientEngine);
 
 // object synchronization:
