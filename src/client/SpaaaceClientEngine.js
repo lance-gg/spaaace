@@ -2,8 +2,8 @@ const ClientEngine = require('incheon').ClientEngine;
 
 
 class SpaaaceClientEngine extends ClientEngine{
-    constructor(gameEngine){
-        super(gameEngine);
+    constructor(gameEngine, options){
+        super(gameEngine, options);
 
         this.serializer.registerClass(require('../common/Ship'));
         this.serializer.registerClass(require('../common/Missile'));

@@ -48,6 +48,9 @@ class SpaaaceGameEngine extends GameEngine {
     };
 
     processInput(inputData, playerId){
+
+        super.processInput(inputData, playerId);
+
         //get the player ship tied to the player socket
         var playerShip;
 

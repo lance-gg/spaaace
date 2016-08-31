@@ -19,12 +19,8 @@ class SpaaaceServerEngine extends ServerEngine{
     onPlayerConnected(socket){
         super.onPlayerConnected(socket);
 
-        var that=this;
-
+        var that = this;
         this.gameEngine.makeShip(socket.playerId);
-
-
-
     };
 
     onPlayerDisconnected(socketId, playerId){
@@ -32,12 +28,6 @@ class SpaaaceServerEngine extends ServerEngine{
 
         delete this.gameEngine.world.objects[playerId];
     };
-
-    onReceivedInput(inputData, socket){
-        super.onReceivedInput(inputData, socket);
-        this.gameEngine.processInput(inputData, socket.playerId)
-    }
-
 }
 
 module.exports = SpaaaceServerEngine;
