@@ -1,19 +1,27 @@
+const qsOptions = require("query-string").parse(location.search);
 const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 const Synchronizer = require('incheon').Synchronizer;
 
+// default options, overwritten by query-string options
+// is sent to both game engine and client engine
+const defaults = {
+    traceLevel: 1,
+    delayInputCount: 3,
+    clientIDSpace: 1000000
+};
+let options = Object.assign(defaults, qsOptions);
+
 // create a client engine, a game engine, a synchronizer, and a renderer
 const renderer = new SpaaaceRenderer();
-const gameEngine = new SpaaaceGameEngine({ renderer, clientIDSpace: 1000000 });
-const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine);
+const gameOptions = Object.assign({ renderer }, options);
+const gameEngine = new SpaaaceGameEngine(gameOptions);
+const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, options);
 const synchronizer = new Synchronizer(spaaaceClientEngine);
 
 // object synchronization:
-// use client prediction for objects controlled by the client
-// interpolate all the rest
-synchronizer.interpolateObjectSelector = (obj) => { return !obj.isPlayerControlled; };
-synchronizer.clientPredictionSelector = (obj) => { return obj.isPlayerControlled; };
+synchronizer.extrapolateObjectSelector = (obj) => { return true; };
 
 var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
 
