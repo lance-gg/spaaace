@@ -23,7 +23,7 @@ const synchronizer = new Synchronizer(spaaaceClientEngine);
 // object synchronization:
 synchronizer.extrapolateObjectSelector = (obj) => { return true; };
 
-var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload: preload, create: create, update: update });
+var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload, create, update });
 
 function preload() {
     game.load.image('ship', 'assets/ship1.png');
