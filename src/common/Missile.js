@@ -2,7 +2,7 @@
 
 
 const Point= require('incheon').Point;
-const Serializer = require('./Serializer');
+const Serializer = require('incheon').serialize.Serializer;
 const DynamicObject= require('incheon').serialize.DynamicObject;
 
 class Missile extends DynamicObject {

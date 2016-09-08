@@ -108,8 +108,10 @@ class SpaaaceGameEngine extends GameEngine {
         return missile;
     }
 
+    // destroy the missile if it still exists
     destroyMissile(missileId){
-        this.removeObjectFromWorld(missileId);
+        if (this.world.objects[missileId])
+            this.removeObjectFromWorld(missileId);
     }
 }
 
