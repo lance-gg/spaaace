@@ -2,12 +2,15 @@
 
 
 const Point= require('incheon').Point;
+const Serializer = require('./Serializer');
 const DynamicObject= require('incheon').serialize.DynamicObject;
 
 class Missile extends DynamicObject {
 
     static get netScheme(){
-        return Object.assign({}, super.netScheme);
+        return Object.assign({
+            inputId: { type: Serializer.TYPES.INT32 }
+        }, super.netScheme);
     }
 
     static newFrom(sourceObj){

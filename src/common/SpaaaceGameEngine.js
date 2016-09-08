@@ -72,7 +72,7 @@ class SpaaaceGameEngine extends GameEngine {
                 playerShip.isRotatingLeft = true;
             }
             else if (inputData.input == "space") {
-                this.makeMissile(playerShip);
+                this.makeMissile(playerShip, inputData.messageIndex);
                 this.emit("fireMissile");
             }
         }
@@ -94,15 +94,15 @@ class SpaaaceGameEngine extends GameEngine {
         return ship;
     };
 
-    makeMissile(playerShip){
+    makeMissile(playerShip, inputId) {
         var missile = new Missile(++this.world.idCount);
         missile.x = playerShip.x;
         missile.y = playerShip.y;
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
+        missile.inputId = inputId;
 
         this.addObjectToWorld(missile);
-        // missile.step(this.worldSettings); //hack to step the missile velocity\
         this.timer.add(40, this.destroyMissile, this, [missile.id]);
 
         return missile;

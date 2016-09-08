@@ -38,15 +38,15 @@ class SpaaaceClientEngine extends ClientEngine{
     preStep(){
         //continuous press
         if (this.cursors.up.isDown) {
-            this.sendInput('up');
+            this.sendInput('up', { movement: true } );
         }
 
         if (this.cursors.left.isDown) {
-            this.sendInput('left');
+            this.sendInput('left', { movement: true });
         }
 
         if (this.cursors.right.isDown) {
-            this.sendInput('right');
+            this.sendInput('right', { movement: true });
         }
 
         //single press
