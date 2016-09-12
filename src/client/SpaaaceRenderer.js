@@ -28,7 +28,7 @@ class SpaaaceRenderer extends Renderer {
 
     }
 
-    addObject(objData) {
+    addObject(objData, options) {
         let sprite;
 
         if (objData.class == Ship) {
@@ -43,9 +43,7 @@ class SpaaaceRenderer extends Renderer {
             sprite.anchor.setTo(0.5, 0.5);
             sprite.width = 50;
             sprite.height = 45;
-        }
-
-        if (objData.class == Missile) {
+        } else if (objData.class == Missile) {
             sprite = window.game.add.sprite(objData.x, objData.y, 'missile');
             this.sprites[objData.id] = sprite;
 
@@ -53,6 +51,8 @@ class SpaaaceRenderer extends Renderer {
             sprite.height = 46 * 0.5;
             sprite.anchor.setTo(0.5, 0.5);
         }
+
+        Object.assign(sprite, options);
 
         return sprite;
     }
