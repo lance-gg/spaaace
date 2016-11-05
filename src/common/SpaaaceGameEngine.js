@@ -17,6 +17,7 @@ class SpaaaceGameEngine extends GameEngine {
         super.start();
 
         this.worldSettings = {
+            worldWrap: true,
             width: 800,
             height: 600
         };

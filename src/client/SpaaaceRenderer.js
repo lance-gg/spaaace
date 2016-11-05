@@ -13,6 +13,7 @@ class SpaaaceRenderer extends Renderer {
         // TODO: the world settings are really a property of the GameEngine.
         //       but they are currently used by interpolate function of DynamicObject.
         this.worldSettings = {
+            worldWrap: true,
             width: 800,
             height: 600
         };
