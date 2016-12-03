@@ -23,6 +23,13 @@ class SpaaaceRenderer extends Renderer {
 
     draw() {
         super.draw();
+        for (let objId of Object.keys(this.sprites)) {
+            if (this.sprites[objId]) {
+                this.sprites[objId].x = this.gameEngine.world.objects[objId].x;
+                this.sprites[objId].y = this.gameEngine.world.objects[objId].y;
+                this.sprites[objId].angle = this.gameEngine.world.objects[objId].angle;
+            }
+        }
     }
 
     addObject(objData, options) {
