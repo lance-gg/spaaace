@@ -15,19 +15,26 @@
   },
   "devDependencies": {
     "babelify": "^7.3.0",
+    "eslint": "^3.10.2",
+    "eslint-config-google": "^0.7.0",
     "watchify": "^3.7.0"
   },
   "scripts": {
     "start": "node main.js",
-    "postinstall": "browserify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js -t [ babelify --presets [ es2015 ] ",
-    "watchify": "watchify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js -v -d -t [ babelify --presets [ es2015 ]"
+    "postinstall": "browserify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js ",
+    "watchify": "watchify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js -v -d"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OpherV/spaaace.git"
   },
+  "browserify": {
+    "transform": ["babelify"]
+  },
   "keywords": [
     "game",
+    "incheon",
+    "multiplayer",
     "websockets"
   ],
   "author": "Opher Vishnia",

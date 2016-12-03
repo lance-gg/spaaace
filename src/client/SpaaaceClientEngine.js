@@ -1,9 +1,13 @@
 const ClientEngine = require('incheon').ClientEngine;
+const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 
 
-class SpaaaceClientEngine extends ClientEngine{
-    constructor(gameEngine, options){
+class SpaaaceClientEngine extends ClientEngine {
+    constructor(gameEngine, options) {
         super(gameEngine, options);
+
+        // initialize renderer
+        this.renderer = new SpaaaceRenderer(gameEngine);
 
         this.serializer.registerClass(require('../common/Ship'));
         this.serializer.registerClass(require('../common/Missile'));
@@ -11,8 +15,7 @@ class SpaaaceClientEngine extends ClientEngine{
         this.gameEngine.on('client.preStep', this.preStep.bind(this));
     }
 
-    start(){
-        var that = this;
+    start() {
 
         super.start();
 
@@ -25,18 +28,13 @@ class SpaaaceClientEngine extends ClientEngine{
             missileHit: game.add.audio('missileHit')
         };
 
-        this.gameEngine.on("fireMissile",function(){
-            that.sounds.fireMissile.play();
-        })
-
-        this.gameEngine.on("missileHit",function(){
-            that.sounds.missileHit.play();
-        })
+        this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
+        this.gameEngine.on('missileHit', () => { this.sounds.missileHit.play(); });
     }
 
     // our pre-step is to process all inputs
-    preStep(){
-        //continuous press
+    preStep() {
+        // continuous press
         if (this.cursors.up.isDown) {
             this.sendInput('up', { movement: true } );
         }
@@ -49,8 +47,8 @@ class SpaaaceClientEngine extends ClientEngine{
             this.sendInput('right', { movement: true });
         }
 
-        //single press
-        if (this.spaceKey.isDown && this.spaceKey.repeats == 0){
+        // single press
+        if (this.spaceKey.isDown && this.spaceKey.repeats == 0) {
             this.sendInput('space');
         }
     }

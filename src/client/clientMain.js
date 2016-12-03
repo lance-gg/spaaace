@@ -9,21 +9,21 @@ const Synchronizer = require('incheon').Synchronizer;
 const defaults = {
     traceLevel: 1,
     delayInputCount: 3,
-    clientIDSpace: 1000000
+    clientIDSpace: 1000000,
+    syncOptions: {
+        sync: qsOptions.sync || 'extrapolate',
+        localObjBending: 0.0,
+        remoteObjBending: 0.6
+    }
 };
 let options = Object.assign(defaults, qsOptions);
 
-// create a client engine, a game engine, a synchronizer, and a renderer
-const renderer = new SpaaaceRenderer();
-const gameOptions = Object.assign({ renderer }, options);
+// create a client engine and a game engine
+const gameOptions = Object.assign({}, options);
 const gameEngine = new SpaaaceGameEngine(gameOptions);
-const spaaaceClientEngine = new SpaaaceClientEngine(gameEngine, options);
-const synchronizer = new Synchronizer(spaaaceClientEngine);
+const clientEngine = new SpaaaceClientEngine(gameEngine, options);
 
-// object synchronization:
-synchronizer.extrapolateObjectSelector = (obj) => { return true; };
-
-var game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload, create, update });
+let game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload, create, update });
 
 function preload() {
     game.load.image('ship', 'assets/ship1.png');
@@ -39,11 +39,7 @@ function create() {
     game.stage.disableVisibilityChange = true;
     game.stage.backgroundColor = 'black';
 
-
-    spaaaceClientEngine.start();
+    clientEngine.start();
 }
 
-function update() {
-
-    spaaaceClientEngine.step();
-}
+function update() {}

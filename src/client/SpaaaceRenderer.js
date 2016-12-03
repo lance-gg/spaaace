@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 const Renderer = require('incheon').render.Renderer;
-var Ship = require("../common/Ship");
-var Missile = require("../common/Missile");
+let Missile = require('../common/Missile');
+let Ship = require('../common/Ship');
 
 class SpaaaceRenderer extends Renderer {
 
-    constructor() {
-        super();
+    constructor(gameEngine) {
+        super(gameEngine);
         this.sprites = {};
 
         // TODO: the world settings are really a property of the GameEngine.
@@ -19,14 +19,10 @@ class SpaaaceRenderer extends Renderer {
         };
     }
 
-    init() {
-
-    }
+    init() {}
 
     draw() {
         super.draw();
-
-
     }
 
     addObject(objData, options) {
@@ -35,7 +31,7 @@ class SpaaaceRenderer extends Renderer {
         if (objData.class == Ship) {
             sprite = window.game.add.sprite(objData.x, objData.y, 'ship');
             this.sprites[objData.id] = sprite;
-            //if own player's ship - color it
+            // if own player's ship - color it
 
             if (objData.isPlayerControlled) {
                 sprite.tint = 0XFF00FF;
