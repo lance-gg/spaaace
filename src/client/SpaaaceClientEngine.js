@@ -48,7 +48,8 @@ class SpaaaceClientEngine extends ClientEngine {
         }
 
         // single press
-        if (this.spaceKey.isDown && this.spaceKey.repeats === 1) {
+        // TODO: Opher please fix the strange "repeats" usage below
+        if (this.spaceKey.isDown && (this.spaceKey.repeats === 0 || this.spaceKey.repeats === 1)) {
             this.sendInput('space');
         }
     }
