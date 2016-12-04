@@ -1,8 +1,6 @@
-const qsOptions = require("query-string").parse(location.search);
-const SpaaaceClientEngine = require("../client/SpaaaceClientEngine");
-const SpaaaceRenderer = require('../client/SpaaaceRenderer');
+const qsOptions = require('query-string').parse(location.search);
+const SpaaaceClientEngine = require('../client/SpaaaceClientEngine');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
-const Synchronizer = require('incheon').Synchronizer;
 
 // default options, overwritten by query-string options
 // is sent to both game engine and client engine

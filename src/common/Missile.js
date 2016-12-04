@@ -13,7 +13,6 @@ class Missile extends DynamicObject {
 
     constructor(id, x, y) {
         super(id, x, y);
-        this.constantVelocity = 10;
         this.class = Missile;
     };
 }

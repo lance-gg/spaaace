@@ -48,7 +48,7 @@ class SpaaaceClientEngine extends ClientEngine {
         }
 
         // single press
-        if (this.spaceKey.isDown && this.spaceKey.repeats == 0) {
+        if (this.spaceKey.isDown && this.spaceKey.repeats === 1) {
             this.sendInput('space');
         }
     }
