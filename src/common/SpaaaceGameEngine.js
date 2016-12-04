@@ -61,7 +61,7 @@ class SpaaaceGameEngine extends GameEngine {
             }
         }
 
-        if (playerShip) {
+        if (playerShip && !playerShip.passive) {
             if (inputData.input == 'up') {
                 playerShip.isAccelerating = true;
             } else if (inputData.input == 'right') {
