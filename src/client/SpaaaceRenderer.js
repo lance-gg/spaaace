@@ -24,10 +24,12 @@ class SpaaaceRenderer extends Renderer {
     draw() {
         super.draw();
         for (let objId of Object.keys(this.sprites)) {
-            if (this.sprites[objId] && this.gameEngine.world.objects[objId]) {
+            if (this.gameEngine.world.objects[objId]) {
                 this.sprites[objId].x = this.gameEngine.world.objects[objId].x;
                 this.sprites[objId].y = this.gameEngine.world.objects[objId].y;
                 this.sprites[objId].angle = this.gameEngine.world.objects[objId].angle;
+            } else {
+                this.removeObject(this.sprites[objId]);
             }
         }
     }
