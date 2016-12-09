@@ -3,13 +3,8 @@
 const GameEngine = require('incheon').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
-const BruteForce = require('./collisionDetection/BruteForce');
 
 class SpaaaceGameEngine extends GameEngine {
-    constructor(options) {
-        super(options);
-        this.bruteForce = new BruteForce(this);
-    }
 
     start() {
         let that = this;
@@ -21,29 +16,19 @@ class SpaaaceGameEngine extends GameEngine {
             height: 600
         };
 
-        this.on('collisionStart', function(objects) {
-            let ship;
-            let missile;
+        this.on('collisionStart', function(e) {
+            let collisionObjects = Object.keys(e).map(k => e[k]);
+            let ship = collisionObjects.find(o => o.class === Ship);
+            let missile = collisionObjects.find(o => o.class === Missile);
 
-            if (objects.a.class == Ship && objects.b.class == Missile) {
-                ship = objects.a;
-                missile = objects.b;
-            } else if (objects.b.class == Ship && objects.a.class == Missile) {
-                ship = objects.b;
-                missile = objects.a;
+            if (!ship || !missile)
+                return;
+
+            if (missile.playerId !== ship.playerId) {
+                that.destroyMissile(missile.id);
+                that.emit('missileHit', { missile, ship });
+                console.log(`ouch.  that hurts.`);
             }
-
-
-            if (ship && missile) {
-                if (missile.playerId != ship.playerId) {
-                    that.destroyMissile(missile.id);
-                    that.emit('missileHit', {
-                        missile: missile,
-                        ship: ship
-                    });
-                }
-            }
-
         });
     };
 
