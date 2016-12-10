@@ -22,10 +22,9 @@ class SpaaaceRenderer extends Renderer {
     }
 
     init() {
-
         this.stage = new PIXI.Container();
         this.renderer = PIXI.autoDetectRenderer(this.gameEngine.worldSettings.width, this.gameEngine.worldSettings.height);
-        document.body.appendChild(this.renderer.view);
+        document.addEventListener("DOMContentLoaded", ()=>{ document.body.appendChild(this.renderer.view); });
 
         PIXI.loader.add([
                 ASSETPATH.ship,
