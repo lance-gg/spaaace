@@ -23,23 +23,6 @@ const gameOptions = Object.assign({ physicsEngine }, options);
 const gameEngine = new SpaaaceGameEngine(gameOptions);
 const clientEngine = new SpaaaceClientEngine(gameEngine, options);
 
-let game = window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'spaaace', { preload, create, update });
+clientEngine.start();
 
-function preload() {
-    game.load.image('ship', 'assets/ship1.png');
-    game.load.image('missile', 'assets/shot.png');
 
-    game.load.audio('missileHit', 'assets/audio/193429__unfa__projectile-hit.mp3');
-    game.load.audio('fireMissile', 'assets/audio/248293__chocobaggy__weird-laser-gun.mp3');
-}
-
-function create() {
-
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.stage.disableVisibilityChange = true;
-    game.stage.backgroundColor = 'black';
-
-    clientEngine.start();
-}
-
-function update() {}

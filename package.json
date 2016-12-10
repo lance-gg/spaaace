@@ -9,7 +9,9 @@
   "dependencies": {
     "browserify": "^13.0.1",
     "express": "^4.14.0",
+    "howler": "^2.0.2",
     "incheon": "OpherV/Incheon.git",
+    "pixi.js": "^4.2.3",
     "query-string": "^4.2.3",
     "socket.io": "^1.4.8"
   },
@@ -21,15 +23,17 @@
   },
   "scripts": {
     "start": "node main.js",
-    "postinstall": "browserify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js ",
-    "watchify": "watchify src/client/clientMain.js -i nodejs-physijs -o dist/bundle.js -v -d"
+    "postinstall": "browserify src/client/clientEntryPoint.js -i nodejs-physijs -o dist/bundle.js ",
+    "watchify": "watchify src/client/clientEntryPoint.js -i nodejs-physijs -o dist/bundle.js -v -d"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OpherV/spaaace.git"
   },
   "browserify": {
-    "transform": ["babelify"]
+    "transform": [
+      "babelify"
+    ]
   },
   "keywords": [
     "game",
