@@ -10,7 +10,7 @@
     "browserify": "^13.0.1",
     "express": "^4.14.0",
     "howler": "^2.0.2",
-    "incheon": "OpherV/Incheon.git",
+    "incheon": "OpherV/Incheon.git#develop",
     "pixi.js": "^4.2.3",
     "query-string": "^4.2.3",
     "socket.io": "^1.4.8"
