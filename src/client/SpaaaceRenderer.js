@@ -23,19 +23,15 @@ class SpaaaceRenderer extends Renderer {
 
     init() {
 
-        PIXI.loader.add([
-                ASSETPATH.ship,
-                ASSETPATH.missile
-            ])
-            .load(() => { this.initPixi(); });
-    }
-
-    initPixi() {
         this.stage = new PIXI.Container();
         this.renderer = PIXI.autoDetectRenderer(this.gameEngine.worldSettings.width, this.gameEngine.worldSettings.height);
         document.body.appendChild(this.renderer.view);
 
-        this.isReady = true;
+        PIXI.loader.add([
+                ASSETPATH.ship,
+                ASSETPATH.missile
+            ])
+            .load(() => {this.isReady = true;});
     }
 
     draw() {
