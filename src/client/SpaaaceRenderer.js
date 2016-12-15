@@ -47,8 +47,6 @@ class SpaaaceRenderer extends Renderer {
                 this.sprites[objId].x = this.gameEngine.world.objects[objId].x;
                 this.sprites[objId].y = this.gameEngine.world.objects[objId].y;
                 this.sprites[objId].rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
-            } else {
-                this.removeObject(this.sprites[objId]);
             }
         }
 
@@ -91,7 +89,7 @@ class SpaaaceRenderer extends Renderer {
     }
 
     removeObject(obj) {
-        obj.destroy();
+        this.sprites[obj.id].destroy();
         delete this.sprites[obj.id];
     }
 
