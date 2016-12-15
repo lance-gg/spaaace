@@ -11,7 +11,7 @@ const defaults = {
     clientIDSpace: 1000000,
     syncOptions: {
         sync: qsOptions.sync || 'extrapolate',
-        localObjBending: 0.0,
+        localObjBending: 0.6,
         remoteObjBending: 0.6
     }
 };
@@ -24,5 +24,3 @@ const gameEngine = new SpaaaceGameEngine(gameOptions);
 const clientEngine = new SpaaaceClientEngine(gameEngine, options);
 
 clientEngine.start();
-
-

@@ -20,20 +20,20 @@ class SpaaaceClientEngine extends ClientEngine {
         super.start();
 
         //  Game input
-        //keep a reference for key press state
+        // keep a reference for key press state
         this.pressedKeys = {};
 
-        //add special handler for space key
+        // add special handler for space key
         document.addEventListener('keydown', (e) => {
             if (e.keyCode=='32' && this.lastKeyPressed==null) {
-            this.sendInput('space');
+                this.sendInput('space');
             }
         });
 
-        document.addEventListener('keydown', (e) => { onKeyChange.call(this, e, true)});
-        document.addEventListener('keyup', (e) => { onKeyChange.call(this, e, false)});
+        document.addEventListener('keydown', (e) => { onKeyChange.call(this, e, true);});
+        document.addEventListener('keyup', (e) => { onKeyChange.call(this, e, false);});
 
-        //handle sounds
+        // handle sounds
         this.sounds = {
             missileHit: new Howl({ src: ['assets/audio/193429__unfa__projectile-hit.mp3'] }),
             fireMissile: new Howl({ src: ['assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
@@ -60,10 +60,10 @@ class SpaaaceClientEngine extends ClientEngine {
 
 }
 
-//private functions
+// private functions
 
 
-//keyboard handling
+// keyboard handling
 const keyCodeTable = {
     '32': 'space',
     '37': 'left',
@@ -75,9 +75,9 @@ function onKeyChange(e, isDown) {
     e = e || window.event;
 
     let keyName = keyCodeTable[e.keyCode];
-    if (keyName){
+    if (keyName) {
         this.pressedKeys[keyName] = isDown;
-        //keep reference to the last key pressed to avoid duplicates
+        // keep reference to the last key pressed to avoid duplicates
         this.lastKeyPressed = isDown?e.keyCode:null;
     }
 }
