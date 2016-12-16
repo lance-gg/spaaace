@@ -7,7 +7,7 @@
   "description": "An HTML5 multiplayer space shooter based on Incheon",
   "main": "main.js",
   "dependencies": {
-`    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
     "express": "^4.14.0",
     "howler": "^2.0.2",
     "incheon": "OpherV/Incheon.git#develop",
@@ -30,7 +30,7 @@
   "scripts": {
     "start": "node main.js",
     "postinstall": "webpack",
-    "dev": "webpack-dev-server"
+    "dev": "webpack --watch"
   },
   "repository": {
     "type": "git",
