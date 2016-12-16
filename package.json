@@ -7,19 +7,19 @@
   "description": "An HTML5 multiplayer space shooter based on Incheon",
   "main": "main.js",
   "dependencies": {
+    "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "express": "^4.14.0",
     "howler": "^2.0.2",
     "incheon": "OpherV/Incheon.git#develop",
     "pixi.js": "^4.2.3",
     "query-string": "^4.2.3",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.8",
+    "watchify": "^3.7.0"
   },
   "devDependencies": {
-    "babelify": "^7.3.0",
     "eslint": "^3.10.2",
-    "eslint-config-google": "^0.7.0",
-    "watchify": "^3.7.0"
+    "eslint-config-google": "^0.7.0"
   },
   "scripts": {
     "start": "node main.js",
