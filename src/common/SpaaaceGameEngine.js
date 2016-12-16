@@ -12,8 +12,8 @@ class SpaaaceGameEngine extends GameEngine {
 
         this.worldSettings = {
             worldWrap: true,
-            width: 800,
-            height: 600
+            width: 2000,
+            height: 2000
         };
 
         this.on('collisionStart', function(e) {
