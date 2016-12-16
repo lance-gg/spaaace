@@ -79,6 +79,7 @@ function onKeyChange(e, isDown) {
         this.pressedKeys[keyName] = isDown;
         // keep reference to the last key pressed to avoid duplicates
         this.lastKeyPressed = isDown?e.keyCode:null;
+        this.gameEngine.emit('client.keyChange',{ keyName, isDown });
     }
 }
 
