@@ -26,14 +26,11 @@ class ShipActor{
 
     renderStep(delta){
         this.thrustEmitter.update(delta * 0.001);
-        this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.sprite.rotation) * 10 ;
-        this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.sprite.rotation) * 10;
+        this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.sprite.rotation) * 4;
+        this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.sprite.rotation) * 4;
 
-        this.thrustEmitter.minsStartRotation  =  this.sprite.rotation * 180/Math.PI;
-        this.thrustEmitter.maxStartRotation =  this.sprite.rotation * 180/Math.PI  + 10;
-
-        this.thrustEmitter.minsStartRotation  =  90;
-        this.thrustEmitter.maxStartRotation =  90;
+        this.thrustEmitter.minStartRotation  =   this.sprite.rotation * 180/Math.PI + 180 - 1;
+        this.thrustEmitter.maxStartRotation =   this.sprite.rotation * 180/Math.PI  + 180 + 1;
 
     }
 
