@@ -9,13 +9,16 @@ module.exports = {
     module: {
         preLoaders: [
             { test: /\.json$/, exclude: /node_modules/, loader: 'json'},
-            { test: /(ServerEngine)/, exclude: /node_modules/, loader: "null" }
+            { test: /(ServerEngine)/, loader: "null" }
         ],
         loaders: [
             { test: /\.css$/, loader: "style!css" },
             {
                 test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
+                include: [
+                    path.resolve(__dirname, "src"),
+                    path.resolve(__dirname, "node_modules/incheon")
+                ],
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015']
