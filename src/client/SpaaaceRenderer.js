@@ -2,9 +2,10 @@
 
 const PIXI = require("pixi.js");
 const Renderer = require('incheon').render.Renderer;
+const Utils= require('./Utils');
+
 const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
-
 const ShipActor = require('./ShipActor');
 
 const ASSETPATH = {
@@ -77,6 +78,15 @@ class SpaaaceRenderer extends Renderer {
             }
         });
 
+        // debug
+        if ('showWorldBounds' in Utils.getUrlVars()) {
+            let graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFFFFFF);
+            graphics.alpha = 0.1;
+            graphics.drawRect(0, 0, this.gameEngine.worldSettings.width, this.gameEngine.worldSettings.height);
+            this.camera.addChild(graphics);
+        }
+
     }
 
     setRendererSize(){
@@ -101,6 +111,13 @@ class SpaaaceRenderer extends Renderer {
         let now = Date.now();
 
         if (!this.isReady) return; //assets might not have been loaded yet
+        let worldWidth = this.gameEngine.worldSettings.width;
+        let worldHeight = this.gameEngine.worldSettings.height;
+
+        let viewportSeesRightBound = this.camera.x < this.viewportWidth - worldWidth;
+        let viewportSeesLeftBound = this.camera.x > 0;
+        let viewportSeesTopBound = this.camera.y > 0;
+        let viewportSeesBottomBound = this.camera.y < this.viewportHeight - worldHeight;
 
         for (let objId of Object.keys(this.sprites)) {
             let objData = this.gameEngine.world.objects[objId];
@@ -111,9 +128,23 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
 
-                sprite.x = this.gameEngine.world.objects[objId].x;
-                sprite.y = this.gameEngine.world.objects[objId].y;
+                sprite.x = objData.x;
+                sprite.y = objData.y;
                 sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+
+                //make the wraparound seamless for objects other than the player ship
+                if (sprite != this.playerShip && viewportSeesLeftBound && objData.x  > this.viewportWidth - this.camera.x){
+                    sprite.x = objData.x - worldWidth;
+                }
+                if (sprite != this.playerShip && viewportSeesRightBound && objData.x  < -this.camera.x){
+                    sprite.x = objData.x + worldWidth;
+                }
+                if (sprite != this.playerShip && viewportSeesTopBound && objData.y  > this.viewportHeight - this.camera.y){
+                    sprite.y = objData.y - worldHeight;
+                }
+                if (sprite != this.playerShip && viewportSeesBottomBound && objData.y  < -this.camera.y){
+                    sprite.y = objData.y + worldHeight;
+                }
             }
         }
 
