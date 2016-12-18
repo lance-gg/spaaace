@@ -27,6 +27,10 @@ class SpaaaceRenderer extends Renderer {
         super(gameEngine);
         this.sprites = {};
         this.isReady = false;
+
+        //these define how many gameWorlds the player ship has "scrolled" through
+        this.bgPhaseX = 0;
+        this.bgPhaseY = 0;
     }
 
     init() {
@@ -128,6 +132,13 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
 
+                if (sprite == this.playerShip){
+                    if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++ }
+                    if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX-- }
+                    if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++ }
+                    if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY-- }
+                }
+
                 sprite.x = objData.x;
                 sprite.y = objData.y;
                 sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
@@ -151,17 +162,20 @@ class SpaaaceRenderer extends Renderer {
         this.elapsedTime = now;
 
         if(this.playerShip) {
-            this.bg1.tilePosition.x = -this.playerShip.x * 0.01;
-            this.bg1.tilePosition.y = -this.playerShip.y * 0.01;
+            let bgOffsetX = -this.bgPhaseX * worldWidth - this.playerShip.x;
+            let bgOffsetY = -this.bgPhaseY * worldHeight- this.playerShip.y;
 
-            this.bg2.tilePosition.x = -this.playerShip.x * 0.02;
-            this.bg2.tilePosition.y = -this.playerShip.y * 0.02;
+            this.bg1.tilePosition.x = bgOffsetX * 0.01;
+            this.bg1.tilePosition.y = bgOffsetY * 0.01;
 
-            this.bg3.tilePosition.x = -this.playerShip.x * 0.3;
-            this.bg3.tilePosition.y = -this.playerShip.y * 0.3;
+            this.bg2.tilePosition.x = bgOffsetX * 0.02;
+            this.bg2.tilePosition.y = bgOffsetY * 0.02;
 
-            this.bg4.tilePosition.x = -this.playerShip.x * 0.45;
-            this.bg4.tilePosition.y = -this.playerShip.y * 0.45;
+            this.bg3.tilePosition.x = bgOffsetX * 0.3;
+            this.bg3.tilePosition.y = bgOffsetY * 0.3;
+
+            this.bg4.tilePosition.x = bgOffsetX * 0.45;
+            this.bg4.tilePosition.y = bgOffsetY * 0.45;
 
             //always center the playership
             this.camera.x = this.viewportWidth/2 - this.playerShip.x;
