@@ -45,7 +45,13 @@ class ShipActor{
             ThrusterEmitterConfig
         );
 
-        this.thrustEmitter.emit = true;
+        this.thrustEmitter.emit = false;
+    }
+
+    destroy(){
+        this.thrustEmitter.destroy();
+        this.shipSprite.destroy();
+        this.sprite.destroy();
     }
 
 }

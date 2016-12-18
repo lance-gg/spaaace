@@ -225,7 +225,13 @@ class SpaaaceRenderer extends Renderer {
     }
 
     removeObject(obj) {
-        this.sprites[obj.id].destroy();
+        let sprite = this.sprites[obj.id];
+        if (sprite.actor){
+            sprite.actor.destroy();
+        }
+        else{
+            this.sprites[obj.id].destroy();
+        }
         delete this.sprites[obj.id];
     }
 
