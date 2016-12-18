@@ -38,6 +38,11 @@ class SpaaaceRenderer extends Renderer {
         this.viewportHeight = window.innerHeight;
 
         this.stage = new PIXI.Container();
+        this.layer1 = new PIXI.Container();
+        this.layer2 = new PIXI.Container();
+
+        this.stage.addChild(this.layer1, this.layer2);
+
         this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
         document.addEventListener("DOMContentLoaded", ()=>{ document.body.appendChild(this.renderer.view); });
 
@@ -55,6 +60,7 @@ class SpaaaceRenderer extends Renderer {
         window.addEventListener("resize", ()=>{ this.setRendererSize(); });
 
         this.camera = new PIXI.Container();
+        this.camera.addChild(this.layer1, this.layer2);
 
         //parallax background
         this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg1].texture,
@@ -190,7 +196,7 @@ class SpaaaceRenderer extends Renderer {
         let sprite;
 
         if (objData.class == Ship) {
-            let shipActor = new ShipActor(this.gameEngine, this.camera);
+            let shipActor = new ShipActor(this.gameEngine, this.layer1);
             sprite = shipActor.sprite;
             this.sprites[objData.id] = sprite;
             sprite.id = objData.id;
@@ -211,7 +217,7 @@ class SpaaaceRenderer extends Renderer {
         }
 
         sprite.position.set(objData.x, objData.y);
-        this.camera.addChild(sprite);
+        this.layer2.addChild(sprite);
 
         Object.assign(sprite, options);
 

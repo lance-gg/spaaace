@@ -5,9 +5,9 @@ const ThrusterEmitterConfig = require("./ThrusterEmitter.json");
 
 class ShipActor{
 
-    constructor(gameEngine, camera){
+    constructor(gameEngine, backLayer){
         this.gameEngine = gameEngine;
-        this.camera = camera;
+        this.backLayer = backLayer;
         this.sprite = new PIXI.Container();
         this.shipSprite = new PIXI.Sprite(PIXI.loader.resources["assets/ship1.png"].texture);
 
@@ -29,20 +29,23 @@ class ShipActor{
         this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.sprite.rotation) * 4;
         this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.sprite.rotation) * 4;
 
-        this.thrustEmitter.minStartRotation  =   this.sprite.rotation * 180/Math.PI + 180 - 1;
-        this.thrustEmitter.maxStartRotation =   this.sprite.rotation * 180/Math.PI  + 180 + 1;
+        this.thrustEmitter.minStartRotation  = this.sprite.rotation * 180/Math.PI + 180 - 1;
+        this.thrustEmitter.maxStartRotation = this.sprite.rotation * 180/Math.PI  + 180 + 1;
+
+        // this.thrustEmitter.acceleration.x  = -Math.cos(this.sprite.rotation) * 100;
+        // this.thrustEmitter.acceleration.y = Math.sin(this.sprite.rotation) * 100;
 
     }
 
     addThrustEmitter(){
         this.thrustEmitter = new PIXI.particles.Emitter(
-            this.camera,
+            this.backLayer,
             // The collection of particle images to use
             [PIXI.loader.resources["assets/smokeparticle.png"].texture],
             ThrusterEmitterConfig
         );
 
-        this.thrustEmitter.emit = false;
+        this.thrustEmitter.emit = true;
     }
 
 }
