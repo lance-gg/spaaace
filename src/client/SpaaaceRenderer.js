@@ -89,7 +89,7 @@ class SpaaaceRenderer extends Renderer {
         });
 
         // debug
-        if ('showWorldBounds' in Utils.getUrlVars()) {
+        if ('showworldbounds' in Utils.getUrlVars()) {
             let graphics = new PIXI.Graphics();
             graphics.beginFill(0xFFFFFF);
             graphics.alpha = 0.1;
@@ -165,17 +165,15 @@ class SpaaaceRenderer extends Renderer {
             }
         }
 
-        this.elapsedTime = now;
-
         if(this.playerShip) {
-            let bgOffsetX = -this.bgPhaseX * worldWidth - this.playerShip.x;
-            let bgOffsetY = -this.bgPhaseY * worldHeight- this.playerShip.y;
+            let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+            let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
 
             this.bg1.tilePosition.x = bgOffsetX * 0.01;
             this.bg1.tilePosition.y = bgOffsetY * 0.01;
 
-            this.bg2.tilePosition.x = bgOffsetX * 0.02;
-            this.bg2.tilePosition.y = bgOffsetY * 0.02;
+            this.bg2.tilePosition.x = bgOffsetX * 0.04;
+            this.bg2.tilePosition.y = bgOffsetY * 0.04;
 
             this.bg3.tilePosition.x = bgOffsetX * 0.3;
             this.bg3.tilePosition.y = bgOffsetY * 0.3;
@@ -183,10 +181,22 @@ class SpaaaceRenderer extends Renderer {
             this.bg4.tilePosition.x = bgOffsetX * 0.45;
             this.bg4.tilePosition.y = bgOffsetY * 0.45;
 
-            //always center the playership
-            this.camera.x = this.viewportWidth/2 - this.playerShip.x;
-            this.camera.y = this.viewportHeight/2 -this.playerShip.y;
+            if ('cameraroam' in Utils.getUrlVars()) {
+                //always center the playership, do this smoothly
+                let targetCamX = this.viewportWidth / 2 - this.playerShip.x;
+                let targetCamY = this.viewportHeight / 2 - this.playerShip.y;
+                let xCamDelta = (targetCamX - this.camera.x);
+                let yCamDelta = (targetCamY - this.camera.y);
+                this.camera.x = Math.round(this.camera.x + xCamDelta / 50);
+                this.camera.y = Math.round(this.camera.y + yCamDelta / 50);
+            }
+            else{
+                this.camera.x = this.viewportWidth/2 - this.playerShip.x;
+                this.camera.y = this.viewportHeight/2 - this.playerShip.y;
+            }
         }
+
+        this.elapsedTime = now;
 
         //Render the stage
         this.renderer.render(this.stage);
