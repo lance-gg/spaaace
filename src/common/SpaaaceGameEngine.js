@@ -60,17 +60,11 @@ class SpaaaceGameEngine extends GameEngine {
         }
     };
 
-    makeShip(playerId) {
-        if (playerId in this.world.objects) {
-            console.log('warning, object with id ', playerId, ' already exists');
-            return null;
-        }
-
+    makeShip() {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        let ship = new Ship(++this.world.idCount, newShipX, newShipY);
-        ship.playerId = playerId;
+        let ship = new Ship(++this.world.idCount, this, newShipX, newShipY);
         this.addObjectToWorld(ship);
 
         return ship;
