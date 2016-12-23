@@ -83,8 +83,10 @@ class SpaaaceRenderer extends Renderer {
 
         //events
         this.gameEngine.on('client.keyChange', (e)=>{
-            if (e.keyName == "up") {
-                this.playerShip.actor.thrustEmitter.emit = e.isDown;
+            if (this.playerShip) {
+                if (e.keyName == "up") {
+                    this.playerShip.actor.thrustEmitter.emit = e.isDown;
+                }
             }
         });
 
@@ -253,6 +255,10 @@ class SpaaaceRenderer extends Renderer {
     }
 
     removeObject(obj) {
+        if (this.playerShip && obj.id == this.playerShip.id) {
+            this.playerShip = null;
+        }
+
         let sprite = this.sprites[obj.id];
         if (sprite.actor){
             //removal "takes time"

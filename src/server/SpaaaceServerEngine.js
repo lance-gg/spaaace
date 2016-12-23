@@ -22,8 +22,8 @@ class SpaaaceServerEngine extends ServerEngine {
         bot3.attachAI();
 
         this.gameEngine.on('missileHit', (e)=>{
+            this.gameEngine.removeObjectFromWorld(e.ship.id);
             if(e.ship.isBot){
-                this.gameEngine.removeObjectFromWorld(e.ship.id);
                 this.makeBot();
             }
         });
