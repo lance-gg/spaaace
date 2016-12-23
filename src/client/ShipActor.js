@@ -1,6 +1,7 @@
 const PIXI = require("pixi.js");
 const PixiParticles = require("pixi-particles");
 const ThrusterEmitterConfig = require("./ThrusterEmitter.json");
+const ExplosionEmitterConfig = require("./ExplosionEmitter.json");
 
 
 class ShipActor{
@@ -25,33 +26,52 @@ class ShipActor{
     }
 
     renderStep(delta){
-        this.thrustEmitter.update(delta * 0.001);
-        this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.sprite.rotation) * 4;
-        this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.sprite.rotation) * 4;
+        if (this.thrustEmitter) {
+            this.thrustEmitter.update(delta * 0.001);
 
-        this.thrustEmitter.minStartRotation  = this.sprite.rotation * 180/Math.PI + 180 - 1;
-        this.thrustEmitter.maxStartRotation = this.sprite.rotation * 180/Math.PI  + 180 + 1;
+            this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.sprite.rotation) * 4;
+            this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.sprite.rotation) * 4;
 
-        // this.thrustEmitter.acceleration.x  = -Math.cos(this.sprite.rotation) * 100;
-        // this.thrustEmitter.acceleration.y = Math.sin(this.sprite.rotation) * 100;
+            this.thrustEmitter.minStartRotation = this.sprite.rotation * 180 / Math.PI + 180 - 1;
+            this.thrustEmitter.maxStartRotation = this.sprite.rotation * 180 / Math.PI + 180 + 1;
+        }
+        if (this.explosionEmitter){
+            this.explosionEmitter.update(delta * 0.001);
+        }
 
     }
 
     addThrustEmitter(){
         this.thrustEmitter = new PIXI.particles.Emitter(
             this.backLayer,
-            // The collection of particle images to use
             [PIXI.loader.resources["assets/smokeparticle.png"].texture],
             ThrusterEmitterConfig
         );
-
         this.thrustEmitter.emit = false;
+
+        this.explosionEmitter = new PIXI.particles.Emitter(
+            this.sprite,
+            [PIXI.loader.resources["assets/smokeparticle.png"].texture],
+            ExplosionEmitterConfig
+        );
+
+        this.explosionEmitter.emit = false;
     }
 
     destroy(){
-        this.thrustEmitter.destroy();
-        this.shipSprite.destroy();
-        this.sprite.destroy();
+        return new Promise((resolve) =>{
+            this.explosionEmitter.emit = true;
+
+            this.thrustEmitter.destroy();
+            this.thrustEmitter = null;
+            this.shipSprite.destroy();
+
+            setTimeout(()=>{
+                this.sprite.destroy();
+                this.explosionEmitter.destroy();
+                resolve();
+            },3000);
+        });
     }
 
 }

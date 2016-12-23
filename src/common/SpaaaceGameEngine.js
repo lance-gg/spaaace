@@ -27,7 +27,6 @@ class SpaaaceGameEngine extends GameEngine {
             if (missile.playerId !== ship.playerId) {
                 that.destroyMissile(missile.id);
                 that.emit('missileHit', { missile, ship });
-                console.log(`ouch.  that hurts.`);
             }
         });
     };

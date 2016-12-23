@@ -20,6 +20,13 @@ class SpaaaceServerEngine extends ServerEngine {
 
         let bot3 = this.gameEngine.makeShip();
         bot3.attachAI();
+
+        this.gameEngine.on('missileHit', (e)=>{
+            if(e.ship.isBot){
+                this.gameEngine.removeObjectFromWorld(e.ship.id);
+                this.makeBot();
+            }
+        });
     };
 
     onPlayerConnected(socket) {
@@ -39,6 +46,11 @@ class SpaaaceServerEngine extends ServerEngine {
             }
         }
     };
+
+    makeBot(){
+        let bot = this.gameEngine.makeShip();
+        bot.attachAI();
+    }
 }
 
 module.exports = SpaaaceServerEngine;

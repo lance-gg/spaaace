@@ -131,12 +131,9 @@ class SpaaaceRenderer extends Renderer {
 
         for (let objId of Object.keys(this.sprites)) {
             let objData = this.gameEngine.world.objects[objId];
+            let sprite = this.sprites[objId];
+
             if (objData) {
-                let sprite = this.sprites[objId];
-                //object is either a Pixi sprite or an Actor. Actors have renderSteps
-                if (sprite.actor && sprite.actor.renderStep){
-                    sprite.actor.renderStep(now - this.elapsedTime);
-                }
 
                 if (sprite == this.playerShip){
                     if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++ }
@@ -161,6 +158,13 @@ class SpaaaceRenderer extends Renderer {
                 }
                 if (sprite != this.playerShip && viewportSeesBottomBound && objData.y  < -this.camera.y){
                     sprite.y = objData.y + worldHeight;
+                }
+            }
+
+            if (sprite) {
+                //object is either a Pixi sprite or an Actor. Actors have renderSteps
+                if (sprite.actor && sprite.actor.renderStep) {
+                    sprite.actor.renderStep(now - this.elapsedTime);
                 }
             }
         }
@@ -251,12 +255,16 @@ class SpaaaceRenderer extends Renderer {
     removeObject(obj) {
         let sprite = this.sprites[obj.id];
         if (sprite.actor){
-            sprite.actor.destroy();
+            //removal "takes time"
+            sprite.actor.destroy().then(()=>{
+                console.log("deleted sprite");
+                delete this.sprites[obj.id];
+            });
         }
         else{
             this.sprites[obj.id].destroy();
+            delete this.sprites[obj.id];
         }
-        delete this.sprites[obj.id];
     }
 
 }
