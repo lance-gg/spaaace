@@ -166,8 +166,11 @@ class SpaaaceRenderer extends Renderer {
         }
 
         if(this.playerShip) {
-            let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
-            let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+            let bgOffsetX = -this.bgPhaseX * worldWidth - this.playerShip.x;
+            let bgOffsetY = -this.bgPhaseY * worldHeight - this.playerShip.y;
+
+            // let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+            // let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
 
             this.bg1.tilePosition.x = bgOffsetX * 0.01;
             this.bg1.tilePosition.y = bgOffsetY * 0.01;
@@ -187,8 +190,19 @@ class SpaaaceRenderer extends Renderer {
                 let targetCamY = this.viewportHeight / 2 - this.playerShip.y;
                 let xCamDelta = (targetCamX - this.camera.x);
                 let yCamDelta = (targetCamY - this.camera.y);
-                this.camera.x = Math.round(this.camera.x + xCamDelta / 50);
-                this.camera.y = Math.round(this.camera.y + yCamDelta / 50);
+                console.log(xCamDelta, yCamDelta);
+
+                if (xCamDelta > worldWidth/2){
+                    this.camera.x = this.camera.x + worldWidth + xCamDelta / 50;
+                }
+                if (xCamDelta < -worldWidth/2){
+                    this.camera.x = this.camera.x - worldWidth + xCamDelta / 50;
+                }
+                else{
+                    this.camera.x = this.camera.x + xCamDelta / 50;
+                }
+
+                this.camera.y = this.camera.y + yCamDelta / 50;
             }
             else{
                 this.camera.x = this.viewportWidth/2 - this.playerShip.x;
@@ -196,7 +210,7 @@ class SpaaaceRenderer extends Renderer {
             }
         }
 
-        this.elapsedTime = now;
+         this.elapsedTime = now;
 
         //Render the stage
         this.renderer.render(this.stage);
