@@ -25,7 +25,7 @@ class SpaaaceClientEngine extends ClientEngine {
 
         // add special handler for space key
         document.addEventListener('keydown', (e) => {
-            if (e.keyCode=='32' && this.pressedKeys['space']==false) {
+            if (e.keyCode=='32' && !this.pressedKeys['space']) {
                 this.sendInput('space');
             }
         });
