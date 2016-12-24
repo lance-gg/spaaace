@@ -29,7 +29,20 @@ class SpaaaceGameEngine extends GameEngine {
                 that.emit('missileHit', { missile, ship });
             }
         });
+
+        this.on('postStep', this.reduceVisibleThrust.bind(this));
     };
+
+    reduceVisibleThrust(postStepEv) {
+        if (postStepEv.isReenact)
+            return;
+
+        for (let objId of Object.keys(this.world.objects)) {
+            let o = this.world.objects[objId];
+            if (Number.isInteger(o.showThrust) && o.showThrust >= 1)
+                o.showThrust--;
+        }
+    }
 
     processInput(inputData, playerId) {
 
@@ -48,6 +61,7 @@ class SpaaaceGameEngine extends GameEngine {
         if (playerShip) {
             if (inputData.input == 'up') {
                 playerShip.isAccelerating = true;
+                playerShip.showThrust = 5; // show thrust for next steps.
             } else if (inputData.input == 'right') {
                 playerShip.isRotatingRight = true;
             } else if (inputData.input == 'left') {

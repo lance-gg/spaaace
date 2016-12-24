@@ -1,6 +1,6 @@
 'use strict';
 
-const PIXI = require("pixi.js");
+const PIXI = require('pixi.js');
 const Renderer = require('incheon').render.Renderer;
 const Utils= require('./Utils');
 
@@ -9,13 +9,13 @@ const Ship = require('../common/Ship');
 const ShipActor = require('./ShipActor');
 
 const ASSETPATH = {
-    ship: "assets/ship1.png",
-    missile: "assets/shot.png",
-    bg1: "assets/space3.png",
-    bg2: "assets/space2.png",
-    bg3: "assets/clouds2.png",
-    bg4: "assets/clouds1.png",
-    smokeParticle: "assets/smokeparticle.png"
+    ship: 'assets/ship1.png',
+    missile: 'assets/shot.png',
+    bg1: 'assets/space3.png',
+    bg2: 'assets/space2.png',
+    bg3: 'assets/clouds2.png',
+    bg4: 'assets/clouds1.png',
+    smokeParticle: 'assets/smokeparticle.png'
 };
 
 /**
@@ -28,7 +28,7 @@ class SpaaaceRenderer extends Renderer {
         this.sprites = {};
         this.isReady = false;
 
-        //these define how many gameWorlds the player ship has "scrolled" through
+        // these define how many gameWorlds the player ship has "scrolled" through
         this.bgPhaseX = 0;
         this.bgPhaseY = 0;
     }
@@ -44,9 +44,9 @@ class SpaaaceRenderer extends Renderer {
         this.stage.addChild(this.layer1, this.layer2);
 
         this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
-        document.addEventListener("DOMContentLoaded", ()=>{ document.body.appendChild(this.renderer.view); });
+        document.addEventListener('DOMContentLoaded', ()=>{ document.body.appendChild(this.renderer.view); });
 
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject)=>{
             PIXI.loader.add(Object.values(ASSETPATH))
             .load(() => {
                 this.isReady = true;
@@ -56,21 +56,21 @@ class SpaaaceRenderer extends Renderer {
         });
     }
 
-    setupStage(){
-        window.addEventListener("resize", ()=>{ this.setRendererSize(); });
+    setupStage() {
+        window.addEventListener('resize', ()=>{ this.setRendererSize(); });
 
         this.camera = new PIXI.Container();
         this.camera.addChild(this.layer1, this.layer2);
 
-        //parallax background
+        // parallax background
         this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg1].texture,
-                this.viewportWidth,this.viewportHeight);
+                this.viewportWidth, this.viewportHeight);
         this.bg2 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg2].texture,
-            this.viewportWidth,this.viewportHeight);
+            this.viewportWidth, this.viewportHeight);
         this.bg3 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg3].texture,
-            this.viewportWidth,this.viewportHeight);
+            this.viewportWidth, this.viewportHeight);
         this.bg4 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg4].texture,
-            this.viewportWidth,this.viewportHeight);
+            this.viewportWidth, this.viewportHeight);
 
         this.bg3.blendMode = PIXI.BLEND_MODES.ADD;
         this.bg4.blendMode = PIXI.BLEND_MODES.ADD;
@@ -81,10 +81,10 @@ class SpaaaceRenderer extends Renderer {
 
         this.elapsedTime = Date.now();
 
-        //events
+        // events
         this.gameEngine.on('client.keyChange', (e)=>{
             if (this.playerShip) {
-                if (e.keyName == "up") {
+                if (e.keyName == 'up') {
                     this.playerShip.actor.thrustEmitter.emit = e.isDown;
                 }
             }
@@ -101,7 +101,7 @@ class SpaaaceRenderer extends Renderer {
 
     }
 
-    setRendererSize(){
+    setRendererSize() {
         this.viewportWidth = window.innerWidth;
         this.viewportHeight = window.innerHeight;
 
@@ -122,7 +122,7 @@ class SpaaaceRenderer extends Renderer {
 
         let now = Date.now();
 
-        if (!this.isReady) return; //assets might not have been loaded yet
+        if (!this.isReady) return; // assets might not have been loaded yet
         let worldWidth = this.gameEngine.worldSettings.width;
         let worldHeight = this.gameEngine.worldSettings.height;
 
@@ -137,34 +137,39 @@ class SpaaaceRenderer extends Renderer {
 
             if (objData) {
 
-                if (sprite == this.playerShip){
-                    if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++ }
-                    if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX-- }
-                    if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++ }
-                    if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY-- }
+                // if the object requests a "showThrust" then invoke it in the actor
+                if ((sprite !== this.playerShip) && sprite.actor) {
+                    sprite.actor.thrustEmitter.emit = !!objData.showThrust;
+                }
+
+                if (sprite == this.playerShip) {
+                    if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++; }
+                    if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX--; }
+                    if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++; }
+                    if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY--; }
                 }
 
                 sprite.x = objData.x;
                 sprite.y = objData.y;
                 sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
 
-                //make the wraparound seamless for objects other than the player ship
-                if (sprite != this.playerShip && viewportSeesLeftBound && objData.x  > this.viewportWidth - this.camera.x){
+                // make the wraparound seamless for objects other than the player ship
+                if (sprite != this.playerShip && viewportSeesLeftBound && objData.x > this.viewportWidth - this.camera.x) {
                     sprite.x = objData.x - worldWidth;
                 }
-                if (sprite != this.playerShip && viewportSeesRightBound && objData.x  < -this.camera.x){
+                if (sprite != this.playerShip && viewportSeesRightBound && objData.x < -this.camera.x) {
                     sprite.x = objData.x + worldWidth;
                 }
-                if (sprite != this.playerShip && viewportSeesTopBound && objData.y  > this.viewportHeight - this.camera.y){
+                if (sprite != this.playerShip && viewportSeesTopBound && objData.y > this.viewportHeight - this.camera.y) {
                     sprite.y = objData.y - worldHeight;
                 }
-                if (sprite != this.playerShip && viewportSeesBottomBound && objData.y  < -this.camera.y){
+                if (sprite != this.playerShip && viewportSeesBottomBound && objData.y < -this.camera.y) {
                     sprite.y = objData.y + worldHeight;
                 }
             }
 
             if (sprite) {
-                //object is either a Pixi sprite or an Actor. Actors have renderSteps
+                // object is either a Pixi sprite or an Actor. Actors have renderSteps
                 if (sprite.actor && sprite.actor.renderStep) {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
@@ -191,34 +196,32 @@ class SpaaaceRenderer extends Renderer {
             this.bg4.tilePosition.y = bgOffsetY * 0.45;
 
             if ('cameraroam' in Utils.getUrlVars()) {
-                //always center the playership, do this smoothly
+                // always center the playership, do this smoothly
                 let targetCamX = this.viewportWidth / 2 - this.playerShip.x;
                 let targetCamY = this.viewportHeight / 2 - this.playerShip.y;
                 let xCamDelta = (targetCamX - this.camera.x);
                 let yCamDelta = (targetCamY - this.camera.y);
                 console.log(xCamDelta, yCamDelta);
 
-                if (xCamDelta > worldWidth/2){
+                if (xCamDelta > worldWidth/2) {
                     this.camera.x = this.camera.x + worldWidth + xCamDelta / 50;
                 }
-                if (xCamDelta < -worldWidth/2){
+                if (xCamDelta < -worldWidth/2) {
                     this.camera.x = this.camera.x - worldWidth + xCamDelta / 50;
-                }
-                else{
+                } else{
                     this.camera.x = this.camera.x + xCamDelta / 50;
                 }
 
                 this.camera.y = this.camera.y + yCamDelta / 50;
-            }
-            else{
+            } else{
                 this.camera.x = this.viewportWidth/2 - this.playerShip.x;
                 this.camera.y = this.viewportHeight/2 - this.playerShip.y;
             }
         }
 
-         this.elapsedTime = now;
+        this.elapsedTime = now;
 
-        //Render the stage
+        // Render the stage
         this.renderer.render(this.stage);
     }
 
@@ -232,8 +235,8 @@ class SpaaaceRenderer extends Renderer {
             sprite.id = objData.id;
 
             if (objData.isPlayerControlled) {
-                this.playerShip = sprite; //save reference to the player ship
-                sprite.actor.shipSprite.tint = 0XFF00FF; //color  player ship
+                this.playerShip = sprite; // save reference to the player ship
+                sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
             }
 
         } else if (objData.class == Missile) {
@@ -260,14 +263,13 @@ class SpaaaceRenderer extends Renderer {
         }
 
         let sprite = this.sprites[obj.id];
-        if (sprite.actor){
-            //removal "takes time"
+        if (sprite.actor) {
+            // removal "takes time"
             sprite.actor.destroy().then(()=>{
-                console.log("deleted sprite");
+                console.log('deleted sprite');
                 delete this.sprites[obj.id];
             });
-        }
-        else{
+        } else{
             this.sprites[obj.id].destroy();
             delete this.sprites[obj.id];
         }
