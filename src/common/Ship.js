@@ -63,6 +63,7 @@ class Ship extends DynamicObject {
                 this.isRotatingLeft = true;
             } else {
                 this.isAccelerating = true;
+                this.showThrust = 5;
             }
 
         }
