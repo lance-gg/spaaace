@@ -44,7 +44,9 @@ class SpaaaceRenderer extends Renderer {
         this.stage.addChild(this.layer1, this.layer2);
 
         this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
-        document.addEventListener('DOMContentLoaded', ()=>{ document.body.appendChild(this.renderer.view); });
+        document.addEventListener('DOMContentLoaded', ()=>{
+            document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+        });
 
         return new Promise((resolve, reject)=>{
             PIXI.loader.add(Object.values(ASSETPATH))
@@ -78,6 +80,9 @@ class SpaaaceRenderer extends Renderer {
 
         this.stage.addChild(this.bg1, this.bg2, this.bg3, this.bg4);
         this.stage.addChild(this.camera);
+
+        // this.debug= new PIXI.Graphics();
+        // this.stage.addChild(this.debug);
 
         this.elapsedTime = Date.now();
 
@@ -147,6 +152,10 @@ class SpaaaceRenderer extends Renderer {
                     if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX--; }
                     if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++; }
                     if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY--; }
+                }
+
+                if (objData.class == Ship && sprite != this.playerShip) {
+                    this.updateOffscreenIndicator(objData);
                 }
 
                 sprite.x = objData.x;
@@ -238,6 +247,9 @@ class SpaaaceRenderer extends Renderer {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
             }
+            else {
+                this.addOffscreenIndicator(objData);
+            }
 
         } else if (objData.class == Missile) {
             sprite = new PIXI.Sprite(PIXI.loader.resources[ASSETPATH.missile].texture);
@@ -262,6 +274,11 @@ class SpaaaceRenderer extends Renderer {
             this.playerShip = null;
         }
 
+        if (obj.class == Ship && this.playerShip && obj.id != this.playerShip.id) {
+            this.removeOffscreenIndicator(obj);
+
+        }
+
         let sprite = this.sprites[obj.id];
         if (sprite.actor) {
             // removal "takes time"
@@ -273,6 +290,61 @@ class SpaaaceRenderer extends Renderer {
             this.sprites[obj.id].destroy();
             delete this.sprites[obj.id];
         }
+    }
+
+    addOffscreenIndicator(objData) {
+        let container = document.querySelector('#offscreenIndicatorContainer');
+        let indicatorEl = document.createElement('div');
+        indicatorEl.setAttribute('id','offscreenIndicator'+objData.id);
+        indicatorEl.classList.add('offscreenIndicator');
+        container.appendChild(indicatorEl);
+    }
+
+    updateOffscreenIndicator(objData){
+        let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
+        let slope = (objData.y - playerShipObj.y)/(objData.x - playerShipObj.x);
+        let b = this.viewportHeight/2;
+
+        // this.debug.clear();
+        // this.debug.lineStyle(1, 0xFF0000 ,1);
+        // this.debug.moveTo(this.viewportWidth/2,this.viewportHeight/2);
+        // this.debug.lineTo(this.viewportWidth/2 + b/-slope, 0);
+        // this.debug.endFill();
+
+        let padding = 30;
+        let indicatorPos = { x: 0, y: 0};
+
+        if (objData.y < playerShipObj.y - this.viewportHeight/2) {
+            indicatorPos.x = this.viewportWidth/2 + (padding - b)/slope;
+            indicatorPos.y = padding;
+        } else if (objData.y > playerShipObj.y + this.viewportHeight/2) {
+            indicatorPos.x = this.viewportWidth/2 + (this.viewportHeight - padding - b)/slope;
+            indicatorPos.y = this.viewportHeight - padding;
+        }
+
+        if (objData.x < playerShipObj.x - this.viewportWidth/2) {
+            indicatorPos.x = padding;
+            indicatorPos.y = slope * (-this.viewportWidth/2 + padding) + b;
+        } else if (objData.x > playerShipObj.x + this.viewportWidth/2) {
+            indicatorPos.x = this.viewportWidth - padding;
+            indicatorPos.y = slope * (this.viewportWidth/2 - padding) + b;
+        }
+
+        if (indicatorPos.x == 0 && indicatorPos.y == 0){
+            indicatorEl.style.opacity = 0;
+        }
+        else{
+            indicatorEl.style.opacity = 1;
+            let rotation = Math.atan2(objData.y - playerShipObj.y,objData.x - playerShipObj.x);
+            rotation = rotation * 180/Math.PI; //rad2deg
+            indicatorEl.style.transform = `translateX(${indicatorPos.x}px) translateY(${indicatorPos.y}px) rotate(${rotation}deg) `;
+        }
+    }
+
+    removeOffscreenIndicator(objData) {
+        let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        indicatorEl.parentNode.removeChild(indicatorEl);
     }
 
 }
