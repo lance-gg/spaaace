@@ -20,7 +20,7 @@ const SpaaaceGameEngine = require(path.join(__dirname, 'src/common/SpaaaceGameEn
 const SimplePhysicsEngine = require('incheon').physics.SimplePhysicsEngine;
 
 // Game Instances
-const physicsEngine = new SimplePhysicsEngine({ collisionOptions: { COLLISION_DISTANCE: 40 } } );
+const physicsEngine = new SimplePhysicsEngine({ collisionOptions: { COLLISION_DISTANCE: 50 } } );
 const gameEngine = new SpaaaceGameEngine({ physicsEngine });
 const serverEngine = new SpaaaceServerEngine(io, gameEngine, { debug: {} });
 

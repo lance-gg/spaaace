@@ -301,6 +301,9 @@ class SpaaaceRenderer extends Renderer {
     }
 
     updateOffscreenIndicator(objData){
+        //player ship might have been destroyed
+        if (!this.playerShip) return;
+
         let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
         let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
         let slope = (objData.y - playerShipObj.y)/(objData.x - playerShipObj.x);

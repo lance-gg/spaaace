@@ -3,12 +3,19 @@
 const GameEngine = require('incheon').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
+const Timer = require('./Timer');
 
 class SpaaaceGameEngine extends GameEngine {
 
     start() {
         let that = this;
         super.start();
+
+        this.timer = new Timer();
+        this.timer.play();
+        this.on('server.postStep', ()=>{
+            this.timer.tick();
+        });
 
         this.worldSettings = {
             worldWrap: true,

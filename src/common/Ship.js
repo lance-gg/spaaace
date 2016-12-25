@@ -29,6 +29,12 @@ class Ship extends DynamicObject {
         this.showThrust = 0;
     };
 
+    destroy(){
+        if (this.fireLoop){
+            this.fireLoop.destroy();
+        }
+    }
+
     get maxSpeed() { return 5.0; }
 
     attachAI() {
@@ -36,6 +42,18 @@ class Ship extends DynamicObject {
         this.gameEngine.on('preStep', ()=>{
             this.steer();
         });
+
+        let fireLoopTime = Math.round(250 + Math.random() * 100);
+        this.fireLoop = this.gameEngine.timer.loop(fireLoopTime,()=>{
+            if (this.target && this.distanceToTarget(this.target) < 400) {
+                this.gameEngine.makeMissile(this);
+            }
+        });
+    }
+
+    distanceToTarget(target) {
+        let dx = this.x - target.x, dy = this.y - target.y;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     steer() {
@@ -43,8 +61,7 @@ class Ship extends DynamicObject {
         let closestDistance = Infinity;
         for (let objId of Object.keys(this.gameEngine.world.objects)) {
             let obj = this.gameEngine.world.objects[objId];
-            let dx = this.x - obj.x, dy = this.y - obj.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
+            let distance = this.distanceToTarget(obj);
             if (obj != this && distance < closestDistance) {
                 closestTarget = obj;
                 closestDistance = distance;
