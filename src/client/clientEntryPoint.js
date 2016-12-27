@@ -6,7 +6,7 @@ const SimplePhysicsEngine = require('incheon').physics.SimplePhysicsEngine;
 // default options, overwritten by query-string options
 // is sent to both game engine and client engine
 const defaults = {
-    traceLevel: 1,
+    traceLevel: 1000,
     delayInputCount: 3,
     clientIDSpace: 1000000,
     syncOptions: {
