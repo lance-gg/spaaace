@@ -1,4 +1,6 @@
-class Timer{
+'use strict';
+
+class Timer {
 
     constructor() {
         this.currentTime = 0;
@@ -95,9 +97,9 @@ class TimerEvent{
     };
 }
 
-TimerEvent.TYPES={
-    repeat: "repeat",
-    single: "single"
+TimerEvent.TYPES = {
+    repeat: 'repeat',
+    single: 'single'
 };
 
 module.exports = Timer;
