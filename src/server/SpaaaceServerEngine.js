@@ -31,8 +31,16 @@ class SpaaaceServerEngine extends ServerEngine {
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
-        let ship = this.gameEngine.makeShip();
-        ship.playerId = socket.playerId;
+
+        let makePlayerShip = ()=>{
+            let ship = this.gameEngine.makeShip();
+            ship.playerId = socket.playerId;
+        };
+
+        makePlayerShip();
+
+        // handle client restart requests
+        socket.on('requestRestart', makePlayerShip);
     };
 
     onPlayerDisconnected(socketId, playerId) {

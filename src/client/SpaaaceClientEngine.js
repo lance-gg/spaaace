@@ -1,6 +1,7 @@
 const Howler = require('howler');
 const ClientEngine = require('incheon').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
+const Ship = require('../common/Ship');
 
 class SpaaaceClientEngine extends ClientEngine {
     constructor(gameEngine, options) {
@@ -32,6 +33,23 @@ class SpaaaceClientEngine extends ClientEngine {
 
         document.addEventListener('keydown', (e) => { onKeyChange.call(this, e, true);});
         document.addEventListener('keyup', (e) => { onKeyChange.call(this, e, false);});
+
+
+        // handle gui for game condition
+        this.gameEngine.on('objectDestroyed',(obj)=>{
+            if (obj.class == Ship && obj.isPlayerControlled){
+                document.body.classList.add('lostGame');
+                document.querySelector('#tryAgain').disabled = false;
+            }
+        });
+
+        this.gameEngine.once('renderer.ready', ()=>{
+            // click event for "try again" button
+            document.querySelector('#tryAgain').addEventListener('click', ()=>{
+                document.querySelector('#tryAgain').disabled = true;
+                this.socket.emit('requestRestart');
+            });
+        });
 
         // handle sounds
         this.sounds = {

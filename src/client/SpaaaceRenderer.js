@@ -53,6 +53,7 @@ class SpaaaceRenderer extends Renderer {
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
+                this.gameEngine.emit('renderer.ready');
                 resolve();
             });
         });
@@ -246,6 +247,7 @@ class SpaaaceRenderer extends Renderer {
             if (objData.isPlayerControlled) {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
+                document.body.classList.remove("lostGame");
             }
             else {
                 this.addOffscreenIndicator(objData);
@@ -305,6 +307,10 @@ class SpaaaceRenderer extends Renderer {
         if (!this.playerShip) return;
 
         let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        if (!indicatorEl) {
+            console.error(`No indicatorEl found with id ${objData.id}`);
+            return;
+        }
         let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
         let slope = (objData.y - playerShipObj.y)/(objData.x - playerShipObj.x);
         let b = this.viewportHeight/2;
