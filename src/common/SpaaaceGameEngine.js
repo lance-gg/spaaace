@@ -13,7 +13,7 @@ class SpaaaceGameEngine extends GameEngine {
 
         this.timer = new Timer();
         this.timer.play();
-        this.on('server.postStep', ()=>{
+        this.on('server__postStep', ()=>{
             this.timer.tick();
         });
 

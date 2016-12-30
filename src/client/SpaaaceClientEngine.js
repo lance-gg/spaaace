@@ -13,7 +13,7 @@ class SpaaaceClientEngine extends ClientEngine {
         this.serializer.registerClass(require('../common/Ship'));
         this.serializer.registerClass(require('../common/Missile'));
 
-        this.gameEngine.on('client.preStep', this.preStep.bind(this));
+        this.gameEngine.on('client__preStep', this.preStep.bind(this));
     }
 
     start() {
