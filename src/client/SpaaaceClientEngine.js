@@ -51,18 +51,14 @@ class SpaaaceClientEngine extends ClientEngine {
             });
         });
 
+        // allow a custom path for sounds
+        let assetPath = this.options.assetPath?this.options.assetPath:'';
+
         // handle sounds
         this.sounds = {
-            missileHit: new Howl({ src: ['assets/audio/193429__unfa__projectile-hit.mp3'] }),
-            fireMissile: new Howl({ src: ['assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
+            missileHit: new Howl({ src: [assetPath + 'assets/audio/193429__unfa__projectile-hit.mp3'] }),
+            fireMissile: new Howl({ src: [assetPath +'assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
         };
-
-        // allow a custom path for sounds
-        if (this.options.assetPath){
-            for(let assetName of Object.keys(this.sounds)){
-                this.sounds[assetName] = this.options.assetPath + this.sounds[assetName];
-            }
-        }
 
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
         this.gameEngine.on('missileHit', () => { this.sounds.missileHit.play(); });
