@@ -57,6 +57,13 @@ class SpaaaceClientEngine extends ClientEngine {
             fireMissile: new Howl({ src: ['assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
         };
 
+        // allow a custom path for sounds
+        if (this.options.assetPath){
+            for(let assetName of Object.keys(this.sounds)){
+                this.sounds[assetName] = this.options.assetPath + this.sounds[assetName];
+            }
+        }
+
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
         this.gameEngine.on('missileHit', () => { this.sounds.missileHit.play(); });
     }
