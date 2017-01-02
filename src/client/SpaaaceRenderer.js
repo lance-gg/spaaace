@@ -30,12 +30,8 @@ class SpaaaceRenderer extends Renderer {
         this.sprites = {};
         this.isReady = false;
 
-        // allow a custom path for assets
-        if (gameEngine.options.assetPath){
-            for(let assetName of Object.keys(this.ASSETPATHS)){
-                this.ASSETPATHS[assetName] = gameEngine.options.assetPath + this.ASSETPATHS[assetName];
-            }
-        }
+        //asset prefix
+        this.assetPathPrefix = this.gameEngine.options.assetPathPrefix?this.gameEngine.options.assetPathPrefix:'';
 
         // these define how many gameWorlds the player ship has "scrolled" through
         this.bgPhaseX = 0;
@@ -58,7 +54,12 @@ class SpaaaceRenderer extends Renderer {
         });
 
         return new Promise((resolve, reject)=>{
-            PIXI.loader.add(Object.values(this.ASSETPATHS))
+            PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
+                return{
+                    name: x,
+                    url: this.assetPathPrefix +this.ASSETPATHS[x]
+                }
+            }))
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
@@ -75,13 +76,13 @@ class SpaaaceRenderer extends Renderer {
         this.camera.addChild(this.layer1, this.layer2);
 
         // parallax background
-        this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg1].texture,
+        this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources.bg1.texture,
                 this.viewportWidth, this.viewportHeight);
-        this.bg2 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg2].texture,
+        this.bg2 = new PIXI.extras.TilingSprite(PIXI.loader.resources.bg2.texture,
             this.viewportWidth, this.viewportHeight);
-        this.bg3 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg3].texture,
+        this.bg3 = new PIXI.extras.TilingSprite(PIXI.loader.resources.bg3.texture,
             this.viewportWidth, this.viewportHeight);
-        this.bg4 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg4].texture,
+        this.bg4 = new PIXI.extras.TilingSprite(PIXI.loader.resources.bg4.texture,
             this.viewportWidth, this.viewportHeight);
 
         this.bg3.blendMode = PIXI.BLEND_MODES.ADD;
@@ -263,7 +264,7 @@ class SpaaaceRenderer extends Renderer {
             }
 
         } else if (objData.class == Missile) {
-            sprite = new PIXI.Sprite(PIXI.loader.resources[this.ASSETPATHS.missile].texture);
+            sprite = new PIXI.Sprite(PIXI.loader.resources.missile.texture);
             this.sprites[objData.id] = sprite;
 
             sprite.width = 81 * 0.5;

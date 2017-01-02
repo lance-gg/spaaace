@@ -52,12 +52,12 @@ class SpaaaceClientEngine extends ClientEngine {
         });
 
         // allow a custom path for sounds
-        let assetPath = this.options.assetPath?this.options.assetPath:'';
+        let assetPathPrefix = this.options.assetPathPrefix?this.options.assetPathPrefix:'';
 
         // handle sounds
         this.sounds = {
-            missileHit: new Howl({ src: [assetPath + 'assets/audio/193429__unfa__projectile-hit.mp3'] }),
-            fireMissile: new Howl({ src: [assetPath +'assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
+            missileHit: new Howl({ src: [assetPathPrefix + 'assets/audio/193429__unfa__projectile-hit.mp3'] }),
+            fireMissile: new Howl({ src: [assetPathPrefix +'assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
         };
 
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });

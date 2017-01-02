@@ -9,10 +9,8 @@ class ShipActor{
         this.gameEngine = renderer.gameEngine;
         this.backLayer = renderer.layer1;
         this.sprite = new PIXI.Container();
-        
-        // allow a custom path for sounds
-        let assetPath = this.gameEngine.options.assetPath?this.gameEngine.options.assetPath:'';
-        this.shipSprite = new PIXI.Sprite(PIXI.loader.resources[assetPath+renderer.ASSETPATHS.ship].texture);
+
+        this.shipSprite = new PIXI.Sprite(PIXI.loader.resources.ship.texture);
 
         //keep a reference to the actor from the sprite
         this.sprite.actor = this;
@@ -46,14 +44,14 @@ class ShipActor{
     addThrustEmitter(){
         this.thrustEmitter = new PIXI.particles.Emitter(
             this.backLayer,
-            [PIXI.loader.resources["assets/smokeparticle.png"].texture],
+            [PIXI.loader.resources.smokeParticle.texture],
             ThrusterEmitterConfig
         );
         this.thrustEmitter.emit = false;
 
         this.explosionEmitter = new PIXI.particles.Emitter(
             this.sprite,
-            [PIXI.loader.resources["assets/smokeparticle.png"].texture],
+            [PIXI.loader.resources.smokeParticle.texture],
             ExplosionEmitterConfig
         );
 
