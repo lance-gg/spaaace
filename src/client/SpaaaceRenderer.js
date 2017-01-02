@@ -49,7 +49,7 @@ class SpaaaceRenderer extends Renderer {
         this.stage.addChild(this.layer1, this.layer2);
 
         this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
-        if (document.readyState === "complete" || document.readyState === "loaded") {
+        if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
             document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
         } else{
             document.addEventListener('DOMContentLoaded', ()=>{
