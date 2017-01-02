@@ -49,9 +49,13 @@ class SpaaaceRenderer extends Renderer {
         this.stage.addChild(this.layer1, this.layer2);
 
         this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
-        document.addEventListener('DOMContentLoaded', ()=>{
+        if (document.readyState === "complete" || document.readyState === "loaded") {
             document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
-        });
+        } else{
+            document.addEventListener('DOMContentLoaded', ()=>{
+                document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+            });
+        }
 
         return new Promise((resolve, reject)=>{
             PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
