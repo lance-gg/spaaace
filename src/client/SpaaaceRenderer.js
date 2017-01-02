@@ -8,7 +8,7 @@ const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
 const ShipActor = require('./ShipActor');
 
-const ASSETPATH = {
+let ASSETPATH = {
     ship: 'assets/ship1.png',
     missile: 'assets/shot.png',
     bg1: 'assets/space3.png',
@@ -27,6 +27,13 @@ class SpaaaceRenderer extends Renderer {
         super(gameEngine);
         this.sprites = {};
         this.isReady = false;
+
+        // allow a custom path for assets
+        if (gameEngine.options.assetPath){
+            for(let assetName of Object.keys(ASSETPATH)){
+                ASSETPATH[assetName] = gameEngine.options.assetPath + ASSETPATH[assetName];
+            }
+        }
 
         // these define how many gameWorlds the player ship has "scrolled" through
         this.bgPhaseX = 0;
