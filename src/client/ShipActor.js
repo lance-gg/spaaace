@@ -3,14 +3,16 @@ const PixiParticles = require("pixi-particles");
 const ThrusterEmitterConfig = require("./ThrusterEmitter.json");
 const ExplosionEmitterConfig = require("./ExplosionEmitter.json");
 
-
 class ShipActor{
 
-    constructor(gameEngine, backLayer){
-        this.gameEngine = gameEngine;
-        this.backLayer = backLayer;
+    constructor(renderer){
+        this.gameEngine = renderer.gameEngine;
+        this.backLayer = renderer.layer1;
         this.sprite = new PIXI.Container();
-        this.shipSprite = new PIXI.Sprite(PIXI.loader.resources["assets/ship1.png"].texture);
+        
+        // allow a custom path for sounds
+        let assetPath = this.gameEngine.options.assetPath?this.gameEngine.options.assetPath:'';
+        this.shipSprite = new PIXI.Sprite(PIXI.loader.resources[assetPath+renderer.ASSETPATHS.ship].texture);
 
         //keep a reference to the actor from the sprite
         this.sprite.actor = this;

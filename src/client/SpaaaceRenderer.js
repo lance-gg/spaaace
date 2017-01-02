@@ -8,20 +8,22 @@ const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
 const ShipActor = require('./ShipActor');
 
-let ASSETPATH = {
-    ship: 'assets/ship1.png',
-    missile: 'assets/shot.png',
-    bg1: 'assets/space3.png',
-    bg2: 'assets/space2.png',
-    bg3: 'assets/clouds2.png',
-    bg4: 'assets/clouds1.png',
-    smokeParticle: 'assets/smokeparticle.png'
-};
-
 /**
  * Renderer for the Spaaace client - based on Pixi.js
  */
 class SpaaaceRenderer extends Renderer {
+
+    get ASSETPATHS(){
+        return {
+            ship: 'assets/ship1.png',
+            missile: 'assets/shot.png',
+            bg1: 'assets/space3.png',
+            bg2: 'assets/space2.png',
+            bg3: 'assets/clouds2.png',
+            bg4: 'assets/clouds1.png',
+            smokeParticle: 'assets/smokeparticle.png'
+        }
+    }
 
     constructor(gameEngine) {
         super(gameEngine);
@@ -30,8 +32,8 @@ class SpaaaceRenderer extends Renderer {
 
         // allow a custom path for assets
         if (gameEngine.options.assetPath){
-            for(let assetName of Object.keys(ASSETPATH)){
-                ASSETPATH[assetName] = gameEngine.options.assetPath + ASSETPATH[assetName];
+            for(let assetName of Object.keys(this.ASSETPATHS)){
+                this.ASSETPATHS[assetName] = gameEngine.options.assetPath + this.ASSETPATHS[assetName];
             }
         }
 
@@ -56,7 +58,7 @@ class SpaaaceRenderer extends Renderer {
         });
 
         return new Promise((resolve, reject)=>{
-            PIXI.loader.add(Object.values(ASSETPATH))
+            PIXI.loader.add(Object.values(this.ASSETPATHS))
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
@@ -73,13 +75,13 @@ class SpaaaceRenderer extends Renderer {
         this.camera.addChild(this.layer1, this.layer2);
 
         // parallax background
-        this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg1].texture,
+        this.bg1 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg1].texture,
                 this.viewportWidth, this.viewportHeight);
-        this.bg2 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg2].texture,
+        this.bg2 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg2].texture,
             this.viewportWidth, this.viewportHeight);
-        this.bg3 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg3].texture,
+        this.bg3 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg3].texture,
             this.viewportWidth, this.viewportHeight);
-        this.bg4 = new PIXI.extras.TilingSprite(PIXI.loader.resources[ASSETPATH.bg4].texture,
+        this.bg4 = new PIXI.extras.TilingSprite(PIXI.loader.resources[this.ASSETPATHS.bg4].texture,
             this.viewportWidth, this.viewportHeight);
 
         this.bg3.blendMode = PIXI.BLEND_MODES.ADD;
@@ -246,7 +248,7 @@ class SpaaaceRenderer extends Renderer {
         let sprite;
 
         if (objData.class == Ship) {
-            let shipActor = new ShipActor(this.gameEngine, this.layer1);
+            let shipActor = new ShipActor(this);
             sprite = shipActor.sprite;
             this.sprites[objData.id] = sprite;
             sprite.id = objData.id;
@@ -261,7 +263,7 @@ class SpaaaceRenderer extends Renderer {
             }
 
         } else if (objData.class == Missile) {
-            sprite = new PIXI.Sprite(PIXI.loader.resources[ASSETPATH.missile].texture);
+            sprite = new PIXI.Sprite(PIXI.loader.resources[this.ASSETPATHS.missile].texture);
             this.sprites[objData.id] = sprite;
 
             sprite.width = 81 * 0.5;
