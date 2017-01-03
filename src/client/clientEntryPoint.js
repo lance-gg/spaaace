@@ -2,6 +2,7 @@ const qsOptions = require('query-string').parse(location.search);
 const SpaaaceClientEngine = require('../client/SpaaaceClientEngine');
 const SpaaaceGameEngine = require('../common/SpaaaceGameEngine');
 const SimplePhysicsEngine = require('incheon').physics.SimplePhysicsEngine;
+require('../../assets/sass/main.scss');
 
 // default options, overwritten by query-string options
 // is sent to both game engine and client engine

@@ -15,6 +15,10 @@ module.exports = {
         loaders: [
             { test: /\.css$/, loader: 'style!css' },
             {
+                test: /\.scss$/,
+                loaders: ['style-loader', 'raw-loader', 'sass-loader']
+            },
+            {
                 test: /\.js$/,
                 include: [
                     path.resolve(__dirname, 'src'),

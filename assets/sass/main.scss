@@ -1,0 +1,102 @@
+html,body{
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+#guiContainer, #offscreenIndicatorContainer{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+}
+
+.offscreenIndicator{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: 30px;
+	background-image: url('assets/icons/offscreenIndicator.svg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 30px;
+	transition: opacity 0.1s ease-in;
+	pointer-events: none;
+}
+
+#tryAgain{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	opacity: 0;
+	pointer-events: none;
+
+	border: 1px solid white;
+	padding: 5px 20px;
+	background: black;
+	color: white;
+	z-index: 10;
+
+	transition: opacity 0.1s ease-in;
+}
+
+.lostGame #tryAgain{
+	opacity: 1;
+	pointer-events: all;
+}
+
+
+.tutorial .keysContainer{
+	&:before, &:after{
+		opacity: 1;
+	}
+}
+
+.keysContainer{
+	pointer-events: none;
+
+	&:before, &:after{
+		content: "";
+		position: absolute;
+		bottom: 50px;
+		opacity: 0;
+		transition: all 0.3s ease-in;
+	}
+}
+
+.pc .keysContainer{
+	&:before{
+		width: 103px;
+		height: 91px;
+		left: 55%;
+		background-image: url("assets/images/pc_keys.png");
+	}
+
+	&:after{
+		width: 175px;
+		height: 55px;
+		left: 40%;
+		background-image: url("assets/images/pc_space.png");
+	}
+}
+
+.mac .keysContainer{
+	&:before{
+		width: 119px;
+		height: 64px;
+		left: 55%;
+
+		background-image: url("assets/images/mac_keys.png");
+	}
+
+	&:after{
+		width: 193px;
+		height: 64px;
+		left: 40%;
+		background-image: url("assets/images/mac_space.png");
+	}
+}

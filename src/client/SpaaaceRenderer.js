@@ -67,10 +67,20 @@ class SpaaaceRenderer extends Renderer {
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
+                this.setupDOM();
                 this.gameEngine.emit('renderer.ready');
                 resolve();
             });
         });
+    }
+
+    setupDOM(){
+        if (isMacintosh()){
+            document.body.classList.add('mac');
+        }
+        if (isWindows()){
+            document.body.classList.add('pc');
+        }
     }
 
     setupStage() {
@@ -262,6 +272,11 @@ class SpaaaceRenderer extends Renderer {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
                 document.body.classList.remove("lostGame");
+
+                //remove the tutorial if required after a timeout
+                setTimeout(()=>{
+                    document.body.classList.remove('tutorial');
+                }, 15000);
             }
             else {
                 this.addOffscreenIndicator(objData);
@@ -370,6 +385,14 @@ class SpaaaceRenderer extends Renderer {
         indicatorEl.parentNode.removeChild(indicatorEl);
     }
 
+}
+
+function isMacintosh() {
+    return navigator.platform.indexOf('Mac') > -1
+}
+
+function isWindows() {
+    return navigator.platform.indexOf('Win') > -1
 }
 
 module.exports = SpaaaceRenderer;
