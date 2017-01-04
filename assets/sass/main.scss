@@ -71,12 +71,20 @@ html,body{
 .keysContainer{
 	pointer-events: none;
 
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+
 	&:before, &:after{
 		content: "";
-		position: absolute;
-		bottom: 50px;
+		display: inline-block;
 		opacity: 0;
 		transition: all 0.3s ease-in;
+	}
+
+	&:before{
+		margin-right: 3rem;
 	}
 }
 
