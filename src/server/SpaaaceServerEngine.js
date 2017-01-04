@@ -35,7 +35,7 @@ class SpaaaceServerEngine extends ServerEngine {
             this.updateScore();
 
             this.gameEngine.removeObjectFromWorld(e.ship.id);
-            if(e.ship.isBot){
+            if(e.ship.isBot) {
                 this.makeBot();
             }
         });
@@ -64,8 +64,8 @@ class SpaaaceServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
 
-        //iterate through all objects, delete those that are associated with the player
-        for (let objId of Object.keys(this.gameEngine.world.objects)){
+        // iterate through all objects, delete those that are associated with the player
+        for (let objId of Object.keys(this.gameEngine.world.objects)) {
             let obj = this.gameEngine.world.objects[objId];
             if (obj.playerId == playerId) {
                 //remove score data
@@ -79,7 +79,7 @@ class SpaaaceServerEngine extends ServerEngine {
         this.updateScore();
     };
 
-    makeBot(){
+    makeBot() {
         let bot = this.gameEngine.makeShip();
         bot.attachAI();
 

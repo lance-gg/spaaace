@@ -82,7 +82,7 @@ class SpaaaceGameEngine extends GameEngine {
 
     /**
      * Makes a new ship, places it randomly and adds it to the game world
-     * @returns {Ship} the added Ship object
+     * @return {Ship} the added Ship object
      */
     makeShip() {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;

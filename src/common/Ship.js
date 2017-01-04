@@ -12,6 +12,8 @@ class Ship extends DynamicObject {
         }, super.netScheme);
     }
 
+    get bendingAngleLocalMultiple() { return 0.0; }
+
     copyFrom(sourceObj) {
         super.copyFrom(sourceObj);
         this.showThrust = sourceObj.showThrust;
@@ -29,8 +31,8 @@ class Ship extends DynamicObject {
         this.showThrust = 0;
     };
 
-    destroy(){
-        if (this.fireLoop){
+    destroy() {
+        if (this.fireLoop) {
             this.fireLoop.destroy();
         }
     }
@@ -44,7 +46,7 @@ class Ship extends DynamicObject {
         });
 
         let fireLoopTime = Math.round(250 + Math.random() * 100);
-        this.fireLoop = this.gameEngine.timer.loop(fireLoopTime,()=>{
+        this.fireLoop = this.gameEngine.timer.loop(fireLoopTime, () => {
             if (this.target && this.distanceToTarget(this.target) < 400) {
                 this.gameEngine.makeMissile(this);
             }
@@ -52,7 +54,8 @@ class Ship extends DynamicObject {
     }
 
     distanceToTarget(target) {
-        let dx = this.x - target.x, dy = this.y - target.y;
+        let dx = this.x - target.x;
+        let dy = this.y - target.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
