@@ -1,4 +1,4 @@
-const Howler = require('howler');
+const Howler = require('howler'); // eslint-disable-line no-unused-vars
 const ClientEngine = require('incheon').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const Ship = require('../common/Ship');
