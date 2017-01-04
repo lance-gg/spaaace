@@ -62,6 +62,10 @@ class SpaaaceClientEngine extends ClientEngine {
 
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
         this.gameEngine.on('missileHit', () => { this.sounds.missileHit.play(); });
+
+        this.networkMonitor.on('RTTUpdate',(e) => {
+            this.renderer.updateHUD(e);
+        });
     }
 
     // our pre-step is to process inputs that are "currently pressed" during the game step

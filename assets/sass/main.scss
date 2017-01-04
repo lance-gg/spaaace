@@ -56,6 +56,18 @@ html,body{
 	}
 }
 
+.hud{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20rem;
+	font-size: 12px;
+	padding: 1rem;
+	color: #fff;
+	font-family: arial;
+	opacity: 0.3;
+}
+
 .keysContainer{
 	pointer-events: none;
 
