@@ -100,6 +100,7 @@ class SpaaaceGameEngine extends GameEngine {
         missile.y = playerShip.y;
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
+        missile.shipOwnerId = playerShip.id;
         missile.inputId = inputId;
         missile.velocity.set(
             Math.cos(missile.angle * (Math.PI / 180)),

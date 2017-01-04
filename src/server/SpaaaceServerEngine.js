@@ -8,6 +8,10 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.serializer.registerClass(require('../common/Missile'));
         this.serializer.registerClass(require('../common/Ship'));
+
+        this.scoreData = {
+
+        }
     };
 
     start() {
@@ -22,6 +26,14 @@ class SpaaaceServerEngine extends ServerEngine {
         bot3.attachAI();
 
         this.gameEngine.on('missileHit', (e)=>{
+            if (this.scoreData[e.missile.shipOwnerId]){
+                //add kills
+                this.scoreData[e.missile.shipOwnerId].kills++;
+                //remove score data for killed ship
+                delete this.scoreData[e.ship.id]
+            }
+            this.updateScore();
+
             this.gameEngine.removeObjectFromWorld(e.ship.id);
             if(e.ship.isBot){
                 this.makeBot();
@@ -35,6 +47,12 @@ class SpaaaceServerEngine extends ServerEngine {
         let makePlayerShip = ()=>{
             let ship = this.gameEngine.makeShip();
             ship.playerId = socket.playerId;
+
+            this.scoreData[ship.id] = {
+                kills: 0,
+                name: 'Ship' + socket.playerId
+            };
+            this.updateScore();
         };
 
         makePlayerShip();
@@ -50,14 +68,31 @@ class SpaaaceServerEngine extends ServerEngine {
         for (let objId of Object.keys(this.gameEngine.world.objects)){
             let obj = this.gameEngine.world.objects[objId];
             if (obj.playerId == playerId) {
+                //remove score data
+                if (this.scoreData[objId]){
+                    delete this.scoreData[objId]
+                }
                 delete this.gameEngine.world.objects[objId];
             }
         }
+
+        this.updateScore();
     };
 
     makeBot(){
         let bot = this.gameEngine.makeShip();
         bot.attachAI();
+
+        this.scoreData[bot.id] = {
+            kills: 0,
+            name: 'Bot' + bot.id
+        };
+
+        this.updateScore();
+    }
+
+    updateScore(){
+        this.io.emit('scoreUpdate',this.scoreData);
     }
 }
 

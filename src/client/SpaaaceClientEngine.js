@@ -68,6 +68,15 @@ class SpaaaceClientEngine extends ClientEngine {
         });
     }
 
+    // extend ClientEngine connect to add own events
+    connect(){
+        return super.connect().then( () =>{
+            this.socket.on('scoreUpdate', (e) =>{
+                console.log(e);
+            })
+        })
+    }
+
     // our pre-step is to process inputs that are "currently pressed" during the game step
     preStep() {
         if (this.pressedKeys.up) {
