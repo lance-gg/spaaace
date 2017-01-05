@@ -72,7 +72,7 @@ class SpaaaceClientEngine extends ClientEngine {
     connect(){
         return super.connect().then( () =>{
             this.socket.on('scoreUpdate', (e) =>{
-                console.log(e);
+                this.renderer.updateScore(e);
             })
         })
     }

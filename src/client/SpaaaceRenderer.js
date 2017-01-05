@@ -185,7 +185,13 @@ class SpaaaceRenderer extends Renderer {
 
                 sprite.x = objData.x;
                 sprite.y = objData.y;
-                sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+
+                if (objData.class == Ship){
+                    sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                }
+                else{
+                    sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                }
 
                 // make the wraparound seamless for objects other than the player ship
                 if (sprite != this.playerShip && viewportSeesLeftBound && objData.x > this.viewportWidth - this.camera.x) {
@@ -388,6 +394,48 @@ class SpaaaceRenderer extends Renderer {
     updateHUD(data){
         if (data.RTT){ qs('.latencyData').innerHTML = data.RTT;}
         if (data.RTTAverage){ qs('.averageLatencyData').innerHTML = truncateDecimals(data.RTTAverage,2);}
+    }
+
+    updateScore(data){
+        let scoreContainer = qs(".score");
+        let scoreArray = [];
+
+        //remove score lines with objects that don't exist anymore
+        let scoreEls = scoreContainer.querySelectorAll('.line');
+        for (let x=0; x < scoreEls.length; x++){
+            if (data[scoreEls[x].dataset.objId] == null){
+                scoreEls[x].parentNode.removeChild(scoreEls[x]);
+            }
+        }
+
+        for (let id of Object.keys(data)){
+            let scoreEl = scoreContainer.querySelector(`[data-obj-id='${id}']`);
+            //create score line if it doesn't exist
+            if (scoreEl == null){
+                scoreEl = document.createElement('div');
+                scoreEl.classList.add('line');
+                scoreEl.dataset.objId = id;
+                scoreContainer.appendChild(scoreEl);
+            }
+
+            //stupid string/number conversion
+            if (this.sprites[id+""])
+                this.sprites[id+""].actor.changeName(data[id].name);
+
+            scoreEl.innerHTML = `${data[id].name}: ${data[id].kills}`;
+            
+            scoreArray.push({
+                el: scoreEl,
+                data: data[id]
+            })
+        }
+
+        scoreArray.sort((a, b) => {return a.data.kills < b.data.kills});
+
+        for (let x=0; x < scoreArray.length; x++){
+            scoreArray[x].el.style.transform = `translateY(${x}rem)`;
+        }
+
     }
 
 }

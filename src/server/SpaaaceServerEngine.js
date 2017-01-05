@@ -16,14 +16,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
     start() {
         super.start();
-        let bot1 = this.gameEngine.makeShip();
-        bot1.attachAI();
-
-        let bot2 = this.gameEngine.makeShip();
-        bot2.attachAI();
-
-        let bot3 = this.gameEngine.makeShip();
-        bot3.attachAI();
+        for(let x=0; x<3; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', (e)=>{
             if (this.scoreData[e.missile.shipOwnerId]){
@@ -50,7 +43,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
             this.scoreData[ship.id] = {
                 kills: 0,
-                name: 'Ship' + socket.playerId
+                name: 'Player_' + socket.playerId
             };
             this.updateScore();
         };
@@ -85,14 +78,18 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.scoreData[bot.id] = {
             kills: 0,
-            name: 'Bot' + bot.id
+            name: 'Bot_' + bot.id
         };
 
         this.updateScore();
     }
 
     updateScore(){
-        this.io.emit('scoreUpdate',this.scoreData);
+        //delay so player socket can catch up
+        setTimeout(() => {
+            this.io.sockets.emit('scoreUpdate',this.scoreData);
+        },100);
+
     }
 }
 

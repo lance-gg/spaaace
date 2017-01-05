@@ -64,8 +64,38 @@ html,body{
 	font-size: 12px;
 	padding: 1rem;
 	color: #fff;
-	font-family: arial;
+	font-family: arial, sans-serif;
 	opacity: 0.3;
+}
+
+.score{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 20rem;
+	height: 5rem;
+	font-size: 12px;
+	padding: 1rem;
+	color: #fff;
+	font-family: arial, sans-serif;
+	opacity: 0.3;
+
+	&:before{
+		content: "Kills";
+		position: absolute;
+		top: -1.2rem;
+		left: 1rem;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	.line{
+		position: absolute;
+		top: 0;
+		left: 1rem;
+		transition: all 0.2s ease-in;
+		transform: translateY(0);
+	}
 }
 
 .keysContainer{
