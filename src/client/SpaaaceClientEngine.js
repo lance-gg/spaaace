@@ -73,8 +73,8 @@ class SpaaaceClientEngine extends ClientEngine {
         return super.connect().then( () =>{
             this.socket.on('scoreUpdate', (e) =>{
                 this.renderer.updateScore(e);
-            })
-        })
+            });
+        });
     }
 
     // our pre-step is to process inputs that are "currently pressed" during the game step

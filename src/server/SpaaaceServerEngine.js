@@ -85,10 +85,10 @@ class SpaaaceServerEngine extends ServerEngine {
     }
 
     updateScore(){
-        //delay so player socket can catch up
+        // delay so player socket can catch up
         setTimeout(() => {
             this.io.sockets.emit('scoreUpdate',this.scoreData);
-        },100);
+        }, 1000);
 
     }
 }

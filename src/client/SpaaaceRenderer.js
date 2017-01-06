@@ -400,7 +400,7 @@ class SpaaaceRenderer extends Renderer {
         let scoreContainer = qs(".score");
         let scoreArray = [];
 
-        //remove score lines with objects that don't exist anymore
+        // remove score lines with objects that don't exist anymore
         let scoreEls = scoreContainer.querySelectorAll('.line');
         for (let x=0; x < scoreEls.length; x++){
             if (data[scoreEls[x].dataset.objId] == null){
@@ -410,7 +410,7 @@ class SpaaaceRenderer extends Renderer {
 
         for (let id of Object.keys(data)){
             let scoreEl = scoreContainer.querySelector(`[data-obj-id='${id}']`);
-            //create score line if it doesn't exist
+            // create score line if it doesn't exist
             if (scoreEl == null){
                 scoreEl = document.createElement('div');
                 scoreEl.classList.add('line');
@@ -418,16 +418,16 @@ class SpaaaceRenderer extends Renderer {
                 scoreContainer.appendChild(scoreEl);
             }
 
-            //stupid string/number conversion
-            if (this.sprites[id+""])
-                this.sprites[id+""].actor.changeName(data[id].name);
+            // stupid string/number conversion
+            if (this.sprites[id+''])
+                this.sprites[id+''].actor.changeName(data[id].name);
 
             scoreEl.innerHTML = `${data[id].name}: ${data[id].kills}`;
-            
+
             scoreArray.push({
                 el: scoreEl,
                 data: data[id]
-            })
+            });
         }
 
         scoreArray.sort((a, b) => {return a.data.kills < b.data.kills});
