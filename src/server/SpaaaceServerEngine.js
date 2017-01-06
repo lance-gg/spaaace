@@ -9,9 +9,7 @@ class SpaaaceServerEngine extends ServerEngine {
         this.serializer.registerClass(require('../common/Missile'));
         this.serializer.registerClass(require('../common/Ship'));
 
-        this.scoreData = {
-
-        }
+        this.scoreData = {};
     };
 
     start() {
@@ -19,11 +17,11 @@ class SpaaaceServerEngine extends ServerEngine {
         for(let x=0; x<3; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', (e)=>{
-            if (this.scoreData[e.missile.shipOwnerId]){
-                //add kills
+            if (this.scoreData[e.missile.shipOwnerId]) {
+                // add kills
                 this.scoreData[e.missile.shipOwnerId].kills++;
-                //remove score data for killed ship
-                delete this.scoreData[e.ship.id]
+                // remove score data for killed ship
+                delete this.scoreData[e.ship.id];
             }
             this.updateScore();
 
@@ -61,9 +59,9 @@ class SpaaaceServerEngine extends ServerEngine {
         for (let objId of Object.keys(this.gameEngine.world.objects)) {
             let obj = this.gameEngine.world.objects[objId];
             if (obj.playerId == playerId) {
-                //remove score data
-                if (this.scoreData[objId]){
-                    delete this.scoreData[objId]
+                // remove score data
+                if (this.scoreData[objId]) {
+                    delete this.scoreData[objId];
                 }
                 delete this.gameEngine.world.objects[objId];
             }
@@ -84,10 +82,10 @@ class SpaaaceServerEngine extends ServerEngine {
         this.updateScore();
     }
 
-    updateScore(){
+    updateScore() {
         // delay so player socket can catch up
         setTimeout(() => {
-            this.io.sockets.emit('scoreUpdate',this.scoreData);
+            this.io.sockets.emit('scoreUpdate', this.scoreData);
         }, 1000);
 
     }
