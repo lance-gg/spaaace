@@ -78,7 +78,6 @@ html,body{
 	padding: 1rem;
 	color: #fff;
 	font-family: arial, sans-serif;
-	opacity: 0.3;
 
 	&:before{
 		content: "Kills";
@@ -95,6 +94,12 @@ html,body{
 		left: 1rem;
 		transition: all 0.2s ease-in;
 		transform: translateY(0);
+		opacity: 0.3;
+	}
+
+	.line.you{
+		color: #efff00;
+		opacity: 0.4;
 	}
 }
 

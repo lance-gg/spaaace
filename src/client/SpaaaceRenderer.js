@@ -414,13 +414,14 @@ class SpaaaceRenderer extends Renderer {
             if (scoreEl == null){
                 scoreEl = document.createElement('div');
                 scoreEl.classList.add('line');
+                if (this.playerShip.id == parseInt(id)) scoreEl.classList.add('you');
                 scoreEl.dataset.objId = id;
                 scoreContainer.appendChild(scoreEl);
             }
 
             // stupid string/number conversion
-            if (this.sprites[id+''])
-                this.sprites[id+''].actor.changeName(data[id].name);
+            if (this.sprites[parseInt(id)])
+                this.sprites[parseInt(id)].actor.changeName(data[id].name);
 
             scoreEl.innerHTML = `${data[id].name}: ${data[id].kills}`;
 
