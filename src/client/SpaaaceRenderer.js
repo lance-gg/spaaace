@@ -243,19 +243,19 @@ class SpaaaceRenderer extends Renderer {
                 let yCamDelta = (targetCamY - this.camera.y);
                 console.log(xCamDelta, yCamDelta);
 
-                if (xCamDelta > worldWidth/2) {
+                if (xCamDelta > worldWidth / 2) {
                     this.camera.x = this.camera.x + worldWidth + xCamDelta / 50;
                 }
-                if (xCamDelta < -worldWidth/2) {
+                if (xCamDelta < -worldWidth / 2) {
                     this.camera.x = this.camera.x - worldWidth + xCamDelta / 50;
-                } else{
+                } else {
                     this.camera.x = this.camera.x + xCamDelta / 50;
                 }
 
                 this.camera.y = this.camera.y + yCamDelta / 50;
-            } else{
-                this.camera.x = this.viewportWidth/2 - this.playerShip.x;
-                this.camera.y = this.viewportHeight/2 - this.playerShip.y;
+            } else {
+                this.camera.x = this.viewportWidth / 2 - this.playerShip.x;
+                this.camera.y = this.viewportHeight / 2 - this.playerShip.y;
             }
         }
 
@@ -279,12 +279,11 @@ class SpaaaceRenderer extends Renderer {
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
                 document.body.classList.remove("lostGame");
 
-                //remove the tutorial if required after a timeout
-                setTimeout(()=>{
+                // remove the tutorial if required after a timeout
+                setTimeout(() => {
                     document.body.classList.remove('tutorial');
                 }, 15000);
-            }
-            else {
+            } else {
                 this.addOffscreenIndicator(objData);
             }
 
@@ -332,23 +331,23 @@ class SpaaaceRenderer extends Renderer {
     addOffscreenIndicator(objData) {
         let container = document.querySelector('#offscreenIndicatorContainer');
         let indicatorEl = document.createElement('div');
-        indicatorEl.setAttribute('id','offscreenIndicator'+objData.id);
+        indicatorEl.setAttribute('id','offscreenIndicator' + objData.id);
         indicatorEl.classList.add('offscreenIndicator');
         container.appendChild(indicatorEl);
     }
 
     updateOffscreenIndicator(objData){
-        //player ship might have been destroyed
+        // player ship might have been destroyed
         if (!this.playerShip) return;
 
-        let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        let indicatorEl = document.querySelector('#offscreenIndicator' + objData.id);
         if (!indicatorEl) {
             console.error(`No indicatorEl found with id ${objData.id}`);
             return;
         }
         let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
-        let slope = (objData.y - playerShipObj.y)/(objData.x - playerShipObj.x);
-        let b = this.viewportHeight/2;
+        let slope = (objData.y - playerShipObj.y) / (objData.x - playerShipObj.x);
+        let b = this.viewportHeight/ 2;
 
         // this.debug.clear();
         // this.debug.lineStyle(1, 0xFF0000 ,1);
@@ -377,8 +376,7 @@ class SpaaaceRenderer extends Renderer {
 
         if (indicatorPos.x == 0 && indicatorPos.y == 0){
             indicatorEl.style.opacity = 0;
-        }
-        else{
+        } else {
             indicatorEl.style.opacity = 1;
             let rotation = Math.atan2(objData.y - playerShipObj.y,objData.x - playerShipObj.x);
             rotation = rotation * 180/Math.PI; //rad2deg
@@ -414,7 +412,7 @@ class SpaaaceRenderer extends Renderer {
             if (scoreEl == null){
                 scoreEl = document.createElement('div');
                 scoreEl.classList.add('line');
-                if (this.playerShip.id == parseInt(id)) scoreEl.classList.add('you');
+                if (this.playerShip && this.playerShip.id == parseInt(id)) scoreEl.classList.add('you');
                 scoreEl.dataset.objId = id;
                 scoreContainer.appendChild(scoreEl);
             }
