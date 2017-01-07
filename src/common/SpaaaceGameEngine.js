@@ -59,8 +59,9 @@ class SpaaaceGameEngine extends GameEngine {
         let playerShip;
 
         for (let objId in this.world.objects) {
-            if (this.world.objects[objId].playerId == playerId) {
-                playerShip = this.world.objects[objId];
+            let o = this.world.objects[objId];
+            if (o.playerId == playerId && o.class == Ship) {
+                playerShip = o;
                 break;
             }
         }
@@ -110,7 +111,7 @@ class SpaaaceGameEngine extends GameEngine {
         missile.velX = missile.velocity.x;
         missile.velY = missile.velocity.y;
 
-        this.trace.trace(`missile created vx=${missile.velocity.x} vy=${missile.velocity.y}`);
+        this.trace.trace(`missile[${missile.id}] created vx=${missile.velocity.x} vy=${missile.velocity.y}`);
 
 
         this.addObjectToWorld(missile);
@@ -121,8 +122,10 @@ class SpaaaceGameEngine extends GameEngine {
 
     // destroy the missile if it still exists
     destroyMissile(missileId) {
-        if (this.world.objects[missileId])
+        if (this.world.objects[missileId]) {
+            this.trace.trace(`missile[${missileId}] destroyed`);
             this.removeObjectFromWorld(missileId);
+        }
     }
 }
 
