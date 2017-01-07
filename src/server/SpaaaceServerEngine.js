@@ -1,6 +1,7 @@
 'use strict';
 
 const ServerEngine = require('incheon').ServerEngine;
+const NameGenerator = require('./NameGenerator');
 
 class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -41,7 +42,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
             this.scoreData[ship.id] = {
                 kills: 0,
-                name: 'Player_' + socket.playerId
+                name: NameGenerator('general')
             };
             this.updateScore();
         };
@@ -74,7 +75,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.scoreData[bot.id] = {
             kills: 0,
-            name: 'Bot_' + bot.id
+            name: NameGenerator('general') + 'Bot'
         };
 
         this.updateScore();

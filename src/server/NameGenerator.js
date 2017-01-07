@@ -6,6 +6,8 @@
 var name_set = {};
 var chain_cache = {};
 
+name_set.general = require("./NameSet");
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // generator function
 
@@ -140,4 +142,5 @@ function select_link (chain, key) {
     return '-';
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+module.exports = generate_name;
