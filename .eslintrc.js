@@ -18,6 +18,12 @@ module.exports = {
         "object-curly-spacing": ["error", "always"],
         "padded-blocks": "off",
         "require-jsdoc": "off"
+    },
+    "globals": {
+        "window": true,
+        "document": true,
+        "navigator": true
     }
+
 
 };
