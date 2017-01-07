@@ -230,8 +230,8 @@ class SpaaaceRenderer extends Renderer {
             this.bg3.tilePosition.x = bgOffsetX * 0.3;
             this.bg3.tilePosition.y = bgOffsetY * 0.3;
 
-            this.bg4.tilePosition.x = bgOffsetX * 0.45;
-            this.bg4.tilePosition.y = bgOffsetY * 0.45;
+            this.bg4.tilePosition.x = bgOffsetX * 0.75;
+            this.bg4.tilePosition.y = bgOffsetY * 0.75;
 
             if ('cameraroam' in Utils.getUrlVars()) {
                 // always center the playership, do this smoothly
