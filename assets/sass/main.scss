@@ -11,6 +11,7 @@ html,body{
 	width: 100%;
 	height: 100%;
 	z-index: 5;
+	pointer-events: none;
 }
 
 .offscreenIndicator{
@@ -25,23 +26,79 @@ html,body{
 	background-repeat: no-repeat;
 	border-radius: 30px;
 	transition: opacity 0.1s ease-in;
-	pointer-events: none;
 }
 
-#tryAgain{
+#tryAgain, #joinGame{
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	opacity: 0;
 	pointer-events: none;
+	transform: translateX(-50%) translateY(-50%);
+}
 
-	border: 1px solid white;
-	padding: 5px 20px;
-	background: black;
+#joinGame {
+	pointer-events: all;
+	opacity: 1;
+}
+
+button{
+
+	position: relative;
+	background-color: rgba(#68b2f8, 0.2);
+	padding: 0.2rem 1.8rem 0.1rem 1.8rem;
+	margin: 2rem auto;
+	font-size: 1.2rem;
+	transition: all 0.5s ease-out;
+	margin-right: 1.5rem;
+	border: 0;
 	color: white;
-	z-index: 10;
+	outline: none;
 
-	transition: opacity 0.1s ease-in;
+	&:before{
+		content: "";
+		position: absolute;
+		z-index: 10;
+		left: -3rem;
+		top: -2.4rem;
+		width: 6rem;
+		height: 7rem;
+		background-image: url(assets/images/cta_glow_left.png);
+		background-repeat: no-repeat;
+		background-position: top;
+		background-size: auto;
+		pointer-events: none;
+	}
+
+	&:after{
+		content: "";
+		position: absolute;
+		z-index: 10;
+		right: -3rem;
+		top: -2.4rem;
+		width: 6rem;
+		height: 7rem;
+		background-image: url(assets/images/cta_glow_left.png);
+		background-repeat: no-repeat;
+		background-position: top;
+		background-size: auto;
+		transform: scaleX(-1);
+		pointer-events: none;
+	}
+
+	a{
+		width: 100%;
+		padding: 0.2rem 0.5rem;
+		color: #fff;
+		transition: all 0.1s ease-in;
+	}
+
+	&:hover{
+		background: rgba(#68b2f8, 0.4);
+		a{
+			padding: 0.2rem 0.8rem;
+		}
+	}
 }
 
 .lostGame #tryAgain{
@@ -115,7 +172,7 @@ html,body{
 		content: "";
 		display: inline-block;
 		opacity: 0;
-		transition: all 0.3s ease-in;
+		transition: all 0.5s ease-in;
 	}
 
 	&:before{
@@ -124,34 +181,29 @@ html,body{
 }
 
 .pc .keysContainer{
-	&:before{
+	&:after{
 		width: 103px;
 		height: 91px;
-		left: 55%;
 		background-image: url("assets/images/pc_keys.png");
 	}
 
-	&:after{
+	&:before{
 		width: 175px;
 		height: 55px;
-		left: 40%;
 		background-image: url("assets/images/pc_space.png");
 	}
 }
 
 .mac .keysContainer{
-	&:before{
+	&:after{
 		width: 119px;
 		height: 64px;
-		left: 55%;
-
 		background-image: url("assets/images/mac_keys.png");
 	}
 
-	&:after{
+	&:before{
 		width: 193px;
 		height: 64px;
-		left: 40%;
 		background-image: url("assets/images/mac_space.png");
 	}
 }

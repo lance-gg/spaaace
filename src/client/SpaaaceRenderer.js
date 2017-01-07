@@ -30,7 +30,7 @@ class SpaaaceRenderer extends Renderer {
         this.sprites = {};
         this.isReady = false;
 
-        //asset prefix
+        // asset prefix
         this.assetPathPrefix = this.gameEngine.options.assetPathPrefix?this.gameEngine.options.assetPathPrefix:'';
 
         // these define how many gameWorlds the player ship has "scrolled" through
@@ -61,26 +61,24 @@ class SpaaaceRenderer extends Renderer {
             PIXI.loader.add(Object.keys(this.ASSETPATHS).map((x)=>{
                 return{
                     name: x,
-                    url: this.assetPathPrefix +this.ASSETPATHS[x]
+                    url: this.assetPathPrefix + this.ASSETPATHS[x]
                 }
             }))
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
-                this.setupDOM();
                 this.gameEngine.emit('renderer.ready');
+
+                if (isMacintosh()) {
+                    document.body.classList.add('mac');
+                }
+                if (isWindows()) {
+                    document.body.classList.add('pc');
+                }
+
                 resolve();
             });
         });
-    }
-
-    setupDOM(){
-        if (isMacintosh()){
-            document.body.classList.add('mac');
-        }
-        if (isWindows()){
-            document.body.classList.add('pc');
-        }
     }
 
     setupStage() {
@@ -278,11 +276,19 @@ class SpaaaceRenderer extends Renderer {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
                 document.body.classList.remove("lostGame");
+                if (!document.body.classList.contains('tutorialDone')){
+                    document.body.classList.add("tutorial");
+                }
+                document.body.classList.remove("lostGame");
+                document.querySelector('#tryAgain').disabled = true;
+                document.querySelector('#joinGame').disabled = true;
+                document.querySelector('#joinGame').style.opacity = 0;
 
                 // remove the tutorial if required after a timeout
                 setTimeout(() => {
                     document.body.classList.remove('tutorial');
-                }, 15000);
+                    document.body.classList.add('tutorialDone');
+                }, 10000);
             } else {
                 this.addOffscreenIndicator(objData);
             }

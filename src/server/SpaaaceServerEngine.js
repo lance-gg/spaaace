@@ -46,8 +46,6 @@ class SpaaaceServerEngine extends ServerEngine {
             this.updateScore();
         };
 
-        makePlayerShip();
-
         // handle client restart requests
         socket.on('requestRestart', makePlayerShip);
     };
