@@ -99,7 +99,7 @@ function scale_chain (chain) {
     var key; for (key in chain) {
         table_len[key] = 0;
 
-        var token; for (token in chain[key]) {
+        var token; for (let token in chain[key]) {
             var count = chain[key][token];
             var weighted = Math.floor(Math.pow(count,1.3));
 
@@ -137,7 +137,7 @@ function select_link (chain, key) {
     var len = chain['table_len'][key];
     var idx = Math.floor(Math.random() * len);
 
-    var t = 0; for (token in chain[key]) {
+    var t = 0; for (let token in chain[key]) {
         t += chain[key][token];
         if (idx < t) { return token; }
     }
