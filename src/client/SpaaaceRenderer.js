@@ -228,10 +228,10 @@ class SpaaaceRenderer extends Renderer {
         let cameraTarget;
         if (this.playerShip) {
             cameraTarget = this.playerShip;
-            this.cameraRoam = false;
+            // this.cameraRoam = false;
         } else if (!this.gameStarted && !cameraTarget) {
 
-            // calculate centroid                                              f
+            // calculate centroid                                              
             cameraTarget = getCentroid(this.gameEngine.world.objects);
             this.cameraRoam = true;
         }
@@ -264,10 +264,10 @@ class SpaaaceRenderer extends Renderer {
                 let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
 
 
-                // if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX+= worldWidth; }
-                // if (lookingAtDeltaX < -worldWidth / 2) { cameraTempTargetX-= worldWidth; }
-                // if (lookingAtDeltaY > worldHeight / 2) { cameraTempTargetY+= worldHeight; }
-                // if (lookingAtDeltaY < -worldHeight / 2) { cameraTempTargetY-= worldHeight; }
+                if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX += worldWidth; }
+                if (lookingAtDeltaX < -worldWidth / 2) { cameraTempTargetX -= worldWidth; }
+                if (lookingAtDeltaY > worldHeight / 2) { cameraTempTargetY += worldHeight; }
+                if (lookingAtDeltaY < -worldHeight / 2) { cameraTempTargetY -= worldHeight; }
 
                 this.centerCamera(cameraTempTargetX, cameraTempTargetY);
 
