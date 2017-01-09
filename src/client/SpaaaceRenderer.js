@@ -84,6 +84,7 @@ class SpaaaceRenderer extends Renderer {
     setupStage() {
         window.addEventListener('resize', ()=>{ this.setRendererSize(); });
 
+        this.lookingAt = { x: 0 , y: 0};
         this.camera = new PIXI.Container();
         this.camera.addChild(this.layer1, this.layer2);
 
@@ -105,7 +106,13 @@ class SpaaaceRenderer extends Renderer {
         this.stage.addChild(this.camera);
 
         // this.debug= new PIXI.Graphics();
-        // this.stage.addChild(this.debug);
+        // this.camera.addChild(this.debug);
+
+        // this.debugText = new PIXI.Text('DEBUG', {fontFamily:"arial", fontSize: "100px", fill:"white"});
+        // this.debugText.anchor.set(0.5, 0.5);
+        // this.debugText.x = this.gameEngine.worldSettings.width/2;
+        // this.debugText.y = this.gameEngine.worldSettings.height/2;
+        // this.camera.addChild(this.debugText);
 
         this.elapsedTime = Date.now();
 
@@ -175,6 +182,10 @@ class SpaaaceRenderer extends Renderer {
                     if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX--; }
                     if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++; }
                     if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY--; }
+
+                    // this.debug.beginFill(0xFF0000);
+                    // this.debug.drawCircle(sprite.x, sprite.y, 1);
+                    // this.debug.endFill();
                 }
 
                 if (objData.class == Ship && sprite != this.playerShip) {
@@ -214,9 +225,20 @@ class SpaaaceRenderer extends Renderer {
             }
         }
 
-        if(this.playerShip) {
-            let bgOffsetX = -this.bgPhaseX * worldWidth - this.playerShip.x;
-            let bgOffsetY = -this.bgPhaseY * worldHeight - this.playerShip.y;
+        let cameraTarget;
+        if (this.playerShip) {
+            cameraTarget = this.playerShip;
+            this.cameraRoam = false;
+        } else if (!this.gameStarted && !cameraTarget) {
+
+            // calculate centroid                                              f
+            cameraTarget = getCentroid(this.gameEngine.world.objects);
+            // this.cameraRoam = true;
+        }
+
+        if (cameraTarget) {
+            let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
+            let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
 
             // let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
             // let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
@@ -233,27 +255,24 @@ class SpaaaceRenderer extends Renderer {
             this.bg4.tilePosition.x = bgOffsetX * 0.75;
             this.bg4.tilePosition.y = bgOffsetY * 0.75;
 
-            if ('cameraroam' in Utils.getUrlVars()) {
-                // always center the playership, do this smoothly
-                let targetCamX = this.viewportWidth / 2 - this.playerShip.x;
-                let targetCamY = this.viewportHeight / 2 - this.playerShip.y;
-                let xCamDelta = (targetCamX - this.camera.x);
-                let yCamDelta = (targetCamY - this.camera.y);
-                console.log(xCamDelta, yCamDelta);
+            // 'cameraroam' in Utils.getUrlVars()
+            if (this.cameraRoam) {
+                let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
+                let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
 
-                if (xCamDelta > worldWidth / 2) {
-                    this.camera.x = this.camera.x + worldWidth + xCamDelta / 50;
-                }
-                if (xCamDelta < -worldWidth / 2) {
-                    this.camera.x = this.camera.x - worldWidth + xCamDelta / 50;
-                } else {
-                    this.camera.x = this.camera.x + xCamDelta / 50;
-                }
+                let cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.05;
+                let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.05;
 
-                this.camera.y = this.camera.y + yCamDelta / 50;
+
+                // if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX+= worldWidth; }
+                // if (lookingAtDeltaX < -worldWidth / 2) { cameraTempTargetX-= worldWidth; }
+                // if (lookingAtDeltaY > worldHeight / 2) { cameraTempTargetY+= worldHeight; }
+                // if (lookingAtDeltaY < -worldHeight / 2) { cameraTempTargetY-= worldHeight; }
+
+                this.centerCamera(cameraTempTargetX, cameraTempTargetY);
+
             } else {
-                this.camera.x = this.viewportWidth / 2 - this.playerShip.x;
-                this.camera.y = this.viewportHeight / 2 - this.playerShip.y;
+                this.centerCamera(cameraTarget.x, cameraTarget.y);
             }
         }
 
@@ -284,6 +303,8 @@ class SpaaaceRenderer extends Renderer {
                 document.querySelector('#tryAgain').disabled = true;
                 document.querySelector('#joinGame').disabled = true;
                 document.querySelector('#joinGame').style.opacity = 0;
+
+                this.gameStarted = true; // todo state shouldn't be saved in the renderer
 
                 // remove the tutorial if required after a timeout
                 setTimeout(() => {
@@ -332,6 +353,19 @@ class SpaaaceRenderer extends Renderer {
             this.sprites[obj.id].destroy();
             delete this.sprites[obj.id];
         }
+    }
+
+    /**
+     * Centers the viewport on a coordinate in the gameworld
+     * @param targetX
+     * @param targetY
+     */
+    centerCamera(targetX, targetY) {
+        if (isNaN(targetX) || isNaN(targetY)) return;
+        this.camera.x = this.viewportWidth / 2 - targetX;
+        this.camera.y = this.viewportHeight / 2 - targetY;
+        this.lookingAt.x = targetX;
+        this.lookingAt.y = targetY;
     }
 
     addOffscreenIndicator(objData) {
@@ -443,6 +477,34 @@ class SpaaaceRenderer extends Renderer {
 
     }
 
+}
+
+function getCentroid(objects) {
+    let maxDistance = 500; // max distance to add to the centroid
+    let shipCount = 0;
+    let centroid = { x: 0, y: 0 };
+    let selectedShip = null;
+
+    for (let id of Object.keys(objects)){
+        let obj = objects[id];
+        if (obj.class == Ship) {
+            if (selectedShip == null)
+                selectedShip = obj;
+
+            let objDistance = Math.sqrt( Math.pow((selectedShip.x-obj.y), 2) + Math.pow((selectedShip.y-obj.y), 2));
+            if (selectedShip == obj || objDistance < maxDistance) {
+                centroid.x += obj.x;
+                centroid.y += obj.y;
+                shipCount++;
+            }
+        }
+    }
+
+    centroid.x /= shipCount;
+    centroid.y /= shipCount;
+
+
+    return centroid;
 }
 
 // convenience function
