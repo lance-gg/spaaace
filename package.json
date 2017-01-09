@@ -14,7 +14,7 @@
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
-    "incheon": "OpherV/Incheon.git#develop",
+    "incheon": "OpherV/Incheon.git",
     "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
     "null-loader": "^0.1.1",
