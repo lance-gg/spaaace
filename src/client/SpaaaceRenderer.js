@@ -233,7 +233,7 @@ class SpaaaceRenderer extends Renderer {
 
             // calculate centroid                                              f
             cameraTarget = getCentroid(this.gameEngine.world.objects);
-            // this.cameraRoam = true;
+            this.cameraRoam = true;
         }
 
         if (cameraTarget) {
@@ -260,8 +260,8 @@ class SpaaaceRenderer extends Renderer {
                 let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
                 let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
 
-                let cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.05;
-                let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.05;
+                let cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
+                let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
 
 
                 // if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX+= worldWidth; }
