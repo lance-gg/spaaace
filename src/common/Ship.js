@@ -41,7 +41,7 @@ class Ship extends DynamicObject {
         }
     }
 
-    get maxSpeed() { return 5.0; }
+    get maxSpeed() { return 3.0; }
 
     attachAI() {
         this.isBot = true;
