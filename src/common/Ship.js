@@ -12,6 +12,10 @@ class Ship extends DynamicObject {
         }, super.netScheme);
     }
 
+    toString() {
+        return `${this.isBot?'Bot':'Player'}::Ship::${super.toString()}`;
+    }
+
     get bendingAngleLocalMultiple() { return 0.0; }
 
     copyFrom(sourceObj) {

@@ -2,6 +2,7 @@ const Howler = require('howler'); // eslint-disable-line no-unused-vars
 const ClientEngine = require('incheon').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const Ship = require('../common/Ship');
+const Utils = require('./Utils');
 
 class SpaaaceClientEngine extends ClientEngine {
     constructor(gameEngine, options) {
@@ -43,10 +44,13 @@ class SpaaaceClientEngine extends ClientEngine {
             }
         });
 
-        this.gameEngine.once('renderer.ready', ()=>{
+        this.gameEngine.once('renderer.ready', () => {
             // click event for "try again" button
-            document.querySelector('#tryAgain').addEventListener('click', ()=>{
-                document.querySelector('#tryAgain').disabled = true;
+            document.querySelector('#tryAgain').addEventListener('click', () => {
+                this.socket.emit('requestRestart');
+            });
+
+            document.querySelector('#joinGame').addEventListener('click', () => {
                 this.socket.emit('requestRestart');
             });
         });
@@ -74,6 +78,10 @@ class SpaaaceClientEngine extends ClientEngine {
             this.socket.on('scoreUpdate', (e) =>{
                 this.renderer.updateScore(e);
             });
+
+            if ('autostart' in Utils.getUrlVars()) {
+                this.socket.emit('requestRestart');
+            }
         });
     }
 

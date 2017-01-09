@@ -11,6 +11,10 @@ class Missile extends DynamicObject {
         }, super.netScheme);
     }
 
+    toString() {
+        return `Missile::${super.toString()}`;
+    }
+
     constructor(id, x, y) {
         super(id, x, y);
         this.class = Missile;
