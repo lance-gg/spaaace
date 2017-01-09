@@ -275,11 +275,12 @@ class SpaaaceRenderer extends Renderer {
             if (objData.isPlayerControlled) {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
-                document.body.classList.remove("lostGame");
+                document.body.classList.remove('lostGame');
                 if (!document.body.classList.contains('tutorialDone')){
-                    document.body.classList.add("tutorial");
+                    document.body.classList.add('tutorial');
                 }
-                document.body.classList.remove("lostGame");
+                document.body.classList.remove('lostGame');
+                document.body.classList.add('gameActive');
                 document.querySelector('#tryAgain').disabled = true;
                 document.querySelector('#joinGame').disabled = true;
                 document.querySelector('#joinGame').style.opacity = 0;
@@ -287,7 +288,6 @@ class SpaaaceRenderer extends Renderer {
                 // remove the tutorial if required after a timeout
                 setTimeout(() => {
                     document.body.classList.remove('tutorial');
-                    document.body.classList.add('tutorialDone');
                 }, 10000);
             } else {
                 this.addOffscreenIndicator(objData);

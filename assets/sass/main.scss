@@ -20,6 +20,7 @@ html,body{
 	left: 0;
 	width: 30px;
 	height: 30px;
+	opacity: 0;
 	background-image: url('assets/icons/offscreenIndicator.svg');
 	background-size: cover;
 	background-position: center;
@@ -122,7 +123,9 @@ button{
 	padding: 1rem;
 	color: #fff;
 	font-family: arial, sans-serif;
-	opacity: 0.3;
+	opacity: 0;
+
+	transition: all 0.5s ease-in;
 }
 
 .score{
@@ -135,6 +138,9 @@ button{
 	padding: 1rem;
 	color: #fff;
 	font-family: arial, sans-serif;
+	opacity: 0;
+
+	transition: all 0.5s ease-in;
 
 	&:before{
 		content: "Kills";
@@ -207,4 +213,10 @@ button{
 		height: 64px;
 		background-image: url("assets/images/mac_space.png");
 	}
+}
+
+body.gameActive{
+	.hud { opacity: 0.3;}
+	.score { opacity: 1;}
+	.offscreenIndicator{ opacity: 0.8}
 }
