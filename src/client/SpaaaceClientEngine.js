@@ -1,6 +1,7 @@
 const Howler = require('howler'); // eslint-disable-line no-unused-vars
 const ClientEngine = require('incheon').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
+const MobileControls = require('../client/MobileControls');
 const Ship = require('../common/Ship');
 const Utils = require('./Utils');
 
@@ -21,6 +22,7 @@ class SpaaaceClientEngine extends ClientEngine {
 
         super.start();
 
+        
         //  Game input
         // keep a reference for key press state
         this.pressedKeys = {};
@@ -52,6 +54,11 @@ class SpaaaceClientEngine extends ClientEngine {
             document.querySelector('#joinGame').addEventListener('click', () => {
                 this.socket.emit('requestRestart');
             });
+
+            if (Utils.isTouchDevice()){
+                // this.controls = new MobileControls(this.renderer);
+            }
+
         });
 
         // allow a custom path for sounds

@@ -27,4 +27,9 @@ Utils.getUrlVars = function() {
     return query_string;
 };
 
+Utils.isTouchDevice = function(){
+    return 'ontouchstart' in window        // works on most browsers
+        || navigator.maxTouchPoints;       // works on IE10/11 and Surface
+};
+
 module.exports = Utils;
