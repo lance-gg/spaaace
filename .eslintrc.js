@@ -22,7 +22,8 @@ module.exports = {
     "globals": {
         "window": true,
         "document": true,
-        "navigator": true
+        "navigator": true,
+        "Howl": true
     }
 
 

@@ -27,7 +27,7 @@ class SpaaaceClientEngine extends ClientEngine {
 
         // add special handler for space key
         document.addEventListener('keydown', (e) => {
-            if (e.keyCode=='32' && !this.pressedKeys['space']) {
+            if (e.keyCode == '32' && !this.pressedKeys.space) {
                 this.sendInput('space');
             }
         });
@@ -35,10 +35,9 @@ class SpaaaceClientEngine extends ClientEngine {
         document.addEventListener('keydown', (e) => { onKeyChange.call(this, e, true);});
         document.addEventListener('keyup', (e) => { onKeyChange.call(this, e, false);});
 
-
         // handle gui for game condition
-        this.gameEngine.on('objectDestroyed',(obj)=>{
-            if (obj.class == Ship && obj.isPlayerControlled){
+        this.gameEngine.on('objectDestroyed', (obj) => {
+            if (obj.class == Ship && obj.isPlayerControlled) {
                 document.body.classList.add('lostGame');
                 document.querySelector('#tryAgain').disabled = false;
             }
@@ -56,26 +55,26 @@ class SpaaaceClientEngine extends ClientEngine {
         });
 
         // allow a custom path for sounds
-        let assetPathPrefix = this.options.assetPathPrefix?this.options.assetPathPrefix:'';
+        let assetPathPrefix = this.options.assetPathPrefix ? this.options.assetPathPrefix : '';
 
         // handle sounds
         this.sounds = {
             missileHit: new Howl({ src: [assetPathPrefix + 'assets/audio/193429__unfa__projectile-hit.mp3'] }),
-            fireMissile: new Howl({ src: [assetPathPrefix +'assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
+            fireMissile: new Howl({ src: [assetPathPrefix + 'assets/audio/248293__chocobaggy__weird-laser-gun.mp3'] })
         };
 
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
         this.gameEngine.on('missileHit', () => { this.sounds.missileHit.play(); });
 
-        this.networkMonitor.on('RTTUpdate',(e) => {
+        this.networkMonitor.on('RTTUpdate', (e) => {
             this.renderer.updateHUD(e);
         });
     }
 
     // extend ClientEngine connect to add own events
-    connect(){
-        return super.connect().then( () =>{
-            this.socket.on('scoreUpdate', (e) =>{
+    connect() {
+        return super.connect().then(() => {
+            this.socket.on('scoreUpdate', (e) => {
                 this.renderer.updateScore(e);
             });
 
@@ -88,7 +87,7 @@ class SpaaaceClientEngine extends ClientEngine {
     // our pre-step is to process inputs that are "currently pressed" during the game step
     preStep() {
         if (this.pressedKeys.up) {
-            this.sendInput('up', { movement: true } );
+            this.sendInput('up', { movement: true });
         }
 
         if (this.pressedKeys.left) {
@@ -104,13 +103,12 @@ class SpaaaceClientEngine extends ClientEngine {
 
 // private functions
 
-
 // keyboard handling
 const keyCodeTable = {
-    '32': 'space',
-    '37': 'left',
-    '38': 'up',
-    '39': 'right'
+    32: 'space',
+    37: 'left',
+    38: 'up',
+    39: 'right'
 };
 
 function onKeyChange(e, isDown) {
@@ -120,11 +118,10 @@ function onKeyChange(e, isDown) {
     if (keyName) {
         this.pressedKeys[keyName] = isDown;
         // keep reference to the last key pressed to avoid duplicates
-        this.lastKeyPressed = isDown?e.keyCode:null;
-        this.gameEngine.emit('client.keyChange',{ keyName, isDown });
+        this.lastKeyPressed = isDown ? e.keyCode : null;
+        this.gameEngine.emit('client.keyChange', { keyName, isDown });
         e.preventDefault();
     }
 }
-
 
 module.exports = SpaaaceClientEngine;
