@@ -1,7 +1,7 @@
 'use strict';
 
 const ServerEngine = require('incheon').ServerEngine;
-const NameGenerator = require('./NameGenerator');
+const nameGenerator = require('./NameGenerator');
 
 class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -11,13 +11,13 @@ class SpaaaceServerEngine extends ServerEngine {
         this.serializer.registerClass(require('../common/Ship'));
 
         this.scoreData = {};
-    };
+    }
 
     start() {
         super.start();
-        for(let x=0; x<3; x++) this.makeBot();
+        for (let x = 0; x < 3; x++) this.makeBot();
 
-        this.gameEngine.on('missileHit', (e)=>{
+        this.gameEngine.on('missileHit', (e) => {
             if (this.scoreData[e.missile.shipOwnerId]) {
                 // add kills
                 this.scoreData[e.missile.shipOwnerId].kills++;
@@ -27,16 +27,16 @@ class SpaaaceServerEngine extends ServerEngine {
             this.updateScore();
 
             this.gameEngine.removeObjectFromWorld(e.ship.id);
-            if(e.ship.isBot) {
+            if (e.ship.isBot) {
                 this.makeBot();
             }
         });
-    };
+    }
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
 
-        let makePlayerShip = ()=>{
+        let makePlayerShip = () => {
             let ship = this.gameEngine.makeShip();
             ship.playerId = socket.playerId;
 
@@ -49,7 +49,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
         // handle client restart requests
         socket.on('requestRestart', makePlayerShip);
-    };
+    }
 
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
@@ -67,7 +67,7 @@ class SpaaaceServerEngine extends ServerEngine {
         }
 
         this.updateScore();
-    };
+    }
 
     makeBot() {
         let bot = this.gameEngine.makeShip();
@@ -75,7 +75,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.scoreData[bot.id] = {
             kills: 0,
-            name: NameGenerator('general') + 'Bot'
+            name: nameGenerator('general') + 'Bot'
         };
 
         this.updateScore();
