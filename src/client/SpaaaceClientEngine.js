@@ -71,7 +71,7 @@ class SpaaaceClientEngine extends ClientEngine {
 
         this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
         this.gameEngine.on('missileHit', () => {
-            // don't play sounds if the player is not in game
+            // don't play explosion sound if the player is not in game
             if (this.renderer.playerShip) {
                 this.sounds.missileHit.play();
             }
