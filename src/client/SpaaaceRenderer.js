@@ -50,7 +50,7 @@ class SpaaaceRenderer extends Renderer {
 
         if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
             this.onDOMLoaded();
-        } else{
+        } else {
             document.addEventListener('DOMContentLoaded', ()=>{
                 this.onDOMLoaded();
             });
@@ -72,7 +72,7 @@ class SpaaaceRenderer extends Renderer {
                     document.body.classList.add('touch');
                 } else if (isMacintosh()) {
                     document.body.classList.add('mac');
-                }  else if (isWindows()) {
+                } else if (isWindows()) {
                     document.body.classList.add('pc');
                 }
 
@@ -218,6 +218,8 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
             }
+
+            // this.emit("postDraw");
         }
 
         let cameraTarget;
@@ -226,29 +228,29 @@ class SpaaaceRenderer extends Renderer {
             // this.cameraRoam = false;
         } else if (!this.gameStarted && !cameraTarget) {
 
-            // calculate centroid                                              
+            // calculate centroid
             cameraTarget = getCentroid(this.gameEngine.world.objects);
             this.cameraRoam = true;
         }
 
+        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+
+        this.bg1.tilePosition.x = bgOffsetX * 0.01;
+        this.bg1.tilePosition.y = bgOffsetY * 0.01;
+
+        this.bg2.tilePosition.x = bgOffsetX * 0.04;
+        this.bg2.tilePosition.y = bgOffsetY * 0.04;
+
+        this.bg3.tilePosition.x = bgOffsetX * 0.3;
+        this.bg3.tilePosition.y = bgOffsetY * 0.3;
+
+        this.bg4.tilePosition.x = bgOffsetX * 0.75;
+        this.bg4.tilePosition.y = bgOffsetY * 0.75;
+
         if (cameraTarget) {
-            let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
-            let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
-
-            // let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
-            // let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
-
-            this.bg1.tilePosition.x = bgOffsetX * 0.01;
-            this.bg1.tilePosition.y = bgOffsetY * 0.01;
-
-            this.bg2.tilePosition.x = bgOffsetX * 0.04;
-            this.bg2.tilePosition.y = bgOffsetY * 0.04;
-
-            this.bg3.tilePosition.x = bgOffsetX * 0.3;
-            this.bg3.tilePosition.y = bgOffsetY * 0.3;
-
-            this.bg4.tilePosition.x = bgOffsetX * 0.75;
-            this.bg4.tilePosition.y = bgOffsetY * 0.75;
+            // let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
+            // let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
 
             // 'cameraroam' in Utils.getUrlVars()
             if (this.cameraRoam) {
@@ -357,6 +359,13 @@ class SpaaaceRenderer extends Renderer {
      */
     centerCamera(targetX, targetY) {
         if (isNaN(targetX) || isNaN(targetY)) return;
+        if (!this.lastCameraPosition){
+            this.lastCameraPosition = {};
+        }
+
+        this.lastCameraPosition.x = this.camera.x;
+        this.lastCameraPosition.y = this.camera.y;
+
         this.camera.x = this.viewportWidth / 2 - targetX;
         this.camera.y = this.viewportHeight / 2 - targetY;
         this.lookingAt.x = targetX;

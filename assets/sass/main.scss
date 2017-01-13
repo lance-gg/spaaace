@@ -225,10 +225,6 @@ button{
 	}
 }
 
-.touch .fireButton{
-	opacity: 0.6;
-	pointer-events: all;
-}
 
 .pc .keysContainer{
 	&:after{
@@ -279,5 +275,10 @@ body.gameActive{
 
 	.pixiContainer:before{
 		opacity: 0;
+	}
+
+	&.touch .fireButton{
+		opacity: 0.6;
+		pointer-events: all;
 	}
 }
