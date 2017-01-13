@@ -28,7 +28,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
             this.gameEngine.removeObjectFromWorld(e.ship.id);
             if (e.ship.isBot) {
-                this.makeBot();
+                setTimeout(() => this.makeBot(), 5000);
             }
         });
     }
