@@ -68,31 +68,40 @@ class MobileControls{
         // no touch, no movement
         if (!this.currentTouch) return;
 
+        // by default no touch
+        this.activeInput.right = false;
+        this.activeInput.left = false;
+        this.activeInput.up = false;
+
         let playerShip = this.renderer.playerShip;
         // no player ship, no movement
         if (!playerShip) return;
 
         let playerShipScreenCoords = this.renderer.gameCoordsToScreen(playerShip);
 
-        let shortestArc = Utils.shortestArc(Math.atan2(this.currentTouch.x - playerShipScreenCoords.x, -(this.currentTouch.y - playerShipScreenCoords.y)),
+        let dx = this.currentTouch.x - playerShipScreenCoords.x;
+        let dy = this.currentTouch.y - playerShipScreenCoords.y;
+        let shortestArc = Utils.shortestArc(Math.atan2(dx, -dy),
             Math.atan2(Math.sin(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2), Math.cos(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2)));
 
         let rotateThreshold = 0.3;
+        let distanceThreshold = 800;
 
+        // ignore if too close
+        if ((dx*dx + dy*dy) < distanceThreshold)
+            return;
+
+        // turn left or right
         if (shortestArc > rotateThreshold){
             this.activeInput.left = true;
             this.activeInput.right = false;
         } else if (shortestArc < -rotateThreshold) {
             this.activeInput.right = true;
             this.activeInput.left = false;
-        } else {
-            this.activeInput.right = false;
-            this.activeInput.left = false;
         }
 
         this.activeInput.up = true;
         this.renderer.onKeyChange({ keyName: 'up', isDown: true });
-
     }
 
 }
