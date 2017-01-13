@@ -45,8 +45,10 @@ class MobileControls{
         this.touchContainer.addEventListener('touchstart', touchHandler, false);
         this.touchContainer.addEventListener('touchmove', (e) =>{
             touchHandler(e);
-            // prevent scrolling
-            e.preventDefault();
+            // if ingame prevent scrolling
+            if (this.renderer.playerShip) {
+                e.preventDefault();
+            }
         }, false);
 
         this.touchContainer.addEventListener('touchend', (e) => {
