@@ -3,6 +3,7 @@
 const Serializer = require('incheon').serialize.Serializer;
 const DynamicObject = require('incheon').serialize.DynamicObject;
 const Point = require('incheon').Point;
+const Utils = require('./Utils');
 
 class Ship extends DynamicObject {
 
@@ -79,7 +80,7 @@ class Ship extends DynamicObject {
         if (this.target) {
             let desiredVelocity = new Point();
             desiredVelocity.copyFrom(this.target).subtract(this.x, this.y);
-            let turnRight = -shortestArc(Math.atan2(desiredVelocity.y, desiredVelocity.x), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
+            let turnRight = -Utils.shortestArc(Math.atan2(desiredVelocity.y, desiredVelocity.x), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
 
             if (turnRight > 0.05) {
                 this.isRotatingRight = true;
@@ -92,12 +93,6 @@ class Ship extends DynamicObject {
 
         }
     }
-}
-
-function shortestArc(a, b) {
-    if (Math.abs(b-a) < Math.PI) return b-a;
-    if (b>a) return b-a-Math.PI*2;
-    return b-a+Math.PI*2;
 }
 
 module.exports = Ship;

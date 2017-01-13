@@ -2,8 +2,9 @@ const Howler = require('howler'); // eslint-disable-line no-unused-vars
 const ClientEngine = require('incheon').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const MobileControls = require('../client/MobileControls');
+const KeyboardControls = require('../client/KeyboardControls');
 const Ship = require('../common/Ship');
-const Utils = require('./Utils');
+const Utils = require('./../common/Utils');
 
 class SpaaaceClientEngine extends ClientEngine {
     constructor(gameEngine, options) {
@@ -21,21 +22,6 @@ class SpaaaceClientEngine extends ClientEngine {
     start() {
 
         super.start();
-
-        
-        //  Game input
-        // keep a reference for key press state
-        this.pressedKeys = {};
-
-        // add special handler for space key
-        document.addEventListener('keydown', (e) => {
-            if (e.keyCode == '32' && !this.pressedKeys.space) {
-                this.sendInput('space');
-            }
-        });
-
-        document.addEventListener('keydown', (e) => { onKeyChange.call(this, e, true);});
-        document.addEventListener('keyup', (e) => { onKeyChange.call(this, e, false);});
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
@@ -55,9 +41,16 @@ class SpaaaceClientEngine extends ClientEngine {
                 this.socket.emit('requestRestart');
             });
 
+            //  Game input
             if (Utils.isTouchDevice()){
-                // this.controls = new MobileControls(this.renderer);
+                this.controls = new MobileControls(this.renderer);
+            } else {
+                this.controls = new KeyboardControls(this.renderer);
             }
+
+            this.controls.on('fire', () => {
+                this.sendInput('space');
+            });
 
         });
 
@@ -93,42 +86,21 @@ class SpaaaceClientEngine extends ClientEngine {
 
     // our pre-step is to process inputs that are "currently pressed" during the game step
     preStep() {
-        if (this.pressedKeys.up) {
-            this.sendInput('up', { movement: true });
-        }
+        if (this.controls) {
+            if (this.controls.activeInput.up) {
+                this.sendInput('up', { movement: true });
+            }
 
-        if (this.pressedKeys.left) {
-            this.sendInput('left', { movement: true });
-        }
+            if (this.controls.activeInput.left) {
+                this.sendInput('left', { movement: true });
+            }
 
-        if (this.pressedKeys.right) {
-            this.sendInput('right', { movement: true });
+            if (this.controls.activeInput.right) {
+                this.sendInput('right', { movement: true });
+            }
         }
     }
 
-}
-
-// private functions
-
-// keyboard handling
-const keyCodeTable = {
-    32: 'space',
-    37: 'left',
-    38: 'up',
-    39: 'right'
-};
-
-function onKeyChange(e, isDown) {
-    e = e || window.event;
-
-    let keyName = keyCodeTable[e.keyCode];
-    if (keyName) {
-        this.pressedKeys[keyName] = isDown;
-        // keep reference to the last key pressed to avoid duplicates
-        this.lastKeyPressed = isDown ? e.keyCode : null;
-        this.gameEngine.emit('client.keyChange', { keyName, isDown });
-        e.preventDefault();
-    }
 }
 
 module.exports = SpaaaceClientEngine;

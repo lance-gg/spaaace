@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 const Renderer = require('incheon').render.Renderer;
-const Utils= require('./Utils');
+const Utils= require('./../common/Utils');
 
 const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
@@ -48,12 +48,11 @@ class SpaaaceRenderer extends Renderer {
 
         this.stage.addChild(this.layer1, this.layer2);
 
-        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
         if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
-            document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+            this.onDOMLoaded();
         } else{
             document.addEventListener('DOMContentLoaded', ()=>{
-                document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+                this.onDOMLoaded();
             });
         }
 
@@ -69,16 +68,22 @@ class SpaaaceRenderer extends Renderer {
                 this.setupStage();
                 this.gameEngine.emit('renderer.ready');
 
-                if (isMacintosh()) {
+                if (Utils.isTouchDevice()){
+                    document.body.classList.add('touch');
+                } else if (isMacintosh()) {
                     document.body.classList.add('mac');
-                }
-                if (isWindows()) {
+                }  else if (isWindows()) {
                     document.body.classList.add('pc');
                 }
 
                 resolve();
             });
         });
+    }
+
+    onDOMLoaded(){
+        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
+        document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
     setupStage() {
@@ -115,16 +120,6 @@ class SpaaaceRenderer extends Renderer {
         // this.camera.addChild(this.debugText);
 
         this.elapsedTime = Date.now();
-
-        // events
-        this.gameEngine.on('client.keyChange', (e)=>{
-            if (this.playerShip) {
-                if (e.keyName == 'up') {
-                    this.playerShip.actor.thrustEmitter.emit = e.isDown;
-                }
-            }
-        });
-
         // debug
         if ('showworldbounds' in Utils.getUrlVars()) {
             let graphics = new PIXI.Graphics();
@@ -475,6 +470,26 @@ class SpaaaceRenderer extends Renderer {
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
         }
 
+    }
+
+    onKeyChange(e){
+        if (this.playerShip) {
+            if (e.keyName === 'up') {
+                this.playerShip.actor.thrustEmitter.emit = e.isDown;
+            }
+        }
+    }
+
+    /*
+     * Takes in game coordinates and translates them into screen coordinates
+     * @param obj an object with x and y properties
+     */
+    gameCoordsToScreen(obj){
+        // console.log(obj.x , this.viewportWidth / 2 , this.camera.x)
+        return {
+            x: obj.x + this.camera.x,
+            y: obj.y + this.camera.y
+        };
     }
 
 }

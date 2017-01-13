@@ -42,7 +42,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
             this.scoreData[ship.id] = {
                 kills: 0,
-                name: NameGenerator('general')
+                name: nameGenerator('general')
             };
             this.updateScore();
         };

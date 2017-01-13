@@ -32,4 +32,10 @@ Utils.isTouchDevice = function(){
         || navigator.maxTouchPoints;       // works on IE10/11 and Surface
 };
 
+Utils.shortestArc = function(a, b) {
+    if (Math.abs(b-a) < Math.PI) return b-a;
+    if (b>a) return b-a-Math.PI*2;
+    return b-a+Math.PI*2;
+};
+
 module.exports = Utils;
