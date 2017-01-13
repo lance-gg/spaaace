@@ -34,10 +34,16 @@ class SpaaaceClientEngine extends ClientEngine {
         this.gameEngine.once('renderer.ready', () => {
             // click event for "try again" button
             document.querySelector('#tryAgain').addEventListener('click', () => {
+                if (Utils.isTouchDevice()){
+                    this.renderer.enableFullScreen();
+                }
                 this.socket.emit('requestRestart');
             });
 
             document.querySelector('#joinGame').addEventListener('click', () => {
+                if (Utils.isTouchDevice()){
+                    this.renderer.enableFullScreen();
+                }
                 this.socket.emit('requestRestart');
             });
 

@@ -480,6 +480,23 @@ class SpaaaceRenderer extends Renderer {
         }
     }
 
+    enableFullScreen(){
+        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !==     null) ||    // alternative standard method
+            (document.mozFullScreen || document.webkitIsFullScreen);
+
+        let docElm = document.documentElement;
+        if (!isInFullScreen) {
+
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        }
+    }
+
     /*
      * Takes in game coordinates and translates them into screen coordinates
      * @param obj an object with x and y properties
