@@ -77,13 +77,16 @@ class MobileControls{
         let shortestArc = Utils.shortestArc(Math.atan2(this.currentTouch.x - playerShipScreenCoords.x, -(this.currentTouch.y - playerShipScreenCoords.y)),
             Math.atan2(Math.sin(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2), Math.cos(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2)));
 
-        let rotateThreshold = 0.05;
+        let rotateThreshold = 0.3;
 
         if (shortestArc > rotateThreshold){
             this.activeInput.left = true;
             this.activeInput.right = false;
         } else if (shortestArc < -rotateThreshold) {
             this.activeInput.right = true;
+            this.activeInput.left = false;
+        } else {
+            this.activeInput.right = false;
             this.activeInput.left = false;
         }
 
