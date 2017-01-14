@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 const Renderer = require('incheon').render.Renderer;
-const Utils= require('./Utils');
+const Utils= require('./../common/Utils');
 
 const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
@@ -48,12 +48,11 @@ class SpaaaceRenderer extends Renderer {
 
         this.stage.addChild(this.layer1, this.layer2);
 
-        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
         if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
-            document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
-        } else{
+            this.onDOMLoaded();
+        } else {
             document.addEventListener('DOMContentLoaded', ()=>{
-                document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+                this.onDOMLoaded();
             });
         }
 
@@ -69,16 +68,22 @@ class SpaaaceRenderer extends Renderer {
                 this.setupStage();
                 this.gameEngine.emit('renderer.ready');
 
-                if (isMacintosh()) {
+                if (Utils.isTouchDevice()){
+                    document.body.classList.add('touch');
+                } else if (isMacintosh()) {
                     document.body.classList.add('mac');
-                }
-                if (isWindows()) {
+                } else if (isWindows()) {
                     document.body.classList.add('pc');
                 }
 
                 resolve();
             });
         });
+    }
+
+    onDOMLoaded(){
+        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
+        document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
     setupStage() {
@@ -115,16 +120,6 @@ class SpaaaceRenderer extends Renderer {
         // this.camera.addChild(this.debugText);
 
         this.elapsedTime = Date.now();
-
-        // events
-        this.gameEngine.on('client.keyChange', (e)=>{
-            if (this.playerShip) {
-                if (e.keyName == 'up') {
-                    this.playerShip.actor.thrustEmitter.emit = e.isDown;
-                }
-            }
-        });
-
         // debug
         if ('showworldbounds' in Utils.getUrlVars()) {
             let graphics = new PIXI.Graphics();
@@ -223,6 +218,8 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
             }
+
+            // this.emit("postDraw");
         }
 
         let cameraTarget;
@@ -231,29 +228,29 @@ class SpaaaceRenderer extends Renderer {
             // this.cameraRoam = false;
         } else if (!this.gameStarted && !cameraTarget) {
 
-            // calculate centroid                                              
+            // calculate centroid
             cameraTarget = getCentroid(this.gameEngine.world.objects);
             this.cameraRoam = true;
         }
 
+        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+
+        this.bg1.tilePosition.x = bgOffsetX * 0.01;
+        this.bg1.tilePosition.y = bgOffsetY * 0.01;
+
+        this.bg2.tilePosition.x = bgOffsetX * 0.04;
+        this.bg2.tilePosition.y = bgOffsetY * 0.04;
+
+        this.bg3.tilePosition.x = bgOffsetX * 0.3;
+        this.bg3.tilePosition.y = bgOffsetY * 0.3;
+
+        this.bg4.tilePosition.x = bgOffsetX * 0.75;
+        this.bg4.tilePosition.y = bgOffsetY * 0.75;
+
         if (cameraTarget) {
-            let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
-            let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
-
-            // let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
-            // let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
-
-            this.bg1.tilePosition.x = bgOffsetX * 0.01;
-            this.bg1.tilePosition.y = bgOffsetY * 0.01;
-
-            this.bg2.tilePosition.x = bgOffsetX * 0.04;
-            this.bg2.tilePosition.y = bgOffsetY * 0.04;
-
-            this.bg3.tilePosition.x = bgOffsetX * 0.3;
-            this.bg3.tilePosition.y = bgOffsetY * 0.3;
-
-            this.bg4.tilePosition.x = bgOffsetX * 0.75;
-            this.bg4.tilePosition.y = bgOffsetY * 0.75;
+            // let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
+            // let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
 
             // 'cameraroam' in Utils.getUrlVars()
             if (this.cameraRoam) {
@@ -362,6 +359,13 @@ class SpaaaceRenderer extends Renderer {
      */
     centerCamera(targetX, targetY) {
         if (isNaN(targetX) || isNaN(targetY)) return;
+        if (!this.lastCameraPosition){
+            this.lastCameraPosition = {};
+        }
+
+        this.lastCameraPosition.x = this.camera.x;
+        this.lastCameraPosition.y = this.camera.y;
+
         this.camera.x = this.viewportWidth / 2 - targetX;
         this.camera.y = this.viewportHeight / 2 - targetY;
         this.lookingAt.x = targetX;
@@ -475,6 +479,43 @@ class SpaaaceRenderer extends Renderer {
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
         }
 
+    }
+
+    onKeyChange(e){
+        if (this.playerShip) {
+            if (e.keyName === 'up') {
+                this.playerShip.actor.thrustEmitter.emit = e.isDown;
+            }
+        }
+    }
+
+    enableFullScreen(){
+        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !==     null) ||    // alternative standard method
+            (document.mozFullScreen || document.webkitIsFullScreen);
+
+        let docElm = document.documentElement;
+        if (!isInFullScreen) {
+
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        }
+    }
+
+    /*
+     * Takes in game coordinates and translates them into screen coordinates
+     * @param obj an object with x and y properties
+     */
+    gameCoordsToScreen(obj){
+        // console.log(obj.x , this.viewportWidth / 2 , this.camera.x)
+        return {
+            x: obj.x + this.camera.x,
+            y: obj.y + this.camera.y
+        };
     }
 
 }

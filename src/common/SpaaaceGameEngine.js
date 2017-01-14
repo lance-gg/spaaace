@@ -30,8 +30,8 @@ class SpaaaceGameEngine extends GameEngine {
 
             if (!ship || !missile)
                 return;
-
-            if (missile.playerId !== ship.playerId) {
+            
+            if (missile.shipOwnerId !== ship.id) {
                 that.destroyMissile(missile.id);
                 that.emit('missileHit', { missile, ship });
             }

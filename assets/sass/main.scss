@@ -41,7 +41,7 @@ html,body{
 	transition: opacity 0.3s ease-in;
 }
 
-#tryAgain, #joinGame{
+#tryAgain, #joinGame, #reconnect{
 	position: absolute;
 	left: 50%;
 	top: 50%;
@@ -199,6 +199,33 @@ button{
 	}
 }
 
+.fireButton{
+	pointer-events: none;
+	opacity: 0;
+
+	transition: all 0.5s ease-in;
+
+	background: #fff;
+	width: 3rem;
+	height: 3rem;
+	position: absolute;
+	bottom: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 3px solid #ff2f95;
+	border-radius: 5rem;
+
+	&:before{
+		content: "FIRE";
+		position: absolute;
+		color: #ff2f95;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+}
+
+
 .pc .keysContainer{
 	&:after{
 		width: 103px;
@@ -248,5 +275,22 @@ body.gameActive{
 
 	.pixiContainer:before{
 		opacity: 0;
+	}
+
+	&.touch .fireButton{
+		opacity: 0.6;
+		pointer-events: all;
+	}
+}
+
+.disconnected{
+	#reconnect{
+		opacity: 1;
+		pointer-events: all;
+	}
+
+	#tryAgain, #joinGame{
+		opacity: 0;
+		pointer-events: none;
 	}
 }
