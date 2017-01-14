@@ -41,7 +41,7 @@ html,body{
 	transition: opacity 0.3s ease-in;
 }
 
-#tryAgain, #joinGame{
+#tryAgain, #joinGame, #reconnect{
 	position: absolute;
 	left: 50%;
 	top: 50%;
@@ -280,5 +280,17 @@ body.gameActive{
 	&.touch .fireButton{
 		opacity: 0.6;
 		pointer-events: all;
+	}
+}
+
+.disconnected{
+	#reconnect{
+		opacity: 1;
+		pointer-events: all;
+	}
+
+	#tryAgain, #joinGame{
+		opacity: 0;
+		pointer-events: none;
 	}
 }

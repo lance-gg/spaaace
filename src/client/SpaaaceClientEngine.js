@@ -47,6 +47,10 @@ class SpaaaceClientEngine extends ClientEngine {
                 this.socket.emit('requestRestart');
             });
 
+            document.querySelector('#reconnect').addEventListener('click', () => {
+                window.location.reload();
+            });
+
             //  Game input
             if (Utils.isTouchDevice()){
                 this.controls = new MobileControls(this.renderer);
@@ -87,6 +91,13 @@ class SpaaaceClientEngine extends ClientEngine {
         return super.connect().then(() => {
             this.socket.on('scoreUpdate', (e) => {
                 this.renderer.updateScore(e);
+            });
+
+            this.socket.on('disconnect', (e) => {
+                console.log('disconnected');
+                document.body.classList.add('disconnected');
+                document.body.classList.remove('gameActive');
+                document.querySelector('#reconnect').disabled = false;
             });
 
             if ('autostart' in Utils.getUrlVars()) {
