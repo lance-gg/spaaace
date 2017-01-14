@@ -1,3 +1,10 @@
+@import "./../../node_modules/breakpoint-sass/stylesheets/breakpoint";
+
+$breakpoint-mobile: (max-width 568px) (orientation portrait);
+$breakpoint-mobile-landscape: (max-width 568px) (orientation landscape);
+$breakpoint-tablet: 569px 1280px;
+$breakpoint-desktop: min-width 1281px;
+
 html,body{
 	padding: 0;
 	margin: 0;
@@ -67,6 +74,7 @@ button{
 	border: 0;
 	color: white;
 	outline: none;
+	white-space: nowrap;
 
 	&:before{
 		content: "";
@@ -256,13 +264,19 @@ button{
 
 h2{
 	position: absolute;
-	top: 40%;
+	box-sizing: border-box;
+	top: 29%;
 	font-weight: 300;
 	font-size: 25px;
 	text-align: center;
 	width: 100%;
 	color: #fff;
 	transition: all 0.5s ease-in;
+	padding: 0 3rem;
+
+	@include breakpoint(($breakpoint-desktop)){
+		top: 40%;
+	}
 }
 
 body.gameActive{
