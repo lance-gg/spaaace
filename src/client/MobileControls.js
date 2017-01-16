@@ -85,7 +85,7 @@ class MobileControls{
             Math.atan2(Math.sin(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2), Math.cos(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2)));
 
         let rotateThreshold = 0.3;
-        let distanceThreshold = 200;
+        let distanceThreshold = 120;
 
         // turn left or right
         if (shortestArc > rotateThreshold){
