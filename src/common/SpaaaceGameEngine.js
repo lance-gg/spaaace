@@ -30,7 +30,7 @@ class SpaaaceGameEngine extends GameEngine {
 
             if (!ship || !missile)
                 return;
-            
+
             if (missile.shipOwnerId !== ship.id) {
                 that.destroyMissile(missile.id);
                 that.emit('missileHit', { missile, ship });
@@ -93,6 +93,7 @@ class SpaaaceGameEngine extends GameEngine {
         let ship = new Ship(++this.world.idCount, this, newShipX, newShipY);
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
+        console.log(`ship added: ${ship.toString()}`);
 
         return ship;
     };

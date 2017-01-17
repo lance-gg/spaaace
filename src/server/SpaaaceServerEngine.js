@@ -26,6 +26,7 @@ class SpaaaceServerEngine extends ServerEngine {
             }
             this.updateScore();
 
+            console.log(`ship killed: ${e.ship.toString()}`);
             this.gameEngine.removeObjectFromWorld(e.ship.id);
             if (e.ship.isBot) {
                 setTimeout(() => this.makeBot(), 5000);

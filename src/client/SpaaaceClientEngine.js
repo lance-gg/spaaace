@@ -11,7 +11,7 @@ class SpaaaceClientEngine extends ClientEngine {
         super(gameEngine, options);
 
         // initialize renderer
-        this.renderer = new SpaaaceRenderer(gameEngine);
+        this.renderer = new SpaaaceRenderer(gameEngine, this);
 
         this.serializer.registerClass(require('../common/Ship'));
         this.serializer.registerClass(require('../common/Missile'));
@@ -25,7 +25,7 @@ class SpaaaceClientEngine extends ClientEngine {
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
-            if (obj.class == Ship && obj.isPlayerControlled) {
+            if (obj.class == Ship && this.isOwnedByPlayer(obj)) {
                 document.body.classList.add('lostGame');
                 document.querySelector('#tryAgain').disabled = false;
             }

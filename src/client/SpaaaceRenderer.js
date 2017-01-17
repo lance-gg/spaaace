@@ -22,11 +22,12 @@ class SpaaaceRenderer extends Renderer {
             bg3: 'assets/clouds2.png',
             bg4: 'assets/clouds1.png',
             smokeParticle: 'assets/smokeparticle.png'
-        }
+        };
     }
 
-    constructor(gameEngine) {
-        super(gameEngine);
+    // TODO: document
+    constructor(gameEngine, clientEngine) {
+        super(gameEngine, clientEngine);
         this.sprites = {};
         this.isReady = false;
 
@@ -288,7 +289,7 @@ class SpaaaceRenderer extends Renderer {
             this.sprites[objData.id] = sprite;
             sprite.id = objData.id;
 
-            if (objData.isPlayerControlled) {
+            if (this.clientEngine.isOwnedByPlayer(objData)) {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
                 document.body.classList.remove('lostGame');
