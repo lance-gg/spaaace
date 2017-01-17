@@ -85,11 +85,13 @@ class SpaaaceGameEngine extends GameEngine {
      * Makes a new ship, places it randomly and adds it to the game world
      * @return {Ship} the added Ship object
      */
-    makeShip() {
+    makeShip(playerId) {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
+        // todo playerId should be called ownerId
         let ship = new Ship(++this.world.idCount, this, newShipX, newShipY);
+        ship.playerId = playerId;
         this.addObjectToWorld(ship);
 
         return ship;

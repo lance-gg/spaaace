@@ -37,8 +37,7 @@ class SpaaaceServerEngine extends ServerEngine {
         super.onPlayerConnected(socket);
 
         let makePlayerShip = () => {
-            let ship = this.gameEngine.makeShip();
-            ship.playerId = socket.playerId;
+            let ship = this.gameEngine.makeShip(socket.playerId);
 
             this.scoreData[ship.id] = {
                 kills: 0,
@@ -70,7 +69,7 @@ class SpaaaceServerEngine extends ServerEngine {
     }
 
     makeBot() {
-        let bot = this.gameEngine.makeShip();
+        let bot = this.gameEngine.makeShip(0);
         bot.attachAI();
 
         this.scoreData[bot.id] = {
