@@ -18,12 +18,10 @@ class SpaaaceServerEngine extends ServerEngine {
         for (let x = 0; x < 3; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', (e) => {
-            if (this.scoreData[e.missile.shipOwnerId]) {
-                // add kills
-                this.scoreData[e.missile.shipOwnerId].kills++;
-                // remove score data for killed ship
-                delete this.scoreData[e.ship.id];
-            }
+            // add kills
+            if (this.scoreData[e.missile.shipOwnerId]) this.scoreData[e.missile.shipOwnerId].kills++;
+            // remove score data for killed ship
+            delete this.scoreData[e.ship.id];
             this.updateScore();
 
             console.log(`ship killed: ${e.ship.toString()}`);
