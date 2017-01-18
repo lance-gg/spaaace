@@ -46,8 +46,14 @@ class Ship extends DynamicObject {
 
     attachAI() {
         this.isBot = true;
-        this.gameEngine.on('preStep', ()=>{
+
+        let onPreStep = () => {
             this.steer();
+        };
+
+        this.gameEngine.on('preStep', onPreStep);
+        this.gameEngine.once('objectDestroyed', (obj) => {
+            if (obj === this) this.gameEngine.removeListener('preStep', onPreStep);
         });
 
         let fireLoopTime = Math.round(250 + Math.random() * 100);
