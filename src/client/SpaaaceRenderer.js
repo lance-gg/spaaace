@@ -172,18 +172,7 @@ class SpaaaceRenderer extends Renderer {
                 if ((sprite !== this.playerShip) && sprite.actor) {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
-
-                if (sprite == this.playerShip) {
-                    if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++; }
-                    if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX--; }
-                    if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++; }
-                    if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY--; }
-
-                    // this.debug.beginFill(0xFF0000);
-                    // this.debug.drawCircle(sprite.x, sprite.y, 1);
-                    // this.debug.endFill();
-                }
-
+                
                 if (objData.class == Ship && sprite != this.playerShip) {
                     this.updateOffscreenIndicator(objData);
                 }
@@ -234,6 +223,44 @@ class SpaaaceRenderer extends Renderer {
             this.cameraRoam = true;
         }
 
+        if (cameraTarget) {
+            // let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
+            // let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
+
+            // 'cameraroam' in Utils.getUrlVars()
+            if (this.cameraRoam) {
+                let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
+                let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
+                let cameraTempTargetX;
+                let cameraTempTargetY;
+
+                if (lookingAtDeltaX > worldWidth / 2) {
+                    this.bgPhaseX++;
+                    cameraTempTargetX = this.lookingAt.x + worldWidth;
+                } else if (lookingAtDeltaX < -worldWidth / 2) {
+                    this.bgPhaseX--;
+                    cameraTempTargetX = this.lookingAt.x - worldWidth;
+                } else {
+                    cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
+                }
+
+                if (lookingAtDeltaY > worldHeight / 2) {
+                    cameraTempTargetY = this.lookingAt.y + worldHeight;
+                    this.bgPhaseY++;
+                } else if (lookingAtDeltaY < -worldHeight / 2) {
+                    this.bgPhaseY--;
+                    cameraTempTargetY = this.lookingAt.y - worldHeight;
+                } else {
+                    cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02
+                }
+
+                this.centerCamera(cameraTempTargetX, cameraTempTargetY);
+
+            } else {
+                this.centerCamera(cameraTarget.x, cameraTarget.y);
+            }
+        }
+
         let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
         let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
 
@@ -248,31 +275,6 @@ class SpaaaceRenderer extends Renderer {
 
         this.bg4.tilePosition.x = bgOffsetX * 0.75;
         this.bg4.tilePosition.y = bgOffsetY * 0.75;
-
-        if (cameraTarget) {
-            // let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
-            // let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
-
-            // 'cameraroam' in Utils.getUrlVars()
-            if (this.cameraRoam) {
-                let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
-                let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
-
-                let cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
-                let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
-
-
-                if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX += worldWidth; }
-                if (lookingAtDeltaX < -worldWidth / 2) { cameraTempTargetX -= worldWidth; }
-                if (lookingAtDeltaY > worldHeight / 2) { cameraTempTargetY += worldHeight; }
-                if (lookingAtDeltaY < -worldHeight / 2) { cameraTempTargetY -= worldHeight; }
-
-                this.centerCamera(cameraTempTargetX, cameraTempTargetY);
-
-            } else {
-                this.centerCamera(cameraTarget.x, cameraTarget.y);
-            }
-        }
 
         this.elapsedTime = now;
 
