@@ -40,6 +40,10 @@ class Ship extends DynamicObject {
         if (this.fireLoop) {
             this.fireLoop.destroy();
         }
+        if (this.onPreStep){
+            this.gameEngine.removeListener('preStep', this.onPreStep);
+            this.onPreStep = null;
+        }
     }
 
     get maxSpeed() { return 3.0; }
@@ -47,14 +51,11 @@ class Ship extends DynamicObject {
     attachAI() {
         this.isBot = true;
 
-        let onPreStep = () => {
+        this.onPreStep = () => {
             this.steer();
         };
 
-        this.gameEngine.on('preStep', onPreStep);
-        this.gameEngine.once('objectDestroyed', (obj) => {
-            if (obj === this) this.gameEngine.removeListener('preStep', onPreStep);
-        });
+        this.gameEngine.on('preStep', this.onPreStep);
 
         let fireLoopTime = Math.round(250 + Math.random() * 100);
         this.fireLoop = this.gameEngine.timer.loop(fireLoopTime, () => {
