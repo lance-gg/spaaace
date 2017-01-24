@@ -16,13 +16,15 @@ module.exports = {
         "no-console": "off",
         "no-warning-comments": "off",
         "object-curly-spacing": ["error", "always"],
+        "space-before-blocks": 0,
         "padded-blocks": "off",
         "require-jsdoc": "off"
     },
     "globals": {
         "window": true,
         "document": true,
-        "navigator": true
+        "navigator": true,
+        "Howl": true
     }
 
 

@@ -3,6 +3,7 @@
 const Serializer = require('incheon').serialize.Serializer;
 const DynamicObject = require('incheon').serialize.DynamicObject;
 const Point = require('incheon').Point;
+const Utils = require('./Utils');
 
 class Ship extends DynamicObject {
 
@@ -39,15 +40,22 @@ class Ship extends DynamicObject {
         if (this.fireLoop) {
             this.fireLoop.destroy();
         }
+        if (this.onPreStep){
+            this.gameEngine.removeListener('preStep', this.onPreStep);
+            this.onPreStep = null;
+        }
     }
 
     get maxSpeed() { return 3.0; }
 
     attachAI() {
         this.isBot = true;
-        this.gameEngine.on('preStep', ()=>{
+
+        this.onPreStep = () => {
             this.steer();
-        });
+        };
+
+        this.gameEngine.on('preStep', this.onPreStep);
 
         let fireLoopTime = Math.round(250 + Math.random() * 100);
         this.fireLoop = this.gameEngine.timer.loop(fireLoopTime, () => {
@@ -79,7 +87,7 @@ class Ship extends DynamicObject {
         if (this.target) {
             let desiredVelocity = new Point();
             desiredVelocity.copyFrom(this.target).subtract(this.x, this.y);
-            let turnRight = -shortestArc(Math.atan2(desiredVelocity.y, desiredVelocity.x), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
+            let turnRight = -Utils.shortestArc(Math.atan2(desiredVelocity.y, desiredVelocity.x), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
 
             if (turnRight > 0.05) {
                 this.isRotatingRight = true;
@@ -92,12 +100,6 @@ class Ship extends DynamicObject {
 
         }
     }
-}
-
-function shortestArc(a, b) {
-    if (Math.abs(b-a) < Math.PI) return b-a;
-    if (b>a) return b-a-Math.PI*2;
-    return b-a+Math.PI*2;
 }
 
 module.exports = Ship;

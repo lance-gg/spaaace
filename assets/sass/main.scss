@@ -1,3 +1,10 @@
+@import "./../../node_modules/breakpoint-sass/stylesheets/breakpoint";
+
+$breakpoint-mobile: (max-width 568px) (orientation portrait);
+$breakpoint-mobile-landscape: (max-width 568px) (orientation landscape);
+$breakpoint-tablet: 569px 1280px;
+$breakpoint-desktop: min-width 1281px;
+
 html,body{
 	padding: 0;
 	margin: 0;
@@ -41,7 +48,7 @@ html,body{
 	transition: opacity 0.3s ease-in;
 }
 
-#tryAgain, #joinGame{
+#tryAgain, #joinGame, #reconnect{
 	position: absolute;
 	left: 50%;
 	top: 50%;
@@ -67,6 +74,7 @@ button{
 	border: 0;
 	color: white;
 	outline: none;
+	white-space: nowrap;
 
 	&:before{
 		content: "";
@@ -199,6 +207,33 @@ button{
 	}
 }
 
+.fireButton{
+	pointer-events: none;
+	opacity: 0;
+
+	transition: all 0.5s ease-in;
+
+	background: #fff;
+	width: 3rem;
+	height: 3rem;
+	position: absolute;
+	bottom: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 3px solid #ff2f95;
+	border-radius: 5rem;
+
+	&:before{
+		content: "FIRE";
+		position: absolute;
+		color: #ff2f95;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+}
+
+
 .pc .keysContainer{
 	&:after{
 		width: 103px;
@@ -229,13 +264,19 @@ button{
 
 h2{
 	position: absolute;
-	top: 40%;
+	box-sizing: border-box;
+	top: 29%;
 	font-weight: 300;
 	font-size: 25px;
 	text-align: center;
 	width: 100%;
 	color: #fff;
 	transition: all 0.5s ease-in;
+	padding: 0 3rem;
+
+	@include breakpoint(($breakpoint-desktop)){
+		top: 40%;
+	}
 }
 
 body.gameActive{
@@ -248,5 +289,22 @@ body.gameActive{
 
 	.pixiContainer:before{
 		opacity: 0;
+	}
+
+	&.touch .fireButton{
+		opacity: 0.6;
+		pointer-events: all;
+	}
+}
+
+.disconnected{
+	#reconnect{
+		opacity: 1;
+		pointer-events: all;
+	}
+
+	#tryAgain, #joinGame{
+		opacity: 0;
+		pointer-events: none;
 	}
 }

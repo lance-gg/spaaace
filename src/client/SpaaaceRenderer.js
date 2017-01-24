@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 const Renderer = require('incheon').render.Renderer;
-const Utils= require('./Utils');
+const Utils= require('./../common/Utils');
 
 const Missile = require('../common/Missile');
 const Ship = require('../common/Ship');
@@ -22,11 +22,12 @@ class SpaaaceRenderer extends Renderer {
             bg3: 'assets/clouds2.png',
             bg4: 'assets/clouds1.png',
             smokeParticle: 'assets/smokeparticle.png'
-        }
+        };
     }
 
-    constructor(gameEngine) {
-        super(gameEngine);
+    // TODO: document
+    constructor(gameEngine, clientEngine) {
+        super(gameEngine, clientEngine);
         this.sprites = {};
         this.isReady = false;
 
@@ -48,12 +49,11 @@ class SpaaaceRenderer extends Renderer {
 
         this.stage.addChild(this.layer1, this.layer2);
 
-        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
         if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
-            document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
-        } else{
+            this.onDOMLoaded();
+        } else {
             document.addEventListener('DOMContentLoaded', ()=>{
-                document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+                this.onDOMLoaded();
             });
         }
 
@@ -69,16 +69,22 @@ class SpaaaceRenderer extends Renderer {
                 this.setupStage();
                 this.gameEngine.emit('renderer.ready');
 
-                if (isMacintosh()) {
+                if (Utils.isTouchDevice()){
+                    document.body.classList.add('touch');
+                } else if (isMacintosh()) {
                     document.body.classList.add('mac');
-                }
-                if (isWindows()) {
+                } else if (isWindows()) {
                     document.body.classList.add('pc');
                 }
 
                 resolve();
             });
         });
+    }
+
+    onDOMLoaded(){
+        this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
+        document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
     }
 
     setupStage() {
@@ -115,16 +121,6 @@ class SpaaaceRenderer extends Renderer {
         // this.camera.addChild(this.debugText);
 
         this.elapsedTime = Date.now();
-
-        // events
-        this.gameEngine.on('client.keyChange', (e)=>{
-            if (this.playerShip) {
-                if (e.keyName == 'up') {
-                    this.playerShip.actor.thrustEmitter.emit = e.isDown;
-                }
-            }
-        });
-
         // debug
         if ('showworldbounds' in Utils.getUrlVars()) {
             let graphics = new PIXI.Graphics();
@@ -176,18 +172,7 @@ class SpaaaceRenderer extends Renderer {
                 if ((sprite !== this.playerShip) && sprite.actor) {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
-
-                if (sprite == this.playerShip) {
-                    if (objData.x - sprite.x < -worldWidth/2) { this.bgPhaseX++; }
-                    if (objData.x - sprite.x > worldWidth/2) { this.bgPhaseX--; }
-                    if (objData.y - sprite.y < -worldHeight/2) { this.bgPhaseY++; }
-                    if (objData.y - sprite.y > worldHeight/2) { this.bgPhaseY--; }
-
-                    // this.debug.beginFill(0xFF0000);
-                    // this.debug.drawCircle(sprite.x, sprite.y, 1);
-                    // this.debug.endFill();
-                }
-
+                
                 if (objData.class == Ship && sprite != this.playerShip) {
                     this.updateOffscreenIndicator(objData);
                 }
@@ -223,6 +208,8 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
             }
+
+            // this.emit("postDraw");
         }
 
         let cameraTarget;
@@ -231,43 +218,41 @@ class SpaaaceRenderer extends Renderer {
             // this.cameraRoam = false;
         } else if (!this.gameStarted && !cameraTarget) {
 
-            // calculate centroid                                              
+            // calculate centroid
             cameraTarget = getCentroid(this.gameEngine.world.objects);
             this.cameraRoam = true;
         }
 
         if (cameraTarget) {
-            let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
-            let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
-
-            // let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
-            // let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
-
-            this.bg1.tilePosition.x = bgOffsetX * 0.01;
-            this.bg1.tilePosition.y = bgOffsetY * 0.01;
-
-            this.bg2.tilePosition.x = bgOffsetX * 0.04;
-            this.bg2.tilePosition.y = bgOffsetY * 0.04;
-
-            this.bg3.tilePosition.x = bgOffsetX * 0.3;
-            this.bg3.tilePosition.y = bgOffsetY * 0.3;
-
-            this.bg4.tilePosition.x = bgOffsetX * 0.75;
-            this.bg4.tilePosition.y = bgOffsetY * 0.75;
+            // let bgOffsetX = -this.bgPhaseX * worldWidth - cameraTarget.x;
+            // let bgOffsetY = -this.bgPhaseY * worldHeight - cameraTarget.y;
 
             // 'cameraroam' in Utils.getUrlVars()
             if (this.cameraRoam) {
                 let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
                 let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
+                let cameraTempTargetX;
+                let cameraTempTargetY;
 
-                let cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
-                let cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
+                if (lookingAtDeltaX > worldWidth / 2) {
+                    this.bgPhaseX++;
+                    cameraTempTargetX = this.lookingAt.x + worldWidth;
+                } else if (lookingAtDeltaX < -worldWidth / 2) {
+                    this.bgPhaseX--;
+                    cameraTempTargetX = this.lookingAt.x - worldWidth;
+                } else {
+                    cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
+                }
 
-
-                if (lookingAtDeltaX > worldWidth / 2) { cameraTempTargetX += worldWidth; }
-                if (lookingAtDeltaX < -worldWidth / 2) { cameraTempTargetX -= worldWidth; }
-                if (lookingAtDeltaY > worldHeight / 2) { cameraTempTargetY += worldHeight; }
-                if (lookingAtDeltaY < -worldHeight / 2) { cameraTempTargetY -= worldHeight; }
+                if (lookingAtDeltaY > worldHeight / 2) {
+                    cameraTempTargetY = this.lookingAt.y + worldHeight;
+                    this.bgPhaseY++;
+                } else if (lookingAtDeltaY < -worldHeight / 2) {
+                    this.bgPhaseY--;
+                    cameraTempTargetY = this.lookingAt.y - worldHeight;
+                } else {
+                    cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02
+                }
 
                 this.centerCamera(cameraTempTargetX, cameraTempTargetY);
 
@@ -275,6 +260,21 @@ class SpaaaceRenderer extends Renderer {
                 this.centerCamera(cameraTarget.x, cameraTarget.y);
             }
         }
+
+        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+
+        this.bg1.tilePosition.x = bgOffsetX * 0.01;
+        this.bg1.tilePosition.y = bgOffsetY * 0.01;
+
+        this.bg2.tilePosition.x = bgOffsetX * 0.04;
+        this.bg2.tilePosition.y = bgOffsetY * 0.04;
+
+        this.bg3.tilePosition.x = bgOffsetX * 0.3;
+        this.bg3.tilePosition.y = bgOffsetY * 0.3;
+
+        this.bg4.tilePosition.x = bgOffsetX * 0.75;
+        this.bg4.tilePosition.y = bgOffsetY * 0.75;
 
         this.elapsedTime = now;
 
@@ -291,7 +291,7 @@ class SpaaaceRenderer extends Renderer {
             this.sprites[objData.id] = sprite;
             sprite.id = objData.id;
 
-            if (objData.isPlayerControlled) {
+            if (this.clientEngine.isOwnedByPlayer(objData)) {
                 this.playerShip = sprite; // save reference to the player ship
                 sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
                 document.body.classList.remove('lostGame');
@@ -362,6 +362,13 @@ class SpaaaceRenderer extends Renderer {
      */
     centerCamera(targetX, targetY) {
         if (isNaN(targetX) || isNaN(targetY)) return;
+        if (!this.lastCameraPosition){
+            this.lastCameraPosition = {};
+        }
+
+        this.lastCameraPosition.x = this.camera.x;
+        this.lastCameraPosition.y = this.camera.y;
+
         this.camera.x = this.viewportWidth / 2 - targetX;
         this.camera.y = this.viewportHeight / 2 - targetY;
         this.lookingAt.x = targetX;
@@ -475,6 +482,43 @@ class SpaaaceRenderer extends Renderer {
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
         }
 
+    }
+
+    onKeyChange(e){
+        if (this.playerShip) {
+            if (e.keyName === 'up') {
+                this.playerShip.actor.thrustEmitter.emit = e.isDown;
+            }
+        }
+    }
+
+    enableFullScreen(){
+        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !==     null) ||    // alternative standard method
+            (document.mozFullScreen || document.webkitIsFullScreen);
+
+        let docElm = document.documentElement;
+        if (!isInFullScreen) {
+
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        }
+    }
+
+    /*
+     * Takes in game coordinates and translates them into screen coordinates
+     * @param obj an object with x and y properties
+     */
+    gameCoordsToScreen(obj){
+        // console.log(obj.x , this.viewportWidth / 2 , this.camera.x)
+        return {
+            x: obj.x + this.camera.x,
+            y: obj.y + this.camera.y
+        };
     }
 
 }

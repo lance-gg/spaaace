@@ -1,7 +1,7 @@
 'use strict';
 
 const ServerEngine = require('incheon').ServerEngine;
-const NameGenerator = require('./NameGenerator');
+const nameGenerator = require('./NameGenerator');
 
 class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -11,45 +11,43 @@ class SpaaaceServerEngine extends ServerEngine {
         this.serializer.registerClass(require('../common/Ship'));
 
         this.scoreData = {};
-    };
+    }
 
     start() {
         super.start();
-        for(let x=0; x<3; x++) this.makeBot();
+        for (let x = 0; x < 3; x++) this.makeBot();
 
-        this.gameEngine.on('missileHit', (e)=>{
-            if (this.scoreData[e.missile.shipOwnerId]) {
-                // add kills
-                this.scoreData[e.missile.shipOwnerId].kills++;
-                // remove score data for killed ship
-                delete this.scoreData[e.ship.id];
-            }
+        this.gameEngine.on('missileHit', (e) => {
+            // add kills
+            if (this.scoreData[e.missile.shipOwnerId]) this.scoreData[e.missile.shipOwnerId].kills++;
+            // remove score data for killed ship
+            delete this.scoreData[e.ship.id];
             this.updateScore();
 
+            console.log(`ship killed: ${e.ship.toString()}`);
             this.gameEngine.removeObjectFromWorld(e.ship.id);
-            if(e.ship.isBot) {
-                this.makeBot();
+            if (e.ship.isBot) {
+                setTimeout(() => this.makeBot(), 5000);
             }
         });
-    };
+    }
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
 
-        let makePlayerShip = ()=>{
-            let ship = this.gameEngine.makeShip();
-            ship.playerId = socket.playerId;
+        let makePlayerShip = () => {
+            let ship = this.gameEngine.makeShip(socket.playerId);
 
             this.scoreData[ship.id] = {
                 kills: 0,
-                name: NameGenerator('general')
+                name: nameGenerator('general')
             };
             this.updateScore();
         };
 
         // handle client restart requests
         socket.on('requestRestart', makePlayerShip);
-    };
+    }
 
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
@@ -67,15 +65,15 @@ class SpaaaceServerEngine extends ServerEngine {
         }
 
         this.updateScore();
-    };
+    }
 
     makeBot() {
-        let bot = this.gameEngine.makeShip();
+        let bot = this.gameEngine.makeShip(0);
         bot.attachAI();
 
         this.scoreData[bot.id] = {
             kills: 0,
-            name: NameGenerator('general') + 'Bot'
+            name: nameGenerator('general') + 'Bot'
         };
 
         this.updateScore();

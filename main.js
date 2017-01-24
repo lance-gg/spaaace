@@ -22,7 +22,7 @@ const SimplePhysicsEngine = require('incheon').physics.SimplePhysicsEngine;
 // Game Instances
 const physicsEngine = new SimplePhysicsEngine({ collisionOptions: { COLLISION_DISTANCE: 50 } } );
 const gameEngine = new SpaaaceGameEngine({ physicsEngine });
-const serverEngine = new SpaaaceServerEngine(io, gameEngine, { debug: {} });
+const serverEngine = new SpaaaceServerEngine(io, gameEngine, { timeoutInterval: 60 * 5 , debug: {} });
 
 // start the game
 serverEngine.start();
