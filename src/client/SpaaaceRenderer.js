@@ -49,7 +49,7 @@ class SpaaaceRenderer extends Renderer {
 
         this.stage.addChild(this.layer1, this.layer2);
 
-        if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
+        if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
             this.onDOMLoaded();
         } else {
             document.addEventListener('DOMContentLoaded', ()=>{
@@ -62,7 +62,7 @@ class SpaaaceRenderer extends Renderer {
                 return{
                     name: x,
                     url: this.assetPathPrefix + this.ASSETPATHS[x]
-                }
+                };
             }))
             .load(() => {
                 this.isReady = true;
@@ -90,7 +90,7 @@ class SpaaaceRenderer extends Renderer {
     setupStage() {
         window.addEventListener('resize', ()=>{ this.setRendererSize(); });
 
-        this.lookingAt = { x: 0 , y: 0};
+        this.lookingAt = { x: 0, y: 0 };
         this.camera = new PIXI.Container();
         this.camera.addChild(this.layer1, this.layer2);
 
@@ -182,8 +182,7 @@ class SpaaaceRenderer extends Renderer {
 
                 if (objData.class == Ship){
                     sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
-                }
-                else{
+                } else{
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 }
 
@@ -357,8 +356,8 @@ class SpaaaceRenderer extends Renderer {
 
     /**
      * Centers the viewport on a coordinate in the gameworld
-     * @param targetX
-     * @param targetY
+     * @param {Number} targetX
+     * @param {Number} targetY
      */
     centerCamera(targetX, targetY) {
         if (isNaN(targetX) || isNaN(targetY)) return;
@@ -378,7 +377,7 @@ class SpaaaceRenderer extends Renderer {
     addOffscreenIndicator(objData) {
         let container = document.querySelector('#offscreenIndicatorContainer');
         let indicatorEl = document.createElement('div');
-        indicatorEl.setAttribute('id','offscreenIndicator' + objData.id);
+        indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
         indicatorEl.classList.add('offscreenIndicator');
         container.appendChild(indicatorEl);
     }
@@ -403,7 +402,7 @@ class SpaaaceRenderer extends Renderer {
         // this.debug.endFill();
 
         let padding = 30;
-        let indicatorPos = { x: 0, y: 0};
+        let indicatorPos = { x: 0, y: 0 };
 
         if (objData.y < playerShipObj.y - this.viewportHeight/2) {
             indicatorPos.x = this.viewportWidth/2 + (padding - b)/slope;
@@ -425,8 +424,8 @@ class SpaaaceRenderer extends Renderer {
             indicatorEl.style.opacity = 0;
         } else {
             indicatorEl.style.opacity = 1;
-            let rotation = Math.atan2(objData.y - playerShipObj.y,objData.x - playerShipObj.x);
-            rotation = rotation * 180/Math.PI; //rad2deg
+            let rotation = Math.atan2(objData.y - playerShipObj.y, objData.x - playerShipObj.x);
+            rotation = rotation * 180/Math.PI; // rad2deg
             indicatorEl.style.transform = `translateX(${indicatorPos.x}px) translateY(${indicatorPos.y}px) rotate(${rotation}deg) `;
         }
     }
@@ -438,11 +437,11 @@ class SpaaaceRenderer extends Renderer {
 
     updateHUD(data){
         if (data.RTT){ qs('.latencyData').innerHTML = data.RTT;}
-        if (data.RTTAverage){ qs('.averageLatencyData').innerHTML = truncateDecimals(data.RTTAverage,2);}
+        if (data.RTTAverage){ qs('.averageLatencyData').innerHTML = truncateDecimals(data.RTTAverage, 2);}
     }
 
     updateScore(data){
-        let scoreContainer = qs(".score");
+        let scoreContainer = qs('.score');
         let scoreArray = [];
 
         // remove score lines with objects that don't exist anymore
@@ -476,7 +475,7 @@ class SpaaaceRenderer extends Renderer {
             });
         }
 
-        scoreArray.sort((a, b) => {return a.data.kills < b.data.kills});
+        scoreArray.sort((a, b) => {return a.data.kills < b.data.kills;});
 
         for (let x=0; x < scoreArray.length; x++){
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
@@ -493,7 +492,7 @@ class SpaaaceRenderer extends Renderer {
     }
 
     enableFullScreen(){
-        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !==     null) ||    // alternative standard method
+        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||    // alternative standard method
             (document.mozFullScreen || document.webkitIsFullScreen);
 
         let docElm = document.documentElement;
@@ -552,7 +551,7 @@ function getCentroid(objects) {
 }
 
 // convenience function
-function qs(selector) { return document.querySelector(selector)}
+function qs(selector) { return document.querySelector(selector);}
 
 function truncateDecimals(number, digits) {
     let multiplier = Math.pow(10, digits);
@@ -563,11 +562,11 @@ function truncateDecimals(number, digits) {
 };
 
 function isMacintosh() {
-    return navigator.platform.indexOf('Mac') > -1
+    return navigator.platform.indexOf('Mac') > -1;
 }
 
 function isWindows() {
-    return navigator.platform.indexOf('Win') > -1
+    return navigator.platform.indexOf('Win') > -1;
 }
 
 module.exports = SpaaaceRenderer;
