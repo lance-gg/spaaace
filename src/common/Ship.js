@@ -65,8 +65,8 @@ class Ship extends DynamicObject {
     }
 
     distanceToTarget(target) {
-        let dx = this.x - target.x;
-        let dy = this.y - target.y;
+        let dx = this.position.x - target.position.x;
+        let dy = this.position.y - target.position.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -85,8 +85,8 @@ class Ship extends DynamicObject {
 
         if (this.target) {
 
-            let newVX = this.target.x - this.x;
-            let newVY = this.target.y - this.y
+            let newVX = this.target.position.x - this.position.x;
+            let newVY = this.target.position.y - this.position.y
 
             let turnRight = -Utils.shortestArc(Math.atan2(newVX, newVY), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
 

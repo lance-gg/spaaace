@@ -172,13 +172,13 @@ class SpaaaceRenderer extends Renderer {
                 if ((sprite !== this.playerShip) && sprite.actor) {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
-                
+
                 if (objData.class == Ship && sprite != this.playerShip) {
                     this.updateOffscreenIndicator(objData);
                 }
 
-                sprite.x = objData.x;
-                sprite.y = objData.y;
+                sprite.x = objData.position.x;
+                sprite.y = objData.position.y;
 
                 if (objData.class == Ship){
                     sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
@@ -187,17 +187,17 @@ class SpaaaceRenderer extends Renderer {
                 }
 
                 // make the wraparound seamless for objects other than the player ship
-                if (sprite != this.playerShip && viewportSeesLeftBound && objData.x > this.viewportWidth - this.camera.x) {
-                    sprite.x = objData.x - worldWidth;
+                if (sprite != this.playerShip && viewportSeesLeftBound && objData.position.x > this.viewportWidth - this.camera.x) {
+                    sprite.x = objData.position.x - worldWidth;
                 }
-                if (sprite != this.playerShip && viewportSeesRightBound && objData.x < -this.camera.x) {
-                    sprite.x = objData.x + worldWidth;
+                if (sprite != this.playerShip && viewportSeesRightBound && objData.position.x < -this.camera.x) {
+                    sprite.x = objData.position.x + worldWidth;
                 }
-                if (sprite != this.playerShip && viewportSeesTopBound && objData.y > this.viewportHeight - this.camera.y) {
-                    sprite.y = objData.y - worldHeight;
+                if (sprite != this.playerShip && viewportSeesTopBound && objData.position.y > this.viewportHeight - this.camera.y) {
+                    sprite.y = objData.position.y - worldHeight;
                 }
-                if (sprite != this.playerShip && viewportSeesBottomBound && objData.y < -this.camera.y) {
-                    sprite.y = objData.y + worldHeight;
+                if (sprite != this.playerShip && viewportSeesBottomBound && objData.position.y < -this.camera.y) {
+                    sprite.y = objData.position.y + worldHeight;
                 }
             }
 
@@ -323,7 +323,7 @@ class SpaaaceRenderer extends Renderer {
             sprite.anchor.set(0.5, 0.5);
         }
 
-        sprite.position.set(objData.x, objData.y);
+        sprite.position.set(objData.position.x, objData.position.y);
         this.layer2.addChild(sprite);
 
         Object.assign(sprite, options);
@@ -392,7 +392,7 @@ class SpaaaceRenderer extends Renderer {
             return;
         }
         let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
-        let slope = (objData.y - playerShipObj.y) / (objData.x - playerShipObj.x);
+        let slope = (objData.position.y - playerShipObj.position.y) / (objData.position.x - playerShipObj.position.x);
         let b = this.viewportHeight/ 2;
 
         // this.debug.clear();
@@ -404,18 +404,18 @@ class SpaaaceRenderer extends Renderer {
         let padding = 30;
         let indicatorPos = { x: 0, y: 0 };
 
-        if (objData.y < playerShipObj.y - this.viewportHeight/2) {
+        if (objData.position.y < playerShipObj.position.y - this.viewportHeight/2) {
             indicatorPos.x = this.viewportWidth/2 + (padding - b)/slope;
             indicatorPos.y = padding;
-        } else if (objData.y > playerShipObj.y + this.viewportHeight/2) {
+        } else if (objData.position.y > playerShipObj.position.y + this.viewportHeight/2) {
             indicatorPos.x = this.viewportWidth/2 + (this.viewportHeight - padding - b)/slope;
             indicatorPos.y = this.viewportHeight - padding;
         }
 
-        if (objData.x < playerShipObj.x - this.viewportWidth/2) {
+        if (objData.position.x < playerShipObj.position.x - this.viewportWidth/2) {
             indicatorPos.x = padding;
             indicatorPos.y = slope * (-this.viewportWidth/2 + padding) + b;
-        } else if (objData.x > playerShipObj.x + this.viewportWidth/2) {
+        } else if (objData.position.x > playerShipObj.position.x + this.viewportWidth/2) {
             indicatorPos.x = this.viewportWidth - padding;
             indicatorPos.y = slope * (this.viewportWidth/2 - padding) + b;
         }
@@ -424,7 +424,7 @@ class SpaaaceRenderer extends Renderer {
             indicatorEl.style.opacity = 0;
         } else {
             indicatorEl.style.opacity = 1;
-            let rotation = Math.atan2(objData.y - playerShipObj.y, objData.x - playerShipObj.x);
+            let rotation = Math.atan2(objData.position.y - playerShipObj.position.y, objData.position.x - playerShipObj.position.x);
             rotation = rotation * 180/Math.PI; // rad2deg
             indicatorEl.style.transform = `translateX(${indicatorPos.x}px) translateY(${indicatorPos.y}px) rotate(${rotation}deg) `;
         }
@@ -515,8 +515,8 @@ class SpaaaceRenderer extends Renderer {
     gameCoordsToScreen(obj){
         // console.log(obj.x , this.viewportWidth / 2 , this.camera.x)
         return {
-            x: obj.x + this.camera.x,
-            y: obj.y + this.camera.y
+            x: obj.position.x + this.camera.x,
+            y: obj.position.y + this.camera.y
         };
     }
 
@@ -534,10 +534,10 @@ function getCentroid(objects) {
             if (selectedShip == null)
                 selectedShip = obj;
 
-            let objDistance = Math.sqrt( Math.pow((selectedShip.x-obj.y), 2) + Math.pow((selectedShip.y-obj.y), 2));
+            let objDistance = Math.sqrt( Math.pow((selectedShip.position.x-obj.position.y), 2) + Math.pow((selectedShip.position.y-obj.position.y), 2));
             if (selectedShip == obj || objDistance < maxDistance) {
-                centroid.x += obj.x;
-                centroid.y += obj.y;
+                centroid.x += obj.position.x;
+                centroid.y += obj.position.y;
                 shipCount++;
             }
         }

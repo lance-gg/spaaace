@@ -3,6 +3,7 @@
 const GameEngine = require('incheon').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
+const TwoVector = require('incheon').serialize.TwoVector;
 const Timer = require('./Timer');
 
 class SpaaaceGameEngine extends GameEngine {
@@ -90,7 +91,7 @@ class SpaaaceGameEngine extends GameEngine {
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
         // todo playerId should be called ownerId
-        let ship = new Ship(++this.world.idCount, this, newShipX, newShipY);
+        let ship = new Ship(++this.world.idCount, this, new TwoVector(newShipX, newShipY));
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
         console.log(`ship added: ${ship.toString()}`);
@@ -100,16 +101,16 @@ class SpaaaceGameEngine extends GameEngine {
 
     makeMissile(playerShip, inputId) {
         let missile = new Missile(++this.world.idCount);
-        missile.x = playerShip.x;
-        missile.y = playerShip.y;
+        missile.position.copy(playerShip.position);
+        missile.velocity.copy(playerShip.velocity);
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
         missile.shipOwnerId = playerShip.id;
         missile.inputId = inputId;
-        missile.velX = playerShip.velX + Math.cos(missile.angle * (Math.PI / 180)) * 10;
-        missile.velY = playerShip.velY + Math.sin(missile.angle * (Math.PI / 180)) * 10;
+        missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
+        missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
 
-        this.trace.trace(`missile[${missile.id}] created vx=${missile.velX} vy=${missile.velY}`);
+        this.trace.trace(`missile[${missile.id}] created vel=${missile.velocity}`);
 
 
         this.addObjectToWorld(missile);

@@ -9,6 +9,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.serializer.registerClass(require('../common/Missile'));
         this.serializer.registerClass(require('../common/Ship'));
+        this.serializer.registerClass(require('incheon').serialize.TwoVector);
 
         this.scoreData = {};
     }
