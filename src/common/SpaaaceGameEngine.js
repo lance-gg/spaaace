@@ -106,15 +106,10 @@ class SpaaaceGameEngine extends GameEngine {
         missile.playerId = playerShip.playerId;
         missile.shipOwnerId = playerShip.id;
         missile.inputId = inputId;
-        missile.velocity.set(
-            Math.cos(missile.angle * (Math.PI / 180)),
-            Math.sin(missile.angle * (Math.PI / 180))
-        ).setMagnitude(10)
-        .add(playerShip.velocity.x, playerShip.velocity.y);
-        missile.velX = missile.velocity.x;
-        missile.velY = missile.velocity.y;
+        missile.velX = playerShip.velX + Math.cos(missile.angle * (Math.PI / 180)) * 10;
+        missile.velY = playerShip.velY + Math.sin(missile.angle * (Math.PI / 180)) * 10;
 
-        this.trace.trace(`missile[${missile.id}] created vx=${missile.velocity.x} vy=${missile.velocity.y}`);
+        this.trace.trace(`missile[${missile.id}] created vx=${missile.velX} vy=${missile.velY}`);
 
 
         this.addObjectToWorld(missile);

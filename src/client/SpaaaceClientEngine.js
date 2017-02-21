@@ -8,10 +8,7 @@ const Utils = require('./../common/Utils');
 
 class SpaaaceClientEngine extends ClientEngine {
     constructor(gameEngine, options) {
-        super(gameEngine, options);
-
-        // initialize renderer
-        this.renderer = new SpaaaceRenderer(gameEngine, this);
+        super(gameEngine, options, SpaaaceRenderer);
 
         this.serializer.registerClass(require('../common/Ship'));
         this.serializer.registerClass(require('../common/Missile'));
