@@ -20,7 +20,7 @@ class SpaaaceServerEngine extends ServerEngine {
 
         this.gameEngine.on('missileHit', (e) => {
             // add kills
-            if (this.scoreData[e.missile.shipOwnerId]) this.scoreData[e.missile.shipOwnerId].kills++;
+            if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
             // remove score data for killed ship
             delete this.scoreData[e.ship.id];
             this.updateScore();

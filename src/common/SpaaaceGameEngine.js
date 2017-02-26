@@ -32,8 +32,9 @@ class SpaaaceGameEngine extends GameEngine {
             if (!ship || !missile)
                 return;
 
-            if (missile.shipOwnerId !== ship.id) {
+            if (missile.ownerId !== ship.id) {
                 that.destroyMissile(missile.id);
+                that.trace.info(`missile by ship=${missile.ownerId} hit ship=${ship.id}`);
                 that.emit('missileHit', { missile, ship });
             }
         });
@@ -87,7 +88,6 @@ class SpaaaceGameEngine extends GameEngine {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        // todo playerId should be called ownerId
         let ship = new Ship(++this.world.idCount, this, new TwoVector(newShipX, newShipY));
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
@@ -102,7 +102,7 @@ class SpaaaceGameEngine extends GameEngine {
         missile.velocity.copy(playerShip.velocity);
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
-        missile.shipOwnerId = playerShip.id;
+        missile.ownerId = playerShip.id;
         missile.inputId = inputId;
         missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
         missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
