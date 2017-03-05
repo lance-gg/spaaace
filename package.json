@@ -37,6 +37,7 @@
   "scripts": {
     "start": "node main.js",
     "postinstall": "webpack",
+    "build": "webpack",
     "dev": "webpack --watch"
   },
   "repository": {

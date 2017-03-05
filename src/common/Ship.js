@@ -18,11 +18,6 @@ class Ship extends DynamicObject {
 
     get bendingAngleLocalMultiple() { return 0.0; }
 
-    copyFrom(sourceObj) {
-        super.copyFrom(sourceObj);
-        this.showThrust = sourceObj.showThrust;
-    }
-
     syncTo(other) {
         super.syncTo(other);
         this.showThrust = other.showThrust;
