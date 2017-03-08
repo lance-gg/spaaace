@@ -2,7 +2,6 @@
 
 const Serializer = require('incheon').serialize.Serializer;
 const DynamicObject = require('incheon').serialize.DynamicObject;
-const Point = require('incheon').Point;
 const Utils = require('./Utils');
 
 class Ship extends DynamicObject {
@@ -18,11 +17,6 @@ class Ship extends DynamicObject {
     }
 
     get bendingAngleLocalMultiple() { return 0.0; }
-
-    copyFrom(sourceObj) {
-        super.copyFrom(sourceObj);
-        this.showThrust = sourceObj.showThrust;
-    }
 
     syncTo(other) {
         super.syncTo(other);
@@ -66,8 +60,8 @@ class Ship extends DynamicObject {
     }
 
     distanceToTarget(target) {
-        let dx = this.x - target.x;
-        let dy = this.y - target.y;
+        let dx = this.position.x - target.position.x;
+        let dy = this.position.y - target.position.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -85,9 +79,11 @@ class Ship extends DynamicObject {
         this.target = closestTarget;
 
         if (this.target) {
-            let desiredVelocity = new Point();
-            desiredVelocity.copyFrom(this.target).subtract(this.x, this.y);
-            let turnRight = -Utils.shortestArc(Math.atan2(desiredVelocity.y, desiredVelocity.x), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
+
+            let newVX = this.target.position.x - this.position.x;
+            let newVY = this.target.position.y - this.position.y
+
+            let turnRight = -Utils.shortestArc(Math.atan2(newVX, newVY), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
 
             if (turnRight > 0.05) {
                 this.isRotatingRight = true;

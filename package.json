@@ -1,6 +1,6 @@
 {
   "name": "spaaace",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "node": "4.3.0"
   },
@@ -16,7 +16,7 @@
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
-    "incheon": "^0.9.3",
+    "incheon": "~1.0.0",
     "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
     "null-loader": "^0.1.1",
@@ -37,6 +37,7 @@
   "scripts": {
     "start": "node main.js",
     "postinstall": "webpack",
+    "build": "webpack",
     "dev": "webpack --watch"
   },
   "repository": {

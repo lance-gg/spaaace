@@ -3,6 +3,7 @@
 const GameEngine = require('incheon').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
+const TwoVector = require('incheon').serialize.TwoVector;
 const Timer = require('./Timer');
 
 class SpaaaceGameEngine extends GameEngine {
@@ -31,8 +32,9 @@ class SpaaaceGameEngine extends GameEngine {
             if (!ship || !missile)
                 return;
 
-            if (missile.shipOwnerId !== ship.id) {
+            if (missile.ownerId !== ship.id) {
                 that.destroyMissile(missile.id);
+                that.trace.info(`missile by ship=${missile.ownerId} hit ship=${ship.id}`);
                 that.emit('missileHit', { missile, ship });
             }
         });
@@ -81,16 +83,12 @@ class SpaaaceGameEngine extends GameEngine {
         }
     };
 
-    /**
-     * Makes a new ship, places it randomly and adds it to the game world
-     * @return {Ship} the added Ship object
-     */
+    // Makes a new ship, places it randomly and adds it to the game world
     makeShip(playerId) {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        // todo playerId should be called ownerId
-        let ship = new Ship(++this.world.idCount, this, newShipX, newShipY);
+        let ship = new Ship(++this.world.idCount, this, new TwoVector(newShipX, newShipY));
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
         console.log(`ship added: ${ship.toString()}`);
@@ -100,21 +98,16 @@ class SpaaaceGameEngine extends GameEngine {
 
     makeMissile(playerShip, inputId) {
         let missile = new Missile(++this.world.idCount);
-        missile.x = playerShip.x;
-        missile.y = playerShip.y;
+        missile.position.copy(playerShip.position);
+        missile.velocity.copy(playerShip.velocity);
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
-        missile.shipOwnerId = playerShip.id;
+        missile.ownerId = playerShip.id;
         missile.inputId = inputId;
-        missile.velocity.set(
-            Math.cos(missile.angle * (Math.PI / 180)),
-            Math.sin(missile.angle * (Math.PI / 180))
-        ).setMagnitude(10)
-        .add(playerShip.velocity.x, playerShip.velocity.y);
-        missile.velX = missile.velocity.x;
-        missile.velY = missile.velocity.y;
+        missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
+        missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
 
-        this.trace.trace(`missile[${missile.id}] created vx=${missile.velocity.x} vy=${missile.velocity.y}`);
+        this.trace.trace(`missile[${missile.id}] created vel=${missile.velocity}`);
 
 
         this.addObjectToWorld(missile);

@@ -2,6 +2,7 @@
 
 const ServerEngine = require('incheon').ServerEngine;
 const nameGenerator = require('./NameGenerator');
+const NUM_BOTS = 3;
 
 class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -15,11 +16,11 @@ class SpaaaceServerEngine extends ServerEngine {
 
     start() {
         super.start();
-        for (let x = 0; x < 3; x++) this.makeBot();
+        for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', (e) => {
             // add kills
-            if (this.scoreData[e.missile.shipOwnerId]) this.scoreData[e.missile.shipOwnerId].kills++;
+            if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
             // remove score data for killed ship
             delete this.scoreData[e.ship.id];
             this.updateScore();
