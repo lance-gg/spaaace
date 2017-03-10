@@ -53,41 +53,54 @@ class Ship extends DynamicObject {
 
         let fireLoopTime = Math.round(250 + Math.random() * 100);
         this.fireLoop = this.gameEngine.timer.loop(fireLoopTime, () => {
-            if (this.target && this.distanceToTarget(this.target) < 400) {
+            if (this.target && this.distanceToTargetSquared(this.target) < 160000) {
                 this.gameEngine.makeMissile(this);
             }
         });
     }
 
-    distanceToTarget(target) {
-        let dx = this.position.x - target.position.x;
-        let dy = this.position.y - target.position.y;
-        return Math.sqrt(dx * dx + dy * dy);
+    shortestVector(p1, p2, wrapDist) {
+        let d = Math.abs(p2 - p1);
+        if (d > Math.abs(p2 + wrapDist - p1)) p2 += wrapDist;
+        else if (d > Math.abs(p1 + wrapDist - p2)) p1 += wrapDist;
+        return p2 - p1;
+    }
+
+    distanceToTargetSquared(target) {
+        let dx = this.shortestVector(this.position.x, target.position.x, this.gameEngine.worldSettings.width);
+        let dy = this.shortestVector(this.position.y, target.position.y, this.gameEngine.worldSettings.height);
+        return dx * dx + dy * dy;
     }
 
     steer() {
         let closestTarget = null;
-        let closestDistance = Infinity;
+        let closestDistance2 = Infinity;
         for (let objId of Object.keys(this.gameEngine.world.objects)) {
             let obj = this.gameEngine.world.objects[objId];
-            let distance = this.distanceToTarget(obj);
-            if (obj != this && distance < closestDistance) {
-                closestTarget = obj;
-                closestDistance = distance;
+            if (obj != this) {
+                let distance2 = this.distanceToTargetSquared(obj);
+                if (distance2 < closestDistance2) {
+                    closestTarget = obj;
+                    closestDistance2 = distance2;
+                }
             }
         }
+
         this.target = closestTarget;
 
         if (this.target) {
 
-            let newVX = this.target.position.x - this.position.x;
-            let newVY = this.target.position.y - this.position.y
+            let newVX = this.shortestVector(this.position.x, this.target.position.x, this.gameEngine.worldSettings.width);
+            let newVY = this.shortestVector(this.position.y, this.target.position.y, this.gameEngine.worldSettings.height);
+            let angleToTarget = Math.atan2(newVX, newVY)/Math.PI* 180;
+            angleToTarget *= -1;
+            angleToTarget += 90; // game uses zero angle on the right, clockwise
+            if (angleToTarget < 0) angleToTarget += 360;
+            let turnRight = this.shortestVector(this.angle, angleToTarget, 360);
 
-            let turnRight = -Utils.shortestArc(Math.atan2(newVX, newVY), Math.atan2(Math.sin(this.angle*Math.PI/180), Math.cos(this.angle*Math.PI/180)));
-
-            if (turnRight > 0.05) {
+            if (turnRight > 4) {
                 this.isRotatingRight = true;
-            } else if (turnRight < -0.05) {
+            } else if (turnRight < -4) {
                 this.isRotatingLeft = true;
             } else {
                 this.isAccelerating = true;
