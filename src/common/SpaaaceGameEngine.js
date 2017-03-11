@@ -109,9 +109,9 @@ class SpaaaceGameEngine extends GameEngine {
 
         this.trace.trace(`missile[${missile.id}] created vel=${missile.velocity}`);
 
-
-        this.addObjectToWorld(missile);
-        this.timer.add(40, this.destroyMissile, this, [missile.id]);
+        let obj = this.addObjectToWorld(missile);
+        if (obj)
+            this.timer.add(40, this.destroyMissile, this, [obj.id]);
 
         return missile;
     }
