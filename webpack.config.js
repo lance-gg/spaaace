@@ -22,8 +22,8 @@ module.exports = {
                 test: /\.js$/,
                 include: [
                     path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'node_modules/incheon'),
-                    fs.realpathSync('./node_modules/incheon')
+                    path.resolve(__dirname, 'node_modules/lance-gg'),
+                    fs.realpathSync('./node_modules/lance-gg')
                 ],
                 loader: 'babel-loader',
                 query: {

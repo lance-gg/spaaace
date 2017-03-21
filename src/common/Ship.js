@@ -1,7 +1,7 @@
 'use strict';
 
-const Serializer = require('incheon').serialize.Serializer;
-const DynamicObject = require('incheon').serialize.DynamicObject;
+const Serializer = require('lance-gg').serialize.Serializer;
+const DynamicObject = require('lance-gg').serialize.DynamicObject;
 const Utils = require('./Utils');
 
 class Ship extends DynamicObject {
