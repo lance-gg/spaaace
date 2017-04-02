@@ -1,5 +1,5 @@
 const Howler = require('howler'); // eslint-disable-line no-unused-vars
-const ClientEngine = require('incheon').ClientEngine;
+const ClientEngine = require('lance-gg').ClientEngine;
 const SpaaaceRenderer = require('../client/SpaaaceRenderer');
 const MobileControls = require('../client/MobileControls');
 const KeyboardControls = require('../client/KeyboardControls');

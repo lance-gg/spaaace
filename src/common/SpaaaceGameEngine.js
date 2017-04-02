@@ -1,9 +1,9 @@
 'use strict';
 
-const GameEngine = require('incheon').GameEngine;
+const GameEngine = require('lance-gg').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
-const TwoVector = require('incheon').serialize.TwoVector;
+const TwoVector = require('lance-gg').serialize.TwoVector;
 const Timer = require('./Timer');
 
 class SpaaaceGameEngine extends GameEngine {

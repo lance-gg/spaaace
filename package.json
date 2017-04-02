@@ -4,7 +4,7 @@
   "engines": {
     "node": "4.4.0"
   },
-  "description": "An HTML5 multiplayer space shooter based on Incheon",
+  "description": "An HTML5 multiplayer space shooter based on Lance",
   "main": "main.js",
   "dependencies": {
     "babel-core": "^6.20.0",
@@ -16,7 +16,7 @@
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
-    "incheon": "~1.0.0",
+    "lance-gg": "~1.0.2",
     "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
     "null-loader": "^0.1.1",
@@ -46,7 +46,8 @@
   },
   "keywords": [
     "game",
-    "incheon",
+    "lance",
+    "lance-gg",
     "multiplayer",
     "websockets"
   ],

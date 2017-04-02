@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const Renderer = require('incheon').render.Renderer;
+const Renderer = require('lance-gg').render.Renderer;
 const Utils= require('./../common/Utils');
 
 const Missile = require('../common/Missile');

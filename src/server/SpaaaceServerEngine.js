@@ -1,6 +1,6 @@
 'use strict';
 
-const ServerEngine = require('incheon').ServerEngine;
+const ServerEngine = require('lance-gg').ServerEngine;
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 3;
 
