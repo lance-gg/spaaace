@@ -1,5 +1,6 @@
 'use strict';
 
+const SimplePhysicsEngine = require('lance-gg').physics.SimplePhysicsEngine;
 const GameEngine = require('lance-gg').GameEngine;
 const Missile= require('./Missile');
 const Ship = require('./Ship');
@@ -7,6 +8,10 @@ const TwoVector = require('lance-gg').serialize.TwoVector;
 const Timer = require('./Timer');
 
 class SpaaaceGameEngine extends GameEngine {
+
+    constructor(options) {
+        super(SimplePhysicsEngine, options);
+    }
 
     start() {
         let that = this;
