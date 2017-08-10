@@ -37,10 +37,11 @@ class SpaaaceClientEngine extends ClientEngine {
                 this.socket.emit('requestRestart');
             });
 
-            document.querySelector('#joinGame').addEventListener('click', () => {
+            document.querySelector('#joinGame').addEventListener('click', (clickEvent) => {
                 if (Utils.isTouchDevice()){
                     this.renderer.enableFullScreen();
                 }
+                clickEvent.currentTarget.disabled = true;
                 this.socket.emit('requestRestart');
             });
 
