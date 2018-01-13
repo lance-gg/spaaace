@@ -1,10 +1,34 @@
-'use strict';
+import Serializer from 'lance/serialize/Serializer';
+import DynamicObject from 'lance/serialize/DynamicObject';
+import PixiRenderableComponent from 'lance/render/pixi/PixiRenderableComponent';
+import Utils from './Utils';
 
-const Serializer = require('lance-gg').serialize.Serializer;
-const DynamicObject = require('lance-gg').serialize.DynamicObject;
-const Utils = require('./Utils');
 
-class Ship extends DynamicObject {
+
+export default class Ship extends DynamicObject {
+
+    constructor(gameEngine, options, props){
+        super(gameEngine, options, props);
+
+        this.addComponent(new PixiRenderableComponent({
+            assetName: 'ship',
+            width: 50,
+            height: 45,
+            onRenderableCreated: (sprite, component) => {
+                if (gameEngine && gameEngine.isOwnedByPlayer(component.parentObject)) {
+                    sprite.tint = 0XFF00FF; // color player ship
+                }
+                return sprite;
+            }
+        }));
+
+        this.showThrust = 0;
+    }
+
+    get maxSpeed() { return 3.0; }
+
+    // ship rotation is input-deterministic, no bending needed
+    get bendingAngleLocalMultiple() { return 0.0; }
 
     static get netScheme() {
         return Object.assign({
@@ -16,19 +40,11 @@ class Ship extends DynamicObject {
         return `${this.isBot?'Bot':'Player'}::Ship::${super.toString()}`;
     }
 
-    get bendingAngleLocalMultiple() { return 0.0; }
-
     syncTo(other) {
         super.syncTo(other);
         this.showThrust = other.showThrust;
     }
 
-    constructor(id, gameEngine, x, y) {
-        super(id, x, y);
-        this.class = Ship;
-        this.gameEngine = gameEngine;
-        this.showThrust = 0;
-    };
 
     destroy() {
         if (this.fireLoop) {
@@ -39,8 +55,6 @@ class Ship extends DynamicObject {
             this.onPreStep = null;
         }
     }
-
-    get maxSpeed() { return 3.0; }
 
     attachAI() {
         this.isBot = true;
@@ -110,5 +124,3 @@ class Ship extends DynamicObject {
         }
     }
 }
-
-module.exports = Ship;

@@ -1,77 +1,68 @@
 'use strict';
 
-const SimplePhysicsEngine = require('lance-gg').physics.SimplePhysicsEngine;
-const GameEngine = require('lance-gg').GameEngine;
-const Missile= require('./Missile');
-const Ship = require('./Ship');
-const TwoVector = require('lance-gg').serialize.TwoVector;
-const Timer = require('./Timer');
 
-class SpaaaceGameEngine extends GameEngine {
+import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
+import GameEngine from 'lance/GameEngine';
+import Ship from './Ship';
+import Missile from './Missile';
+import TwoVector from 'lance/serialize/TwoVector';
+
+export default class SpaaaceGameEngine extends GameEngine {
 
     constructor(options) {
-        super(SimplePhysicsEngine, options);
+        super(options);
+        this.physicsEngine = new SimplePhysicsEngine({
+            gameEngine: this,
+            collisions: {
+                type: 'brute'
+            }
+        });
     }
 
-    start() {
-        let that = this;
-        super.start();
+    registerClasses(serializer){
+        serializer.registerClass(Ship);
+        serializer.registerClass(Missile);
+    }
 
-        this.timer = new Timer();
-        this.timer.play();
-        this.on('server__postStep', ()=>{
-            this.timer.tick();
-        });
-
-        this.worldSettings = {
+    initWorld(){
+        super.initWorld({
             worldWrap: true,
             width: 3000,
             height: 3000
-        };
+        });
+    }
 
-        this.on('collisionStart', function(e) {
+    start() {
+        super.start();
+
+        this.on('collisionStart', e => {
             let collisionObjects = Object.keys(e).map(k => e[k]);
-            let ship = collisionObjects.find(o => o.class === Ship);
-            let missile = collisionObjects.find(o => o.class === Missile);
+            let ship = collisionObjects.find(o => o instanceof Ship);
+            let missile = collisionObjects.find(o => o instanceof Missile);
 
             if (!ship || !missile)
                 return;
 
-            if (missile.ownerId !== ship.id) {
-                that.destroyMissile(missile.id);
-                that.trace.info(`missile by ship=${missile.ownerId} hit ship=${ship.id}`);
-                that.emit('missileHit', { missile, ship });
+            // make sure not to process the collision between a missile and the ship that fired it
+            if (missile.playerId !== ship.playerId) {
+                this.destroyMissile(missile.id);
+                this.trace.info(() => `missile by ship=${missile.playerId} hit ship=${ship.id}`);
+                this.emit('missileHit', { missile, ship });
             }
         });
 
         this.on('postStep', this.reduceVisibleThrust.bind(this));
     };
 
-    reduceVisibleThrust(postStepEv) {
-        if (postStepEv.isReenact)
-            return;
-
-        for (let objId of Object.keys(this.world.objects)) {
-            let o = this.world.objects[objId];
-            if (Number.isInteger(o.showThrust) && o.showThrust >= 1)
-                o.showThrust--;
-        }
-    }
-
-    processInput(inputData, playerId) {
+    processInput(inputData, playerId, isServer) {
 
         super.processInput(inputData, playerId);
 
         // get the player ship tied to the player socket
-        let playerShip;
-
-        for (let objId in this.world.objects) {
-            let o = this.world.objects[objId];
-            if (o.playerId == playerId && o.class == Ship) {
-                playerShip = o;
-                break;
-            }
-        }
+        let playerShip = this.world.queryObject({
+            playerId: playerId,
+            instanceType: Ship
+        });
 
         if (playerShip) {
             if (inputData.input == 'up') {
@@ -93,7 +84,10 @@ class SpaaaceGameEngine extends GameEngine {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        let ship = new Ship(++this.world.idCount, this, new TwoVector(newShipX, newShipY));
+        let ship = new Ship(this, null, {
+            position: new TwoVector(newShipX, newShipY)
+        });
+
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
         console.log(`ship added: ${ship.toString()}`);
@@ -102,19 +96,23 @@ class SpaaaceGameEngine extends GameEngine {
     };
 
     makeMissile(playerShip, inputId) {
-        let missile = new Missile(++this.world.idCount);
+        let missile = new Missile(this);
+
+        // we want the missile location and velocity to correspond to that of the ship firing it
         missile.position.copy(playerShip.position);
         missile.velocity.copy(playerShip.velocity);
         missile.angle = playerShip.angle;
         missile.playerId = playerShip.playerId;
         missile.ownerId = playerShip.id;
-        missile.inputId = inputId;
+        missile.inputId = inputId; // this enables usage of the missile shadow object
         missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
         missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
 
         this.trace.trace(`missile[${missile.id}] created vel=${missile.velocity}`);
 
         let obj = this.addObjectToWorld(missile);
+
+        // if the object was added successfully to the game world, destroy the missile after some game ticks
         if (obj)
             this.timer.add(40, this.destroyMissile, this, [obj.id]);
 
@@ -124,10 +122,23 @@ class SpaaaceGameEngine extends GameEngine {
     // destroy the missile if it still exists
     destroyMissile(missileId) {
         if (this.world.objects[missileId]) {
-            this.trace.trace(`missile[${missileId}] destroyed`);
+            this.trace.trace(() => `missile[${missileId}] destroyed`);
             this.removeObjectFromWorld(missileId);
         }
     }
-}
 
-module.exports = SpaaaceGameEngine;
+    // at the end of the step, reduce the thrust for all objects
+    reduceVisibleThrust(postStepEv) {
+        if (postStepEv.isReenact)
+            return;
+
+        let ships = this.world.queryObjects({
+            instanceType: Ship
+        });
+
+        ships.forEach(ship => {
+            if (Number.isInteger(ship.showThrust) && ship.showThrust >= 1)
+                ship.showThrust--;
+        });
+    }
+}

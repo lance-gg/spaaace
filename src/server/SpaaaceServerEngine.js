@@ -1,24 +1,19 @@
-'use strict';
-
-const ServerEngine = require('lance-gg').ServerEngine;
+import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 3;
 
-class SpaaaceServerEngine extends ServerEngine {
+export default class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
         super(io, gameEngine, inputOptions);
-
-        this.serializer.registerClass(require('../common/Missile'));
-        this.serializer.registerClass(require('../common/Ship'));
-
         this.scoreData = {};
     }
 
     start() {
         super.start();
+        
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
-        this.gameEngine.on('missileHit', (e) => {
+        this.gameEngine.on('missileHit', e => {
             // add kills
             if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
             // remove score data for killed ship
@@ -53,17 +48,14 @@ class SpaaaceServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
 
-        // iterate through all objects, delete those that are associated with the player
-        for (let objId of Object.keys(this.gameEngine.world.objects)) {
-            let obj = this.gameEngine.world.objects[objId];
-            if (obj.playerId == playerId) {
-                // remove score data
-                if (this.scoreData[objId]) {
-                    delete this.scoreData[objId];
-                }
-                delete this.gameEngine.world.objects[objId];
-            }
-        }
+
+        // iterate through all objects, delete those that are associated with the player (ship and missiles)
+        let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId});
+        playerObjects.forEach( obj => {
+            this.gameEngine.removeObjectFromWorld(obj.id);
+            // remove score associated with this ship
+            delete this.scoreData[obj.id];
+        });
 
         this.updateScore();
     }
@@ -88,5 +80,3 @@ class SpaaaceServerEngine extends ServerEngine {
 
     }
 }
-
-module.exports = SpaaaceServerEngine;

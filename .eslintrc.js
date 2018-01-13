@@ -2,7 +2,8 @@ module.exports = {
     "extends": "google",
     "installedESLint": true,
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion": 6,
+        "sourceType": "module"
     },
     "rules": {
         "arrow-parens": "off",
