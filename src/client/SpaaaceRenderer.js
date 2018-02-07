@@ -171,7 +171,7 @@ export default class SpaaaceRenderer extends Renderer {
             if (objData) {
 
                 // if the object requests a "showThrust" then invoke it in the actor
-                if ((sprite !== this.playerShip) && sprite.actor) {
+                if ((sprite !== this.playerShip) && sprite.actor && sprite.actor.thrustEmitter) {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
 
@@ -345,12 +345,6 @@ export default class SpaaaceRenderer extends Renderer {
         let slope = (objData.position.y - playerShipObj.position.y) / (objData.position.x - playerShipObj.position.x);
         let b = this.viewportHeight/ 2;
 
-        // this.debug.clear();
-        // this.debug.lineStyle(1, 0xFF0000 ,1);
-        // this.debug.moveTo(this.viewportWidth/2,this.viewportHeight/2);
-        // this.debug.lineTo(this.viewportWidth/2 + b/-slope, 0);
-        // this.debug.endFill();
-
         let padding = 30;
         let indicatorPos = { x: 0, y: 0 };
 
@@ -382,7 +376,8 @@ export default class SpaaaceRenderer extends Renderer {
 
     removeOffscreenIndicator(objData) {
         let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
-        indicatorEl.parentNode.removeChild(indicatorEl);
+        if (indicatorEl && indicatorEl.parentNode)
+            indicatorEl.parentNode.removeChild(indicatorEl);
     }
 
     updateHUD(data){

@@ -17,7 +17,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
-            if (obj instanceof Ship && this.isOwnedByPlayer(obj)) {
+            if (obj instanceof Ship && this.gameEngine.isOwnedByPlayer(obj)) {
                 document.body.classList.add('lostGame');
                 document.querySelector('#tryAgain').disabled = false;
             }

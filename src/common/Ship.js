@@ -1,6 +1,5 @@
 import Serializer from 'lance/serialize/Serializer';
 import DynamicObject from 'lance/serialize/DynamicObject';
-import PixiRenderableComponent from 'lance/render/pixi/PixiRenderableComponent';
 import Renderer from '../client/SpaaaceRenderer';
 import Utils from './Utils';
 import ShipActor from '../client/ShipActor';
@@ -9,19 +8,6 @@ export default class Ship extends DynamicObject {
 
     constructor(gameEngine, options, props){
         super(gameEngine, options, props);
-
-        // this.addComponent(new PixiRenderableComponent({
-        //     assetName: 'ship',
-        //     width: 50,
-        //     height: 45,
-        //     onRenderableCreated: (sprite, component) => {
-        //         if (gameEngine && gameEngine.isOwnedByPlayer(component.parentObject)) {
-        //             sprite.tint = 0XFF00FF; // color player ship
-        //         }
-        //         return sprite;
-        //     }
-        // }));
-
         this.showThrust = 0;
     }
 
@@ -55,15 +41,17 @@ export default class Ship extends DynamicObject {
                 renderer.removeOffscreenIndicator(this);
             }
             let sprite = renderer.sprites[this.id];
-            if (sprite.actor) {
-                // removal "takes time"
-                sprite.actor.destroy().then(()=>{
-                    console.log('deleted sprite');
+            if (sprite) {
+                if (sprite.actor) {
+                    // removal "takes time"
+                    sprite.actor.destroy().then(()=>{
+                        console.log('deleted sprite');
+                        delete renderer.sprites[this.id];
+                    });
+                } else {
+                    sprite.destroy();
                     delete renderer.sprites[this.id];
-                });
-            } else {
-                sprite.destroy();
-                delete renderer.sprites[this.id];
+                }
             }
         }
     }

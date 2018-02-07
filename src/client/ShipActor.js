@@ -1,8 +1,8 @@
 const ThrusterEmitterConfig = require('./ThrusterEmitter.json');
 const ExplosionEmitterConfig = require('./ExplosionEmitter.json');
 
-let PixiParticles = null;
 let PIXI = null;
+let PixiParticles = null;
 
 class ShipActor{
 
@@ -74,15 +74,16 @@ class ShipActor{
         this.sprite.addChild(this.nameText);
     }
 
-    destroy(){
+    destroy() {
         return new Promise((resolve) =>{
             this.explosionEmitter.emit = true;
 
-            if (this.nameText)
-                this.nameText.destroy();
-            this.thrustEmitter.destroy();
+            if (this.nameText) this.nameText.destroy({ texture: false });
+            if (this.thrustEmitter) this.thrustEmitter.destroy();
+            if (this.shipSprite) this.shipSprite.destroy();
+            this.nameText = null;
             this.thrustEmitter = null;
-            this.shipSprite.destroy();
+            this.shipSprite = null;
 
             setTimeout(()=>{
                 this.shipContainerSprite.destroy();

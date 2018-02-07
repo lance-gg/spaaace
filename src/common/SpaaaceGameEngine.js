@@ -114,7 +114,7 @@ export default class SpaaaceGameEngine extends GameEngine {
 
         // if the object was added successfully to the game world, destroy the missile after some game ticks
         if (obj)
-            this.timer.add(40, this.destroyMissile, this, [obj.id]);
+            this.timer.add(30, this.destroyMissile, this, [obj.id]);
 
         return missile;
     }
