@@ -10,7 +10,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     devServer: {
-        contentBase: path.join(__dirname, "dist"),
+        contentBase: path.join(__dirname, 'dist'),
         compress: true,
         port: 8080
     },
@@ -22,6 +22,7 @@ module.exports = {
     ],
     module: {
         loaders: [
+            { test: /\.json$/, loader: 'json-loader' },
             { test: /\.css$/, loader: 'style!css' },
             {
                 test: /\.scss$/,

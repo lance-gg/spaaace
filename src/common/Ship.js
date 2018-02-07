@@ -1,31 +1,72 @@
 import Serializer from 'lance/serialize/Serializer';
 import DynamicObject from 'lance/serialize/DynamicObject';
 import PixiRenderableComponent from 'lance/render/pixi/PixiRenderableComponent';
+import Renderer from '../client/SpaaaceRenderer';
 import Utils from './Utils';
-
-
+import ShipActor from '../client/ShipActor';
 
 export default class Ship extends DynamicObject {
 
     constructor(gameEngine, options, props){
         super(gameEngine, options, props);
 
-        this.addComponent(new PixiRenderableComponent({
-            assetName: 'ship',
-            width: 50,
-            height: 45,
-            onRenderableCreated: (sprite, component) => {
-                if (gameEngine && gameEngine.isOwnedByPlayer(component.parentObject)) {
-                    sprite.tint = 0XFF00FF; // color player ship
-                }
-                return sprite;
-            }
-        }));
+        // this.addComponent(new PixiRenderableComponent({
+        //     assetName: 'ship',
+        //     width: 50,
+        //     height: 45,
+        //     onRenderableCreated: (sprite, component) => {
+        //         if (gameEngine && gameEngine.isOwnedByPlayer(component.parentObject)) {
+        //             sprite.tint = 0XFF00FF; // color player ship
+        //         }
+        //         return sprite;
+        //     }
+        // }));
 
         this.showThrust = 0;
     }
 
     get maxSpeed() { return 3.0; }
+
+    onAddToWorld(gameEngine) {
+        let renderer = Renderer.getInstance();
+        if (renderer) {
+            let shipActor = new ShipActor(renderer);
+            let sprite = shipActor.sprite;
+            renderer.sprites[this.id] = sprite;
+            sprite.id = this.id;
+            sprite.position.set(this.position.x, this.position.y);
+            renderer.layer2.addChild(sprite);
+
+            if (gameEngine.isOwnedByPlayer(this)) {
+                renderer.addPlayerShip(sprite);
+            } else {
+                renderer.addOffscreenIndicator(this);
+            }
+        }
+    }
+
+    onRemoveFromWorld(gameEngine) {
+
+        let renderer = Renderer.getInstance();
+        if (renderer) {
+            if (gameEngine.isOwnedByPlayer(this)) {
+                renderer.playerShip = null;
+            } else {
+                renderer.removeOffscreenIndicator(this);
+            }
+            let sprite = renderer.sprites[this.id];
+            if (sprite.actor) {
+                // removal "takes time"
+                sprite.actor.destroy().then(()=>{
+                    console.log('deleted sprite');
+                    delete renderer.sprites[this.id];
+                });
+            } else {
+                sprite.destroy();
+                delete renderer.sprites[this.id];
+            }
+        }
+    }
 
     // ship rotation is input-deterministic, no bending needed
     get bendingAngleLocalMultiple() { return 0.0; }

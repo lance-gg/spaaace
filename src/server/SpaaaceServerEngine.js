@@ -1,3 +1,5 @@
+'use strict';
+
 import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 3;
@@ -10,7 +12,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     start() {
         super.start();
-        
+
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', e => {

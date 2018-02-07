@@ -3,6 +3,7 @@ import ClientEngine from 'lance/ClientEngine';
 import SpaaaceRenderer from '../client/SpaaaceRenderer';
 import KeyboardControls from 'lance/controls/KeyboardControls';
 import MobileControls from './MobileControls';
+import Ship from '../common/Ship';
 import Utils from '../common/Utils';
 
 export default class SpaaaceClientEngine extends ClientEngine {
@@ -16,7 +17,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
-            if (obj.class == Ship && this.isOwnedByPlayer(obj)) {
+            if (obj instanceof Ship && this.isOwnedByPlayer(obj)) {
                 document.body.classList.add('lostGame');
                 document.querySelector('#tryAgain').disabled = false;
             }

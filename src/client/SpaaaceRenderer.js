@@ -1,17 +1,17 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-const Renderer = require('lance-gg').render.Renderer;
-const Utils= require('./../common/Utils');
+let PIXI = null;
+import Renderer from 'lance/render/Renderer';
+import Utils from './../common/Utils';
 
-const Missile = require('../common/Missile');
-const Ship = require('../common/Ship');
-const ShipActor = require('./ShipActor');
+import Missile from '../common/Missile';
+import Ship from '../common/Ship';
+
 
 /**
  * Renderer for the Spaaace client - based on Pixi.js
  */
-class SpaaaceRenderer extends Renderer {
+export default class SpaaaceRenderer extends Renderer {
 
     get ASSETPATHS(){
         return {
@@ -28,6 +28,7 @@ class SpaaaceRenderer extends Renderer {
     // TODO: document
     constructor(gameEngine, clientEngine) {
         super(gameEngine, clientEngine);
+        PIXI = require('pixi.js');
         this.sprites = {};
         this.isReady = false;
 
@@ -67,7 +68,6 @@ class SpaaaceRenderer extends Renderer {
             .load(() => {
                 this.isReady = true;
                 this.setupStage();
-                this.gameEngine.emit('renderer.ready');
 
                 if (Utils.isTouchDevice()){
                     document.body.classList.add('touch');
@@ -78,6 +78,8 @@ class SpaaaceRenderer extends Renderer {
                 }
 
                 resolve();
+
+                this.gameEngine.emit('renderer.ready');
             });
         });
     }
@@ -173,14 +175,14 @@ class SpaaaceRenderer extends Renderer {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
 
-                if (objData.class == Ship && sprite != this.playerShip) {
+                if (objData instanceof Ship && sprite != this.playerShip) {
                     this.updateOffscreenIndicator(objData);
                 }
 
                 sprite.x = objData.position.x;
                 sprite.y = objData.position.y;
 
-                if (objData.class == Ship){
+                if (objData instanceof Ship){
                     sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 } else{
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
@@ -281,77 +283,25 @@ class SpaaaceRenderer extends Renderer {
         this.renderer.render(this.stage);
     }
 
-    addObject(objData, options) {
-        let sprite;
-
-        if (objData.class == Ship) {
-            let shipActor = new ShipActor(this);
-            sprite = shipActor.sprite;
-            this.sprites[objData.id] = sprite;
-            sprite.id = objData.id;
-
-            if (this.clientEngine.isOwnedByPlayer(objData)) {
-                this.playerShip = sprite; // save reference to the player ship
-                sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
-                document.body.classList.remove('lostGame');
-                if (!document.body.classList.contains('tutorialDone')){
-                    document.body.classList.add('tutorial');
-                }
-                document.body.classList.remove('lostGame');
-                document.body.classList.add('gameActive');
-                document.querySelector('#tryAgain').disabled = true;
-                document.querySelector('#joinGame').disabled = true;
-                document.querySelector('#joinGame').style.opacity = 0;
-
-                this.gameStarted = true; // todo state shouldn't be saved in the renderer
-
-                // remove the tutorial if required after a timeout
-                setTimeout(() => {
-                    document.body.classList.remove('tutorial');
-                }, 10000);
-            } else {
-                this.addOffscreenIndicator(objData);
-            }
-
-        } else if (objData.class == Missile) {
-            sprite = new PIXI.Sprite(PIXI.loader.resources.missile.texture);
-            this.sprites[objData.id] = sprite;
-
-            sprite.width = 81 * 0.5;
-            sprite.height = 46 * 0.5;
-
-            sprite.anchor.set(0.5, 0.5);
+    addPlayerShip(sprite) {
+        this.playerShip = sprite;
+        sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
+        document.body.classList.remove('lostGame');
+        if (!document.body.classList.contains('tutorialDone')){
+            document.body.classList.add('tutorial');
         }
+        document.body.classList.remove('lostGame');
+        document.body.classList.add('gameActive');
+        document.querySelector('#tryAgain').disabled = true;
+        document.querySelector('#joinGame').disabled = true;
+        document.querySelector('#joinGame').style.opacity = 0;
 
-        sprite.position.set(objData.position.x, objData.position.y);
-        this.layer2.addChild(sprite);
+        this.gameStarted = true; // todo state shouldn't be saved in the renderer
 
-        Object.assign(sprite, options);
-
-        return sprite;
-    }
-
-    removeObject(obj) {
-        if (this.playerShip && obj.id == this.playerShip.id) {
-            this.playerShip = null;
-        }
-
-        if (obj.class == Ship && this.playerShip && obj.id != this.playerShip.id) {
-            this.removeOffscreenIndicator(obj);
-
-        }
-
-        let sprite = this.sprites[obj.id];
-        if (sprite.actor) {
-            // removal "takes time"
-            sprite.actor.destroy().then(()=>{
-                console.log('deleted sprite');
-                delete this.sprites[obj.id];
-            });
-        } else{
-            this.sprites[obj.id].destroy();
-            delete this.sprites[obj.id];
-        }
+        // remove the tutorial if required after a timeout
+        setTimeout(() => {
+            document.body.classList.remove('tutorial');
+        }, 10000);
     }
 
     /**
@@ -530,7 +480,7 @@ function getCentroid(objects) {
 
     for (let id of Object.keys(objects)){
         let obj = objects[id];
-        if (obj.class == Ship) {
+        if (obj instanceof Ship) {
             if (selectedShip == null)
                 selectedShip = obj;
 
@@ -568,5 +518,3 @@ function isMacintosh() {
 function isWindows() {
     return navigator.platform.indexOf('Win') > -1;
 }
-
-module.exports = SpaaaceRenderer;
