@@ -42,6 +42,7 @@
     "start": "babel-node main.js --presets es2015",
     "start-debug": "babel-node main.js --inspect --debug-brk --presets es2015",
     "nodemon": "nodemon main.js --exec babel-node --presets es2015",
+    "postinstall": "webpack",
     "build": "webpack",
     "dev": "webpack --watch",
     "stats": "webpack --env production --profile --json > stats.json"
