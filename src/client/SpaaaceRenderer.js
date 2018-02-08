@@ -150,8 +150,8 @@ export default class SpaaaceRenderer extends Renderer {
         this.renderer.resize(this.viewportWidth, this.viewportHeight);
     }
 
-    draw() {
-        super.draw();
+    draw(t, dt) {
+        super.draw(t, dt);
 
         let now = Date.now();
 
