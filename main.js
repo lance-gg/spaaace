@@ -15,14 +15,17 @@ let requestHandler = server.listen(PORT, () => console.log(`Listening on ${ PORT
 const io = socketIO(requestHandler);
 
 // Game Server
-const SpaaaceServerEngine = require(path.join(__dirname, 'src/server/SpaaaceServerEngine.js'));
-const SpaaaceGameEngine = require(path.join(__dirname, 'src/common/SpaaaceGameEngine.js'));
-const SimplePhysicsEngine = require('lance-gg').physics.SimplePhysicsEngine;
+import MyServerEngine from './src/server/SpaaaceServerEngine.js';
+import MyGameEngine from './src/common/SpaaaceGameEngine.js';
+
 
 // Game Instances
-const physicsEngine = new SimplePhysicsEngine({ collisionOptions: { COLLISION_DISTANCE: 50 } } );
-const gameEngine = new SpaaaceGameEngine({ physicsEngine });
-const serverEngine = new SpaaaceServerEngine(io, gameEngine, { timeoutInterval: 60 * 5 , debug: {} });
+const gameEngine = new MyGameEngine();
+const serverEngine = new MyServerEngine(io, gameEngine, {
+    debug: {},
+    updateRate: 6,
+    timeoutInterval: 0 // no timeout
+});
 
 // start the game
 serverEngine.start();

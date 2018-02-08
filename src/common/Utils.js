@@ -38,4 +38,4 @@ Utils.shortestArc = function(a, b) {
     return b-a+Math.PI*2;
 };
 
-module.exports = Utils;
+export default Utils;

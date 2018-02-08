@@ -1,10 +1,63 @@
-'use strict';
+import Serializer from 'lance/serialize/Serializer';
+import DynamicObject from 'lance/serialize/DynamicObject';
+import Renderer from '../client/SpaaaceRenderer';
+import Utils from './Utils';
+import ShipActor from '../client/ShipActor';
 
-const Serializer = require('lance-gg').serialize.Serializer;
-const DynamicObject = require('lance-gg').serialize.DynamicObject;
-const Utils = require('./Utils');
+export default class Ship extends DynamicObject {
 
-class Ship extends DynamicObject {
+    constructor(gameEngine, options, props){
+        super(gameEngine, options, props);
+        this.showThrust = 0;
+    }
+
+    get maxSpeed() { return 3.0; }
+
+    onAddToWorld(gameEngine) {
+        let renderer = Renderer.getInstance();
+        if (renderer) {
+            let shipActor = new ShipActor(renderer);
+            let sprite = shipActor.sprite;
+            renderer.sprites[this.id] = sprite;
+            sprite.id = this.id;
+            sprite.position.set(this.position.x, this.position.y);
+            renderer.layer2.addChild(sprite);
+
+            if (gameEngine.isOwnedByPlayer(this)) {
+                renderer.addPlayerShip(sprite);
+            } else {
+                renderer.addOffscreenIndicator(this);
+            }
+        }
+    }
+
+    onRemoveFromWorld(gameEngine) {
+
+        let renderer = Renderer.getInstance();
+        if (renderer) {
+            if (gameEngine.isOwnedByPlayer(this)) {
+                renderer.playerShip = null;
+            } else {
+                renderer.removeOffscreenIndicator(this);
+            }
+            let sprite = renderer.sprites[this.id];
+            if (sprite) {
+                if (sprite.actor) {
+                    // removal "takes time"
+                    sprite.actor.destroy().then(()=>{
+                        console.log('deleted sprite');
+                        delete renderer.sprites[this.id];
+                    });
+                } else {
+                    sprite.destroy();
+                    delete renderer.sprites[this.id];
+                }
+            }
+        }
+    }
+
+    // ship rotation is input-deterministic, no bending needed
+    get bendingAngleLocalMultiple() { return 0.0; }
 
     static get netScheme() {
         return Object.assign({
@@ -16,19 +69,11 @@ class Ship extends DynamicObject {
         return `${this.isBot?'Bot':'Player'}::Ship::${super.toString()}`;
     }
 
-    get bendingAngleLocalMultiple() { return 0.0; }
-
     syncTo(other) {
         super.syncTo(other);
         this.showThrust = other.showThrust;
     }
 
-    constructor(id, gameEngine, x, y) {
-        super(id, x, y);
-        this.class = Ship;
-        this.gameEngine = gameEngine;
-        this.showThrust = 0;
-    };
 
     destroy() {
         if (this.fireLoop) {
@@ -39,8 +84,6 @@ class Ship extends DynamicObject {
             this.onPreStep = null;
         }
     }
-
-    get maxSpeed() { return 3.0; }
 
     attachAI() {
         this.isBot = true;
@@ -110,5 +153,3 @@ class Ship extends DynamicObject {
         }
     }
 }
-
-module.exports = Ship;

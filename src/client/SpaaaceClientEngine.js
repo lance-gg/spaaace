@@ -1,28 +1,23 @@
-const Howler = require('howler'); // eslint-disable-line no-unused-vars
-const ClientEngine = require('lance-gg').ClientEngine;
-const SpaaaceRenderer = require('../client/SpaaaceRenderer');
-const MobileControls = require('../client/MobileControls');
-const KeyboardControls = require('../client/KeyboardControls');
-const Ship = require('../common/Ship');
-const Utils = require('./../common/Utils');
+import Howler from 'howler'; // eslint-disable-line no-unused-vars
+import ClientEngine from 'lance/ClientEngine';
+import SpaaaceRenderer from '../client/SpaaaceRenderer';
+import KeyboardControls from 'lance/controls/KeyboardControls';
+import MobileControls from './MobileControls';
+import Ship from '../common/Ship';
+import Utils from '../common/Utils';
 
-class SpaaaceClientEngine extends ClientEngine {
+export default class SpaaaceClientEngine extends ClientEngine {
+
     constructor(gameEngine, options) {
         super(gameEngine, options, SpaaaceRenderer);
-
-        this.serializer.registerClass(require('../common/Ship'));
-        this.serializer.registerClass(require('../common/Missile'));
-
-        this.gameEngine.on('client__preStep', this.preStep.bind(this));
     }
 
     start() {
-
         super.start();
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
-            if (obj.class == Ship && this.isOwnedByPlayer(obj)) {
+            if (obj instanceof Ship && this.gameEngine.isOwnedByPlayer(obj)) {
                 document.body.classList.add('lostGame');
                 document.querySelector('#tryAgain').disabled = false;
             }
@@ -55,6 +50,12 @@ class SpaaaceClientEngine extends ClientEngine {
             } else {
                 this.controls = new KeyboardControls(this.renderer);
             }
+
+            this.controls = new KeyboardControls(this);
+            this.controls.bindKey('left', 'left', { repeat: true });
+            this.controls.bindKey('right', 'right', { repeat: true });
+            this.controls.bindKey('up', 'up', { repeat: true } );
+            this.controls.bindKey('space', 'space');
 
             this.controls.on('fire', () => {
                 this.sendInput('space');
@@ -104,23 +105,4 @@ class SpaaaceClientEngine extends ClientEngine {
         });
     }
 
-    // our pre-step is to process inputs that are "currently pressed" during the game step
-    preStep() {
-        if (this.controls) {
-            if (this.controls.activeInput.up) {
-                this.sendInput('up', { movement: true });
-            }
-
-            if (this.controls.activeInput.left) {
-                this.sendInput('left', { movement: true });
-            }
-
-            if (this.controls.activeInput.right) {
-                this.sendInput('right', { movement: true });
-            }
-        }
-    }
-
 }
-
-module.exports = SpaaaceClientEngine;

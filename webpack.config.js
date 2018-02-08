@@ -1,18 +1,28 @@
-var path = require('path');
-var fs = require('fs');
+const path = require('path');
+const fs = require('fs');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 module.exports = {
-    entry: './src/client/clientEntryPoint.js',
+    entry: './src/client/clientMain.js',
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js'
     },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 8080
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'Development',
+            template: 'index.html'
+        })
+    ],
     module: {
-        preLoaders: [
-            { test: /\.json$/, exclude: /node_modules/, loader: 'json' },
-            { test: /(ServerEngine)/, loader: 'null' }
-        ],
         loaders: [
+            { test: /\.json$/, loader: 'json-loader' },
             { test: /\.css$/, loader: 'style!css' },
             {
                 test: /\.scss$/,
@@ -27,11 +37,16 @@ module.exports = {
                 ],
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: [
+                        'babel-preset-es2015'
+                    ].map(require.resolve),
                 }
             }
         ]
     },
-    resolve: { fallback: path.join(__dirname, 'node_modules') },
-    resolveLoader: { fallback: path.join(__dirname, 'node_modules') }
+    resolve: {
+        alias: {
+            lance: path.resolve(__dirname, 'node_modules/lance-gg/src/'),
+        }
+    }
 };

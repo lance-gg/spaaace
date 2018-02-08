@@ -1,11 +1,14 @@
-const PIXI = require("pixi.js");
-const PixiParticles = require("pixi-particles");
-const ThrusterEmitterConfig = require("./ThrusterEmitter.json");
-const ExplosionEmitterConfig = require("./ExplosionEmitter.json");
+const ThrusterEmitterConfig = require('./ThrusterEmitter.json');
+const ExplosionEmitterConfig = require('./ExplosionEmitter.json');
+
+let PIXI = null;
+let PixiParticles = null;
 
 class ShipActor{
 
     constructor(renderer){
+        PIXI = require('pixi.js');
+        PixiParticles = require('pixi-particles');
         this.gameEngine = renderer.gameEngine;
         this.backLayer = renderer.layer1;
         this.sprite = new PIXI.Container();
@@ -13,7 +16,7 @@ class ShipActor{
 
         this.shipSprite = new PIXI.Sprite(PIXI.loader.resources.ship.texture);
 
-        //keep a reference to the actor from the sprite
+        // keep a reference to the actor from the sprite
         this.sprite.actor = this;
 
 
@@ -64,28 +67,29 @@ class ShipActor{
         if (this.nameText != null){
             this.nameText.destroy();
         }
-        this.nameText = new PIXI.Text(name, {fontFamily:"arial", fontSize: "12px", fill:"white"});
+        this.nameText = new PIXI.Text(name, { fontFamily: 'arial', fontSize: '12px', fill: 'white' });
         this.nameText.anchor.set(0.5, 0.5);
         this.nameText.y = -40;
         this.nameText.alpha = 0.3;
         this.sprite.addChild(this.nameText);
     }
 
-    destroy(){
+    destroy() {
         return new Promise((resolve) =>{
             this.explosionEmitter.emit = true;
 
-            if (this.nameText)
-                this.nameText.destroy();
-            this.thrustEmitter.destroy();
+            if (this.nameText) this.nameText.destroy({ texture: false });
+            if (this.thrustEmitter) this.thrustEmitter.destroy();
+            if (this.shipSprite) this.shipSprite.destroy();
+            this.nameText = null;
             this.thrustEmitter = null;
-            this.shipSprite.destroy();
+            this.shipSprite = null;
 
             setTimeout(()=>{
                 this.shipContainerSprite.destroy();
                 this.explosionEmitter.destroy();
                 resolve();
-            },3000);
+            }, 3000);
         });
     }
 
