@@ -33,10 +33,6 @@ export default class Ship extends DynamicObject {
 
     onRemoveFromWorld(gameEngine) {
 
-        if (this.fireLoop) {
-            this.fireLoop.destroy();
-        }
-
         if (this.onPreStep){
             this.gameEngine.removeListener('preStep', this.onPreStep);
             this.onPreStep = null;
@@ -89,19 +85,19 @@ export default class Ship extends DynamicObject {
 
     attachAI() {
         this.isBot = true;
+        this.fireLoopTime = Math.round(250 + Math.random() * 100);
 
-        this.onPreStep = () => {
+        this.onPreStep = (ev) => {
             this.steer();
+            if (ev.step % this.fireLoopTime === 0) {
+                if (this.target && this.distanceToTargetSquared(this.target) < 160000) {
+                    this.gameEngine.trace.trace(() => `robot launching a missile id=${this.id}`);
+                    this.gameEngine.makeMissile(this);
+                }
+            }
         };
 
         this.gameEngine.on('preStep', this.onPreStep);
-
-        let fireLoopTime = Math.round(250 + Math.random() * 100);
-        this.fireLoop = this.gameEngine.timer.loop(fireLoopTime, () => {
-            if (this.target && this.distanceToTargetSquared(this.target) < 160000) {
-                this.gameEngine.makeMissile(this);
-            }
-        });
     }
 
     shortestVector(p1, p2, wrapDist) {
