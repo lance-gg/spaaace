@@ -89,7 +89,7 @@ class ShipActor{
                 this.shipContainerSprite.destroy();
                 this.explosionEmitter.destroy();
                 resolve();
-            }, 3000);
+            }, 300);
         });
     }
 

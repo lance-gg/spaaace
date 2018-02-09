@@ -7,12 +7,6 @@ export default class Missile extends DynamicObject {
 
     constructor(gameEngine, options, props){
         super(gameEngine, options, props);
-
-        this.addComponent(new PixiRenderableComponent({
-            assetName: 'missile',
-            width: 40,
-            height: 23
-        }));
     }
 
     // this is what allows usage of shadow object with input-created objects (missiles)
