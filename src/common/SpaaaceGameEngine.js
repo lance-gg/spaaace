@@ -108,7 +108,7 @@ export default class SpaaaceGameEngine extends GameEngine {
         missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
         missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;
 
-        this.trace.trace(`missile[${missile.id}] created vel=${missile.velocity}`);
+        this.trace.trace(() => `missile[${missile.id}] created vel=${missile.velocity}`);
 
         let obj = this.addObjectToWorld(missile);
 
