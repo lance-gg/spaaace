@@ -171,7 +171,7 @@ export default class SpaaaceRenderer extends Renderer {
             if (objData) {
 
                 // if the object requests a "showThrust" then invoke it in the actor
-                if ((sprite !== this.playerShip) && sprite.actor && sprite.actor.thrustEmitter) {
+                if (sprite.actor && sprite.actor.thrustEmitter) {
                     sprite.actor.thrustEmitter.emit = !!objData.showThrust;
                 }
 
