@@ -1,6 +1,5 @@
 'use strict';
 
-
 import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
 import GameEngine from 'lance/GameEngine';
 import Ship from './Ship';

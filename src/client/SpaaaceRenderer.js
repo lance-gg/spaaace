@@ -252,7 +252,7 @@ export default class SpaaaceRenderer extends Renderer {
                     this.bgPhaseY--;
                     cameraTempTargetY = this.lookingAt.y - worldHeight;
                 } else {
-                    cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02
+                    cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
                 }
 
                 this.centerCamera(cameraTempTargetX, cameraTempTargetY);

@@ -11,11 +11,6 @@ const options = {
         sync: 'extrapolate',
         localObjBending: 0.2,
         remoteObjBending: 0.5
-    },
-    physics: {
-        collisionOptions: {
-            COLLISION_DISTANCE: 25
-        }
     }
 };
 
