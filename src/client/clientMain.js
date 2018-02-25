@@ -6,7 +6,6 @@ import '../../assets/sass/main.scss';
 const options = {
     traceLevel: 1000,
     delayInputCount: 8,
-    clientIDSpace: 1000000,
     scheduler: 'render-schedule',
     syncOptions: {
         sync: 'extrapolate',
