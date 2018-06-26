@@ -1,16 +1,17 @@
-const EventEmitter = require('eventemitter3');
-const Utils = require('../common/Utils');
+import EventEmitter from 'eventemitter3';
+import Utils from '../common/Utils';
 
 /**
  * This class handles touch device controls
  */
 class MobileControls{
 
-    constructor(renderer){
+    constructor(clientEngine){
         Object.assign(this, EventEmitter.prototype);
-        this.renderer = renderer;
+        this.clientEngine = clientEngine;
+        this.renderer = clientEngine.renderer;
 
-        this.touchContainer = document.querySelector(".pixiContainer");
+        this.touchContainer = document.querySelector('.pixiContainer');
         this.setupListeners();
 
         this.activeInput = {
@@ -23,8 +24,15 @@ class MobileControls{
             this.handleMovementInput();
             window.requestAnimationFrame(onRequestAnimationFrame);
         };
-
         onRequestAnimationFrame();
+
+        this.clientEngine.gameEngine.on('client__preStep', ()=>{
+            for (let keyName in this.activeInput){
+                if (this.activeInput[keyName]){
+                    this.clientEngine.sendInput(keyName);
+                }
+            }
+        });
 
     }
 

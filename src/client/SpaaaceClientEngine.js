@@ -46,20 +46,17 @@ export default class SpaaaceClientEngine extends ClientEngine {
 
             //  Game input
             if (Utils.isTouchDevice()){
-                this.controls = new MobileControls(this.renderer);
+``                this.controls = new MobileControls(this);
+                this.controls.on('fire', () => {
+                    this.sendInput('space');
+                });
             } else {
-                this.controls = new KeyboardControls(this.renderer);
+                this.controls = new KeyboardControls(this);
+                this.controls.bindKey('left', 'left', { repeat: true });
+                this.controls.bindKey('right', 'right', { repeat: true });
+                this.controls.bindKey('up', 'up', { repeat: true } );
+                this.controls.bindKey('space', 'space');
             }
-
-            this.controls = new KeyboardControls(this);
-            this.controls.bindKey('left', 'left', { repeat: true });
-            this.controls.bindKey('right', 'right', { repeat: true });
-            this.controls.bindKey('up', 'up', { repeat: true } );
-            this.controls.bindKey('space', 'space');
-
-            this.controls.on('fire', () => {
-                this.sendInput('space');
-            });
 
         });
 
