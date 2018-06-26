@@ -46,7 +46,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
 
             //  Game input
             if (Utils.isTouchDevice()){
-``                this.controls = new MobileControls(this);
+                this.controls = new MobileControls(this);
                 this.controls.on('fire', () => {
                     this.sendInput('space');
                 });
