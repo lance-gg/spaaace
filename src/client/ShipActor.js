@@ -2,7 +2,6 @@ const ThrusterEmitterConfig = require('./ThrusterEmitter.json');
 const ExplosionEmitterConfig = require('./ExplosionEmitter.json');
 
 let PIXI = null;
-let PixiParticles = null;
 
 class ShipActor{
 

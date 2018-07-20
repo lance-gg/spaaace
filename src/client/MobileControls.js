@@ -10,7 +10,7 @@ class MobileControls{
         Object.assign(this, EventEmitter.prototype);
         this.renderer = renderer;
 
-        this.touchContainer = document.querySelector(".pixiContainer");
+        this.touchContainer = document.querySelector('.pixiContainer');
         this.setupListeners();
 
         this.activeInput = {
