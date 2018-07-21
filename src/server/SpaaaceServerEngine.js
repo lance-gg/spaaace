@@ -52,7 +52,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
 
         // iterate through all objects, delete those that are associated with the player (ship and missiles)
-        let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId});
+        let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId });
         playerObjects.forEach( obj => {
             this.gameEngine.removeObjectFromWorld(obj.id);
             // remove score associated with this ship

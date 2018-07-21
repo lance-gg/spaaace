@@ -1,7 +1,6 @@
-import Serializer from 'lance/serialize/Serializer';
+import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
 import Renderer from '../client/SpaaaceRenderer';
-import Utils from './Utils';
 import ShipActor from '../client/ShipActor';
 
 export default class Ship extends DynamicObject {
@@ -72,7 +71,7 @@ export default class Ship extends DynamicObject {
 
     static get netScheme() {
         return Object.assign({
-            showThrust: { type: Serializer.TYPES.INT32 }
+            showThrust: { type: BaseTypes.TYPES.INT32 }
         }, super.netScheme);
     }
 

@@ -1,10 +1,11 @@
+import Trace from 'lance/lib/Trace';
 import SpaaaceClientEngine from './SpaaaceClientEngine';
 import SpaaaceGameEngine from '../common/SpaaaceGameEngine';
 import '../../assets/sass/main.scss';
 
 // sent to both game engine and client engine
 const options = {
-    traceLevel: 1000,
+    traceLevel: Trace.TRACE_NONE,
     delayInputCount: 8,
     scheduler: 'render-schedule',
     syncOptions: {
