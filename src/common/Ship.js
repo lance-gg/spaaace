@@ -64,9 +64,10 @@ export default class Ship extends DynamicObject {
         }
     }
 
-    // ship rotation is input-deterministic, no bending needed
+    // no bending corrections on angle needed, angle is deterministic
+    // position correction if less than world width/height
     get bending() {
-        return { angleLocal: { percent: 0.0 } };
+        return { angleLocal: { percent: 0.0 }, position: { max: 500.0 } };
     }
 
     static get netScheme() {
