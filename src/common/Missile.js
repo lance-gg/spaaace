@@ -19,6 +19,11 @@ export default class Missile extends DynamicObject {
         }, super.netScheme);
     }
 
+    // position correction if less than world width/height
+    get bending() {
+        return { position: { max: 500.0 } };
+    }
+
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
         if (renderer) {
