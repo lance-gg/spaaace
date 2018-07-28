@@ -20,7 +20,7 @@ import MyGameEngine from './src/common/SpaaaceGameEngine.js';
 
 
 // Game Instances
-const gameEngine = new MyGameEngine();
+const gameEngine = new MyGameEngine({ traceLevel: 1000 });
 const serverEngine = new MyServerEngine(io, gameEngine, {
     debug: {},
     updateRate: 6,

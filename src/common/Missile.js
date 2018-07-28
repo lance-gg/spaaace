@@ -1,4 +1,4 @@
-import Serializer from 'lance/serialize/Serializer';
+import BaseTypes from 'lance/serialize/BaseTypes';
 import DynamicObject from 'lance/serialize/DynamicObject';
 import PixiRenderableComponent from 'lance/render/pixi/PixiRenderableComponent';
 import Renderer from '../client/SpaaaceRenderer';
@@ -15,7 +15,7 @@ export default class Missile extends DynamicObject {
 
     static get netScheme() {
         return Object.assign({
-            inputId: { type: Serializer.TYPES.INT32 }
+            inputId: { type: BaseTypes.TYPES.INT32 }
         }, super.netScheme);
     }
 
