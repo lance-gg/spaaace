@@ -53,7 +53,6 @@ export default class Ship extends DynamicObject {
                 if (sprite.actor) {
                     // removal "takes time"
                     sprite.actor.destroy().then(()=>{
-                        console.log('deleted sprite');
                         delete renderer.sprites[this.id];
                     });
                 } else {
