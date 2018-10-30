@@ -65,12 +65,12 @@ export default class SpaaaceGameEngine extends GameEngine {
 
         if (playerShip) {
             if (inputData.input == 'up') {
-                playerShip.isAccelerating = true;
+                playerShip.accelerate(0.05);
                 playerShip.showThrust = 5; // show thrust for next steps.
             } else if (inputData.input == 'right') {
-                playerShip.isRotatingRight = true;
+                playerShip.turnRight(2.5);
             } else if (inputData.input == 'left') {
-                playerShip.isRotatingLeft = true;
+                playerShip.turnLeft(2.5);
             } else if (inputData.input == 'space') {
                 this.makeMissile(playerShip, inputData.messageIndex);
                 this.emit('fireMissile');

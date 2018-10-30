@@ -145,11 +145,11 @@ export default class Ship extends DynamicObject {
             let turnRight = this.shortestVector(this.angle, angleToTarget, 360);
 
             if (turnRight > 4) {
-                this.isRotatingRight = true;
+                this.turnRight(2.5);
             } else if (turnRight < -4) {
-                this.isRotatingLeft = true;
+                this.turnLeft(2.5);
             } else {
-                this.isAccelerating = true;
+                this.accelerate(0.05);
                 this.showThrust = 5;
             }
 

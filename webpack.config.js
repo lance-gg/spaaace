@@ -38,7 +38,7 @@ module.exports = {
                 loader: 'babel-loader',
                 query: {
                     presets: [
-                        'babel-preset-es2015'
+                        'babel-preset-env'
                     ].map(require.resolve),
                 }
             }
