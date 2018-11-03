@@ -2,7 +2,7 @@ version: 0.0
 
 files:
   - source: /
-    destination: /var/api/spaaace
+    destination: /var/games/spaaace
     
 permissions:
 - object: /
