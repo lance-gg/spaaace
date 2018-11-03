@@ -1,0 +1,18 @@
+version: 0.0
+
+files:
+  - source: /
+    destination: /var/api/spaaace
+    
+permissions:
+- object: /
+   pattern: "**"
+   owner: ec2-user
+   group: ec2-user
+ 
+hooks:
+  ApplicationStart:
+    - location: scripts/npm-start.sh
+      runas: ec2-user
+      timeout: 60
+      
