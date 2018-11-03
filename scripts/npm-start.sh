@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /var/api/spaaace
+cd /var/games/spaaace
 npm start
       
