@@ -13,6 +13,10 @@ permissions:
     group: ec2-user
  
 hooks:
+  ApplicationStop:
+    - location: scripts/npm-stop.sh
+      runas: ec2-user
+      timeout: 60
   AfterInstall:
     - location: scripts/npm-install.sh
       runas: ec2-user
