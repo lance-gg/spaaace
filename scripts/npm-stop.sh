@@ -1,3 +1,3 @@
 #!/bin/bash
-pkill -f spaaace
+pkill -f spaaace || true
 
