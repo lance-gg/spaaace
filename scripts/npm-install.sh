@@ -6,6 +6,9 @@ npm install
 
 # upload static files to s3
 cd /var/games/spaaace/dist && aws s3 sync --acl public-read --delete . s3://spaaace.lance.gg
+cd /var/games/spaaace/ && aws s3 sync --acl public-read assets s3://spaaace.lance.gg/assets
+
+
 
  # invalidate CDN
 aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id E1DCUODC5JNVXV --paths "/*"
