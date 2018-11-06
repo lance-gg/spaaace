@@ -10,7 +10,7 @@ const INDEX = path.join(__dirname, './dist/index.html');
 // define routes and socket
 const server = express();
 server.get('/', function(req, res) { res.sendFile(INDEX); });
-server.use('/', express.static(path.join(__dirname, '.')));
+server.use('/', express.static(path.join(__dirname, './dist/')));
 let requestHandler = server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 const io = socketIO(requestHandler);
 

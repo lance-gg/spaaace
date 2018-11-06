@@ -1,4 +1,4 @@
-@import "./../../node_modules/breakpoint-sass/stylesheets/breakpoint";
+@import "./../../../node_modules/breakpoint-sass/stylesheets/breakpoint";
 
 $breakpoint-mobile: (max-width 568px) (orientation portrait);
 $breakpoint-mobile-landscape: (max-width 568px) (orientation landscape);

@@ -2,7 +2,7 @@ import querystring from 'query-string';
 import Trace from 'lance/lib/Trace';
 import SpaaaceClientEngine from './SpaaaceClientEngine';
 import SpaaaceGameEngine from '../common/SpaaaceGameEngine';
-import '../../assets/sass/main.scss';
+import '../../dist/assets/sass/main.scss';
 const qsOptions = querystring.parse(location.search);
 
 // sent to both game engine and client engine
