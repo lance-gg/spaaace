@@ -1,7 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 
 module.exports = {
     entry: './src/client/clientMain.js',
@@ -14,12 +12,6 @@ module.exports = {
         compress: true,
         port: 8080
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            title: 'Development',
-            template: 'index.html'
-        })
-    ],
     module: {
         loaders: [
             { test: /\.json$/, loader: 'json-loader' },
