@@ -440,6 +440,9 @@ export default class SpaaaceRenderer extends Renderer {
         let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||    // alternative standard method
             (document.mozFullScreen || document.webkitIsFullScreen);
 
+        // iOS fullscreen generates user warnings
+        if (isIPhoneIPad()) return;
+
         let docElm = document.documentElement;
         if (!isInFullScreen) {
 
@@ -512,4 +515,8 @@ function isMacintosh() {
 
 function isWindows() {
     return navigator.platform.indexOf('Win') > -1;
+}
+
+function isIPhoneIPad() {
+    return navigator.platform.match(/i(Phone|Pod)/i) !== null;
 }
