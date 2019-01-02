@@ -1,5 +1,3 @@
-'use strict';
-
 import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
 import GameEngine from 'lance/GameEngine';
 import Ship from './Ship';
@@ -13,7 +11,8 @@ export default class SpaaaceGameEngine extends GameEngine {
         this.physicsEngine = new SimplePhysicsEngine({
             gameEngine: this,
             collisions: {
-                type: 'brute'
+                type: 'brute',
+                collisionDistance: 28
             }
         });
     }

@@ -1,10 +1,6 @@
-'use strict';
-
 let PIXI = null;
 import Renderer from 'lance/render/Renderer';
 import Utils from './../common/Utils';
-
-import Missile from '../common/Missile';
 import Ship from '../common/Ship';
 
 
@@ -69,7 +65,7 @@ export default class SpaaaceRenderer extends Renderer {
                 this.isReady = true;
                 this.setupStage();
 
-                if (Utils.isTouchDevice()){
+                if (Utils.isTouchDevice()) {
                     document.body.classList.add('touch');
                 } else if (isMacintosh()) {
                     document.body.classList.add('mac');
