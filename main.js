@@ -15,13 +15,13 @@ let requestHandler = server.listen(PORT, () => console.log(`Listening on ${ PORT
 const io = socketIO(requestHandler);
 
 // Game Server
-import MyServerEngine from './src/server/SpaaaceServerEngine.js';
-import MyGameEngine from './src/common/SpaaaceGameEngine.js';
+import SpaaaceServerEngine from './src/server/SpaaaceServerEngine.js';
+import SpaaaceGameEngine from './src/common/SpaaaceGameEngine.js';
 
 
 // Game Instances
-const gameEngine = new MyGameEngine({ traceLevel: 1000 });
-const serverEngine = new MyServerEngine(io, gameEngine, {
+const gameEngine = new SpaaaceGameEngine({ traceLevel: 1000 });
+const serverEngine = new SpaaaceServerEngine(io, gameEngine, {
     debug: {},
     updateRate: 6,
     timeoutInterval: 0 // no timeout

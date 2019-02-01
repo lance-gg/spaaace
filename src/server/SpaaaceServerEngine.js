@@ -1,23 +1,26 @@
-'use strict';
-
 import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 3;
 
 export default class SpaaaceServerEngine extends ServerEngine {
+
     constructor(io, gameEngine, inputOptions) {
         super(io, gameEngine, inputOptions);
         this.scoreData = {};
     }
 
+    // when the game starts, create robot spaceships, and register
+    // on missile-hit events
     start() {
         super.start();
 
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
         this.gameEngine.on('missileHit', e => {
+
             // add kills
             if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
+
             // remove score data for killed ship
             delete this.scoreData[e.ship.id];
             this.updateScore();
@@ -30,6 +33,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
         });
     }
 
+    // a player has connected
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
 
@@ -47,6 +51,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
         socket.on('requestRestart', makePlayerShip);
     }
 
+    // a player has disconnected
     onPlayerDisconnected(socketId, playerId) {
         super.onPlayerDisconnected(socketId, playerId);
 
@@ -62,6 +67,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
         this.updateScore();
     }
 
+    // create a robot spaceship
     makeBot() {
         let bot = this.gameEngine.makeShip(0);
         bot.attachAI();
