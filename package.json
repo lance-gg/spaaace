@@ -18,7 +18,7 @@
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
     "json-loader": "^0.5.4",
-    "lance-gg": "^3.0.12",
+    "lance-gg": "^3.1.0",
     "node-sass": "^4.9.4",
     "null-loader": "^0.1.1",
     "pixi-particles": "^2.0.0",
@@ -39,7 +39,7 @@
   },
   "scripts": {
     "start": "babel-node main.js --presets env",
-    "start-debug": "babel-node main.js --inspect --debug-brk --presets env",
+    "start-debug": "babel-node main.js --inspect-brk --presets env",
     "nodemon": "nodemon main.js --exec babel-node --presets env",
     "postinstall": "webpack",
     "build": "webpack",
