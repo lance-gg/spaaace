@@ -1,7 +1,4 @@
-import BaseTypes from 'lance/serialize/BaseTypes';
-import DynamicObject from 'lance/serialize/DynamicObject';
-import PixiRenderableComponent from 'lance/render/pixi/PixiRenderableComponent';
-import Renderer from '../client/SpaaaceRenderer';
+import { BaseTypes, DynamicObject, Renderer } from 'lance-gg';
 
 export default class Missile extends DynamicObject {
 
@@ -25,8 +22,8 @@ export default class Missile extends DynamicObject {
     }
 
     onAddToWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer) {
+        if (Renderer) {
+            let renderer = Renderer.getInstance();
             let sprite = new PIXI.Sprite(PIXI.loader.resources.missile.texture);
             renderer.sprites[this.id] = sprite;
             sprite.width = 81 * 0.5;
@@ -38,10 +35,12 @@ export default class Missile extends DynamicObject {
     }
 
     onRemoveFromWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer && renderer.sprites[this.id]) {
-            renderer.sprites[this.id].destroy();
-            delete renderer.sprites[this.id];
+        if (Renderer) {
+            let renderer = Renderer.getInstance();
+            if (renderer.sprites[this.id]) {
+                renderer.sprites[this.id].destroy();
+                delete renderer.sprites[this.id];
+            }
         }
     }
 

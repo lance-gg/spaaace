@@ -1,4 +1,4 @@
-import ServerEngine from 'lance/ServerEngine';
+import { ServerEngine } from 'lance-gg';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 3;
 

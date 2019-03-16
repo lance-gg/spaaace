@@ -1,10 +1,10 @@
-import EventEmitter from 'eventemitter3';
+import EventEmitter from 'event-emitter';
 import Utils from '../common/Utils';
 
 /**
  * This class handles touch device controls
  */
-class MobileControls{
+export default class MobileControls {
 
     constructor(clientEngine){
         Object.assign(this, EventEmitter.prototype);
@@ -115,5 +115,3 @@ class MobileControls{
     }
 
 }
-
-module.exports = MobileControls;

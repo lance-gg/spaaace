@@ -1,16 +1,14 @@
 {
   "name": "spaaace",
-  "version": "2.0.3",
+  "version": "4.0.0",
   "engines": {
-    "node": "6.11.1"
+    "node": ">11.0.0"
   },
   "description": "An HTML5 multiplayer space shooter based on Lance",
   "main": "main.js",
   "dependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-module-resolver": "^2.7.1",
-    "babel-preset-env": "^1.7.0",
+    "@babel/node": "^7.2.2",
+    "babel-loader": "^8.0.5",
     "breakpoint-sass": "^2.7.1",
     "css-loader": "^0.26.1",
     "eventemitter3": "^1.2.0",
@@ -18,7 +16,7 @@
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
     "json-loader": "^0.5.4",
-    "lance-gg": "^3.1.0",
+    "lance-gg": "^4.0.2",
     "node-sass": "^4.9.4",
     "null-loader": "^0.1.1",
     "pixi-particles": "^2.0.0",
@@ -32,19 +30,21 @@
     "webpack": "^3.8.1"
   },
   "devDependencies": {
-    "babelify": "^7.3.0",
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-plugin-inline-json-import": "^0.3.2",
     "eslint": "^3.10.2",
     "eslint-config-google": "^0.7.0"
   },
   "scripts": {
-    "start": "babel-node main.js --presets env",
-    "start-debug": "babel-node main.js --inspect-brk --presets env",
-    "nodemon": "nodemon main.js --exec babel-node --presets env",
-    "postinstall": "webpack",
-    "build": "webpack",
-    "dev": "webpack --watch",
-    "stats": "webpack --env production --profile --json > stats.json"
+    "start": "node dist-server/main.js",
+    "start-debug": "node --inspect-brk dist-server/main.js",
+    "start-dev": "nodemon dist-server/main.js",
+    "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
+    "build": "webpack && babel src --source-maps --out-dir dist-server",
+    "stats": "webpack --env production --profile --json > stats.json",
+    "dev": "webpack --watch"
   },
   "repository": {
     "type": "git",

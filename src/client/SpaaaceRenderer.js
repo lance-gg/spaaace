@@ -1,5 +1,5 @@
 let PIXI = null;
-import Renderer from 'lance/render/Renderer';
+import { Renderer } from 'lance-gg';
 import Utils from './../common/Utils';
 import Ship from '../common/Ship';
 

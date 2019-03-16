@@ -1,8 +1,6 @@
-import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
-import GameEngine from 'lance/GameEngine';
+import { SimplePhysicsEngine, GameEngine, TwoVector } from 'lance-gg';
 import Ship from './Ship';
 import Missile from './Missile';
-import TwoVector from 'lance/serialize/TwoVector';
 
 export default class SpaaaceGameEngine extends GameEngine {
 

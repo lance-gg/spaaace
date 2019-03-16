@@ -1,11 +1,9 @@
-import BaseTypes from 'lance/serialize/BaseTypes';
-import DynamicObject from 'lance/serialize/DynamicObject';
-import Renderer from '../client/SpaaaceRenderer';
+import { BaseTypes, DynamicObject, Renderer } from 'lance-gg';
 import ShipActor from '../client/ShipActor';
 
 export default class Ship extends DynamicObject {
 
-    constructor(gameEngine, options, props){
+    constructor(gameEngine, options, props) {
         super(gameEngine, options, props);
         this.showThrust = 0;
     }
@@ -13,8 +11,8 @@ export default class Ship extends DynamicObject {
     get maxSpeed() { return 3.0; }
 
     onAddToWorld(gameEngine) {
-        let renderer = Renderer.getInstance();
-        if (renderer) {
+        if (Renderer) {
+            let renderer = Renderer.getInstance();
             let shipActor = new ShipActor(renderer);
             let sprite = shipActor.sprite;
             renderer.sprites[this.id] = sprite;
@@ -41,8 +39,8 @@ export default class Ship extends DynamicObject {
             this.onPreStep = null;
         }
 
-        let renderer = Renderer.getInstance();
-        if (renderer) {
+        if (Renderer) {
+            let renderer = Renderer.getInstance();
             if (gameEngine.isOwnedByPlayer(this)) {
                 renderer.playerShip = null;
             } else {

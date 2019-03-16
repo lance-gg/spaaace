@@ -1,7 +1,6 @@
 import Howler from 'howler'; // eslint-disable-line no-unused-vars
-import ClientEngine from 'lance/ClientEngine';
+import { ClientEngine, KeyboardControls } from 'lance-gg';
 import SpaaaceRenderer from '../client/SpaaaceRenderer';
-import KeyboardControls from 'lance/controls/KeyboardControls';
 import MobileControls from './MobileControls';
 import Ship from '../common/Ship';
 import Utils from '../common/Utils';

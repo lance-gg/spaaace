@@ -1,12 +1,12 @@
-const ThrusterEmitterConfig = require('./ThrusterEmitter.json');
-const ExplosionEmitterConfig = require('./ExplosionEmitter.json');
+import ThrusterEmitterConfig from './ThrusterEmitter.json';
+import ExplosionEmitterConfig from './ExplosionEmitter.json';
 
 let PIXI = null;
 let PixiParticles = null;
 
-class ShipActor{
+export default class ShipActor {
 
-    constructor(renderer){
+    constructor(renderer) {
         PIXI = require('pixi.js');
         PixiParticles = require('pixi-particles');
         this.gameEngine = renderer.gameEngine;
@@ -30,7 +30,7 @@ class ShipActor{
         this.shipContainerSprite.addChild(this.shipSprite);
     }
 
-    renderStep(delta){
+    renderStep(delta) {
         if (this.thrustEmitter) {
             this.thrustEmitter.update(delta * 0.001);
 
@@ -46,7 +46,7 @@ class ShipActor{
 
     }
 
-    addThrustEmitter(){
+    addThrustEmitter() {
         this.thrustEmitter = new PIXI.particles.Emitter(
             this.backLayer,
             [PIXI.loader.resources.smokeParticle.texture],
@@ -63,7 +63,7 @@ class ShipActor{
         this.explosionEmitter.emit = false;
     }
 
-    changeName(name){
+    changeName(name) {
         if (this.nameText != null){
             this.nameText.destroy();
         }
@@ -94,6 +94,3 @@ class ShipActor{
     }
 
 }
-
-
-module.exports = ShipActor;
