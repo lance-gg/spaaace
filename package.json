@@ -5,7 +5,7 @@
     "node": ">11.0.0"
   },
   "description": "An HTML5 multiplayer space shooter based on Lance",
-  "main": "main.js",
+  "main": "src/main.js",
   "dependencies": {
     "@babel/node": "^7.2.2",
     "babel-loader": "^8.0.5",
@@ -16,7 +16,7 @@
     "file-loader": "^0.9.0",
     "howler": "^2.0.2",
     "json-loader": "^0.5.4",
-    "lance-gg": "^4.0.2",
+    "lance-gg": "^4.0.4",
     "node-sass": "^4.9.4",
     "null-loader": "^0.1.1",
     "pixi-particles": "^2.0.0",
