@@ -34,7 +34,7 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "babel-plugin-inline-json-import": "^0.3.2",
-    "eslint": "^3.10.2",
+    "eslint": "^4.18.2",
     "eslint-config-google": "^0.7.0"
   },
   "scripts": {
