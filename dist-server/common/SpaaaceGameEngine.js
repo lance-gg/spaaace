@@ -158,6 +158,7 @@ var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
       missile.angle = playerShip.angle;
       missile.playerId = playerShip.playerId;
       missile.ownerId = playerShip.id;
+      missile.roomName = playerShip._roomName;
       missile.inputId = inputId; // this enables usage of the missile shadow object
 
       missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;

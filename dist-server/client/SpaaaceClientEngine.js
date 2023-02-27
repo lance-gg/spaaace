@@ -64,79 +64,79 @@ var SpaaaceClientEngine = /*#__PURE__*/function (_ClientEngine) {
       _get(_getPrototypeOf(SpaaaceClientEngine.prototype), "start", this).call(this); // handle gui for game condition
 
 
-      this.gameEngine.on('objectDestroyed', function (obj) {
+      this.gameEngine.on("objectDestroyed", function (obj) {
         if (obj instanceof _Ship["default"] && _this.gameEngine.isOwnedByPlayer(obj)) {
-          document.body.classList.add('lostGame');
-          document.querySelector('#tryAgain').disabled = false;
+          document.body.classList.add("lostGame");
+          document.querySelector("#tryAgain").disabled = false;
         }
       });
-      this.gameEngine.once('renderer.ready', function () {
+      this.gameEngine.once("renderer.ready", function () {
         // click event for "try again" button
-        document.querySelector('#tryAgain').addEventListener('click', function () {
+        document.querySelector("#tryAgain").addEventListener("click", function () {
           if (_Utils["default"].isTouchDevice()) {
             _this.renderer.enableFullScreen();
           }
 
-          _this.socket.emit('requestRestart');
+          _this.socket.emit("requestRestart");
         });
-        document.querySelector('#joinGame').addEventListener('click', function (clickEvent) {
+        document.querySelector("#joinGame").addEventListener("click", function (clickEvent) {
           if (_Utils["default"].isTouchDevice()) {
             _this.renderer.enableFullScreen();
           }
 
           clickEvent.currentTarget.disabled = true;
 
-          _this.socket.emit('requestRestart');
+          _this.socket.emit("requestRestart");
         });
-        document.querySelector('#reconnect').addEventListener('click', function () {
+        document.querySelector("#reconnect").addEventListener("click", function () {
           window.location.reload();
         }); //  Game input
 
         if (_Utils["default"].isTouchDevice()) {
           _this.controls = new _MobileControls["default"](_this);
 
-          _this.controls.on('fire', function () {
-            _this.sendInput('space');
+          _this.controls.on("fire", function () {
+            _this.sendInput("space");
           });
         } else {
           _this.controls = new _lanceGg.KeyboardControls(_this);
 
-          _this.controls.bindKey('left', 'left', {
+          _this.controls.bindKey("left", "left", {
             repeat: true
           });
 
-          _this.controls.bindKey('right', 'right', {
+          _this.controls.bindKey("right", "right", {
             repeat: true
           });
 
-          _this.controls.bindKey('up', 'up', {
+          _this.controls.bindKey("up", "up", {
             repeat: true
           });
 
-          _this.controls.bindKey('space', 'space');
+          _this.controls.bindKey("space", "space");
         }
       }); // allow a custom path for sounds
 
-      var assetPathPrefix = this.options.assetPathPrefix ? this.options.assetPathPrefix : ''; // handle sounds
+      var assetPathPrefix = this.options.assetPathPrefix ? this.options.assetPathPrefix : ""; // handle sounds
 
       this.sounds = {
         missileHit: new Howl({
-          src: [assetPathPrefix + 'assets/audio/193429__unfa__projectile-hit.mp3']
+          src: [assetPathPrefix + "assets/audio/193429__unfa__projectile-hit.mp3"]
         }),
         fireMissile: new Howl({
-          src: [assetPathPrefix + 'assets/audio/248293__chocobaggy__weird-laser-gun.mp3']
+          src: [assetPathPrefix + "assets/audio/248293__chocobaggy__weird-laser-gun.mp3"]
         })
       };
-      this.gameEngine.on('fireMissile', function () {
+      this.gameEngine.on("fireMissile", function () {
         _this.sounds.fireMissile.play();
       });
-      this.gameEngine.on('missileHit', function () {
+      this.gameEngine.on("missileHit", function () {
         // don't play explosion sound if the player is not in game
         if (_this.renderer.playerShip) {
           _this.sounds.missileHit.play();
         }
       });
-      this.networkMonitor.on('RTTUpdate', function (e) {
+      this.networkMonitor.on("RTTUpdate", function (e) {
         _this.renderer.updateHUD(e);
       });
     } // extend ClientEngine connect to add own events
@@ -147,19 +147,26 @@ var SpaaaceClientEngine = /*#__PURE__*/function (_ClientEngine) {
       var _this2 = this;
 
       return _get(_getPrototypeOf(SpaaaceClientEngine.prototype), "connect", this).call(this).then(function () {
-        _this2.socket.on('scoreUpdate', function (e) {
-          _this2.renderer.updateScore(e);
+        _this2.socket.on("scoreUpdate", function (e) {
+          var params = new Proxy(new URLSearchParams(window.location.search), {
+            get: function get(searchParams, prop) {
+              return searchParams.get(prop);
+            }
+          });
+          var value = params.assetId;
+
+          _this2.renderer.updateScore(e[value]);
         });
 
-        _this2.socket.on('disconnect', function (e) {
-          console.log('disconnected');
-          document.body.classList.add('disconnected');
-          document.body.classList.remove('gameActive');
-          document.querySelector('#reconnect').disabled = false;
+        _this2.socket.on("disconnect", function (e) {
+          console.log("disconnected");
+          document.body.classList.add("disconnected");
+          document.body.classList.remove("gameActive");
+          document.querySelector("#reconnect").disabled = false;
         });
 
-        if ('autostart' in _Utils["default"].getUrlVars()) {
-          _this2.socket.emit('requestRestart');
+        if ("autostart" in _Utils["default"].getUrlVars()) {
+          _this2.socket.emit("requestRestart");
         }
       });
     }

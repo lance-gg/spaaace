@@ -1,7 +1,7 @@
+import url from "url";
 import { ServerEngine } from "lance-gg";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
-const roomName = "/hi";
 
 export default class SpaaaceServerEngine extends ServerEngine {
   constructor(io, gameEngine, inputOptions) {
@@ -13,39 +13,48 @@ export default class SpaaaceServerEngine extends ServerEngine {
   // on missile-hit events
   start() {
     super.start();
-    super.createRoom(roomName);
+
     // Room IDs https://github.com/jungbeomsu/Test/blob/fe9474c67073121937726deb54f0e53eb11eb4c4/src/gameServer/TownServerEngine.js
 
-    for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
+    // for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
     this.gameEngine.on("missileHit", (e) => {
       // add kills
-      if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
+      const roomName = e.missile.roomName;
+      if (this.scoreData[roomName][e.missile.ownerId]) this.scoreData[roomName][e.missile.ownerId].kills++;
 
       // remove score data for killed ship
-      delete this.scoreData[e.ship.id];
+      delete this.scoreData[roomName][e.ship.id];
       this.updateScore();
 
       //   console.log(`ship killed: ${e.ship.toString()}`);
       this.gameEngine.removeObjectFromWorld(e.ship.id);
-      if (e.ship.isBot) {
-        setTimeout(() => this.makeBot(), 5000);
-      }
+      //   if (e.ship.isBot) {
+      //     setTimeout(() => this.makeBot(), 5000);
+      //   }
     });
   }
 
   // a player has connected
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
-    // console.log("Game status", super.gameStatus());
-    super.assignPlayerToRoom(socket.playerId, roomName);
+
+    // Get the query parameters out of the URL
+    const URL = socket.handshake.headers.referer;
+    const parts = url.parse(URL, true);
+    const query = parts.query;
+    const assetId = query.assetId;
+
+    super.createRoom(assetId);
+    super.assignPlayerToRoom(socket.playerId, assetId);
+    this.scoreData[assetId] = this.scoreData[assetId] || {};
 
     let makePlayerShip = () => {
       console.log("Rooms", this.rooms);
       let ship = this.gameEngine.makeShip(socket.playerId);
-      this.assignObjectToRoom(ship, roomName);
+      this.assignObjectToRoom(ship, assetId);
 
-      this.scoreData[ship.id] = {
+      this.scoreData[assetId][ship.id] = {
         kills: 0,
         name: nameGenerator("general"),
       };
@@ -64,23 +73,23 @@ export default class SpaaaceServerEngine extends ServerEngine {
     let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId });
     playerObjects.forEach((obj) => {
       this.gameEngine.removeObjectFromWorld(obj.id);
-      // remove score associated with this ship
-      delete this.scoreData[obj.id];
+      //   // remove score associated with this ship
+      //   delete this.scoreData[obj.id];
     });
 
     this.updateScore();
   }
 
-  // create a robot spaceship
-  makeBot() {
-    let bot = this.gameEngine.makeShip(0);
-    bot.attachAI();
-    this.scoreData[bot.id] = {
-      kills: 0,
-      name: nameGenerator("general") + "Bot",
-    };
-    this.updateScore();
-  }
+  //   // create a robot spaceship
+  //   makeBot() {
+  //     let bot = this.gameEngine.makeShip(0);
+  //     bot.attachAI();
+  //     this.scoreData[bot.id] = {
+  //       kills: 0,
+  //       name: nameGenerator("general") + "Bot",
+  //     };
+  //     this.updateScore();
+  //   }
 
   updateScore() {
     // delay so player socket can catch up

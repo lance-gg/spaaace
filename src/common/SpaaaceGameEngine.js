@@ -97,6 +97,7 @@ export default class SpaaaceGameEngine extends GameEngine {
     missile.angle = playerShip.angle;
     missile.playerId = playerShip.playerId;
     missile.ownerId = playerShip.id;
+    missile.roomName = playerShip._roomName;
     missile.inputId = inputId; // this enables usage of the missile shadow object
     missile.velocity.x += Math.cos(missile.angle * (Math.PI / 180)) * 10;
     missile.velocity.y += Math.sin(missile.angle * (Math.PI / 180)) * 10;

@@ -5,7 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _url = _interopRequireDefault(require("url"));
+
 var _lanceGg = require("lance-gg");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -36,7 +40,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var nameGenerator = require("./NameGenerator");
 
 var NUM_BOTS = 0;
-var roomName = "/hi";
 
 var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
   _inherits(SpaaaceServerEngine, _ServerEngine);
@@ -60,31 +63,25 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function start() {
       var _this2 = this;
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "start", this).call(this);
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "start", this).call(this); // Room IDs https://github.com/jungbeomsu/Test/blob/fe9474c67073121937726deb54f0e53eb11eb4c4/src/gameServer/TownServerEngine.js
+      // for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, roomName); // Room IDs https://github.com/jungbeomsu/Test/blob/fe9474c67073121937726deb54f0e53eb11eb4c4/src/gameServer/TownServerEngine.js
-
-
-      for (var x = 0; x < NUM_BOTS; x++) {
-        this.makeBot();
-      }
 
       this.gameEngine.on("missileHit", function (e) {
         // add kills
-        if (_this2.scoreData[e.missile.ownerId]) _this2.scoreData[e.missile.ownerId].kills++; // remove score data for killed ship
+        var roomName = e.missile.roomName;
+        console.log("Missile roomName", roomName);
+        if (_this2.scoreData[roomName][e.missile.ownerId]) _this2.scoreData[roomName][e.missile.ownerId].kills++; // remove score data for killed ship
 
-        delete _this2.scoreData[e.ship.id];
+        delete _this2.scoreData[roomName][e.ship.id];
 
         _this2.updateScore(); //   console.log(`ship killed: ${e.ship.toString()}`);
 
 
-        _this2.gameEngine.removeObjectFromWorld(e.ship.id);
+        _this2.gameEngine.removeObjectFromWorld(e.ship.id); //   if (e.ship.isBot) {
+        //     setTimeout(() => this.makeBot(), 5000);
+        //   }
 
-        if (e.ship.isBot) {
-          setTimeout(function () {
-            return _this2.makeBot();
-          }, 5000);
-        }
       });
     } // a player has connected
 
@@ -93,19 +90,30 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function onPlayerConnected(socket) {
       var _this3 = this;
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "onPlayerConnected", this).call(this, socket); // console.log("Game status", super.gameStatus());
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "onPlayerConnected", this).call(this, socket); // Get the query parameters out of the URL
 
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
+      var URL = socket.handshake.headers.referer;
+
+      var parts = _url["default"].parse(URL, true);
+
+      var query = parts.query;
+      var assetId = query.assetId;
+
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, assetId);
+
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, assetId);
+
+      this.scoreData[assetId] = this.scoreData[assetId] || {};
 
       var makePlayerShip = function makePlayerShip() {
         console.log("Rooms", _this3.rooms);
 
         var ship = _this3.gameEngine.makeShip(socket.playerId);
 
-        _this3.assignObjectToRoom(ship, roomName);
+        _this3.assignObjectToRoom(ship, assetId);
 
-        _this3.scoreData[ship.id] = {
+        _this3.scoreData[assetId][ship.id] = {
           kills: 0,
           name: nameGenerator("general")
         };
@@ -129,25 +137,22 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
         playerId: playerId
       });
       playerObjects.forEach(function (obj) {
-        _this4.gameEngine.removeObjectFromWorld(obj.id); // remove score associated with this ship
+        _this4.gameEngine.removeObjectFromWorld(obj.id); //   // remove score associated with this ship
+        //   delete this.scoreData[obj.id];
 
-
-        delete _this4.scoreData[obj.id];
       });
       this.updateScore();
-    } // create a robot spaceship
+    } //   // create a robot spaceship
+    //   makeBot() {
+    //     let bot = this.gameEngine.makeShip(0);
+    //     bot.attachAI();
+    //     this.scoreData[bot.id] = {
+    //       kills: 0,
+    //       name: nameGenerator("general") + "Bot",
+    //     };
+    //     this.updateScore();
+    //   }
 
-  }, {
-    key: "makeBot",
-    value: function makeBot() {
-      var bot = this.gameEngine.makeShip(0);
-      bot.attachAI();
-      this.scoreData[bot.id] = {
-        kills: 0,
-        name: nameGenerator("general") + "Bot"
-      };
-      this.updateScore();
-    }
   }, {
     key: "updateScore",
     value: function updateScore() {
