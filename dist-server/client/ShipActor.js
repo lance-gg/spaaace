@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -112,9 +112,7 @@ var ExplosionEmitterConfig = {
 var PIXI = null;
 var PixiParticles = null;
 
-var ShipActor =
-/*#__PURE__*/
-function () {
+var ShipActor = /*#__PURE__*/function () {
   function ShipActor(renderer) {
     _classCallCheck(this, ShipActor);
 
@@ -204,5 +202,5 @@ function () {
   return ShipActor;
 }();
 
-exports.default = ShipActor;
+exports["default"] = ShipActor;
 //# sourceMappingURL=ShipActor.js.map

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -11,9 +11,9 @@ var _Ship = _interopRequireDefault(require("./Ship"));
 
 var _Missile = _interopRequireDefault(require("./Missile"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21,13 +21,17 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -35,17 +39,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var SpaaaceGameEngine =
-/*#__PURE__*/
-function (_GameEngine) {
+var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
   _inherits(SpaaaceGameEngine, _GameEngine);
+
+  var _super = _createSuper(SpaaaceGameEngine);
 
   function SpaaaceGameEngine(options) {
     var _this;
 
     _classCallCheck(this, SpaaaceGameEngine);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SpaaaceGameEngine).call(this, options));
+    _this = _super.call(this, options);
     _this.physicsEngine = new _lanceGg.SimplePhysicsEngine({
       gameEngine: _assertThisInitialized(_this),
       collisions: {
@@ -59,8 +63,8 @@ function (_GameEngine) {
   _createClass(SpaaaceGameEngine, [{
     key: "registerClasses",
     value: function registerClasses(serializer) {
-      serializer.registerClass(_Ship.default);
-      serializer.registerClass(_Missile.default);
+      serializer.registerClass(_Ship["default"]);
+      serializer.registerClass(_Missile["default"]);
     }
   }, {
     key: "initWorld",
@@ -83,10 +87,10 @@ function (_GameEngine) {
           return e[k];
         });
         var ship = collisionObjects.find(function (o) {
-          return o instanceof _Ship.default;
+          return o instanceof _Ship["default"];
         });
         var missile = collisionObjects.find(function (o) {
-          return o instanceof _Missile.default;
+          return o instanceof _Missile["default"];
         });
         if (!ship || !missile) return; // make sure not to process the collision between a missile and the ship that fired it
 
@@ -113,7 +117,7 @@ function (_GameEngine) {
 
       var playerShip = this.world.queryObject({
         playerId: playerId,
-        instanceType: _Ship.default
+        instanceType: _Ship["default"]
       });
 
       if (playerShip) {
@@ -136,7 +140,7 @@ function (_GameEngine) {
     value: function makeShip(playerId) {
       var newShipX = Math.floor(Math.random() * (this.worldSettings.width - 200)) + 200;
       var newShipY = Math.floor(Math.random() * (this.worldSettings.height - 200)) + 200;
-      var ship = new _Ship.default(this, null, {
+      var ship = new _Ship["default"](this, null, {
         position: new _lanceGg.TwoVector(newShipX, newShipY)
       });
       ship.playerId = playerId;
@@ -147,7 +151,7 @@ function (_GameEngine) {
   }, {
     key: "makeMissile",
     value: function makeMissile(playerShip, inputId) {
-      var missile = new _Missile.default(this); // we want the missile location and velocity to correspond to that of the ship firing it
+      var missile = new _Missile["default"](this); // we want the missile location and velocity to correspond to that of the ship firing it
 
       missile.position.copy(playerShip.position);
       missile.velocity.copy(playerShip.velocity);
@@ -183,7 +187,7 @@ function (_GameEngine) {
     value: function reduceVisibleThrust(postStepEv) {
       if (postStepEv.isReenact) return;
       var ships = this.world.queryObjects({
-        instanceType: _Ship.default
+        instanceType: _Ship["default"]
       });
       ships.forEach(function (ship) {
         if (Number.isInteger(ship.showThrust) && ship.showThrust >= 1) ship.showThrust--;
@@ -194,5 +198,5 @@ function (_GameEngine) {
   return SpaaaceGameEngine;
 }(_lanceGg.GameEngine);
 
-exports.default = SpaaaceGameEngine;
+exports["default"] = SpaaaceGameEngine;
 //# sourceMappingURL=SpaaaceGameEngine.js.map

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 var Utils = {};
 var query_string = null;
 
@@ -44,5 +44,5 @@ Utils.shortestArc = function (a, b) {
 };
 
 var _default = Utils;
-exports.default = _default;
+exports["default"] = _default;
 //# sourceMappingURL=Utils.js.map
