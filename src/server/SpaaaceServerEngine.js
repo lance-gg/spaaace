@@ -73,8 +73,9 @@ export default class SpaaaceServerEngine extends ServerEngine {
     let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId });
     playerObjects.forEach((obj) => {
       this.gameEngine.removeObjectFromWorld(obj.id);
+      console.log(obj);
       //   // remove score associated with this ship
-      //   delete this.scoreData[obj.id];
+      delete this.scoreData[obj._roomName][obj.id];
     });
 
     this.updateScore();

@@ -70,7 +70,6 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
       this.gameEngine.on("missileHit", function (e) {
         // add kills
         var roomName = e.missile.roomName;
-        console.log("Missile roomName", roomName);
         if (_this2.scoreData[roomName][e.missile.ownerId]) _this2.scoreData[roomName][e.missile.ownerId].kills++; // remove score data for killed ship
 
         delete _this2.scoreData[roomName][e.ship.id];
@@ -137,9 +136,11 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
         playerId: playerId
       });
       playerObjects.forEach(function (obj) {
-        _this4.gameEngine.removeObjectFromWorld(obj.id); //   // remove score associated with this ship
-        //   delete this.scoreData[obj.id];
+        _this4.gameEngine.removeObjectFromWorld(obj.id);
 
+        console.log(obj); //   // remove score associated with this ship
+
+        delete _this4.scoreData[obj._roomName][obj.id];
       });
       this.updateScore();
     } //   // create a robot spaceship
