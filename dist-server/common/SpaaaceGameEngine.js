@@ -53,7 +53,7 @@ var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
     _this.physicsEngine = new _lanceGg.SimplePhysicsEngine({
       gameEngine: _assertThisInitialized(_this),
       collisions: {
-        type: 'brute',
+        type: "brute",
         collisionDistance: 28
       }
     });
@@ -82,7 +82,7 @@ var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
 
       _get(_getPrototypeOf(SpaaaceGameEngine.prototype), "start", this).call(this);
 
-      this.on('collisionStart', function (e) {
+      this.on("collisionStart", function (e) {
         var collisionObjects = Object.keys(e).map(function (k) {
           return e[k];
         });
@@ -101,13 +101,13 @@ var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
             return "missile by ship=".concat(missile.playerId, " hit ship=").concat(ship.id);
           });
 
-          _this2.emit('missileHit', {
+          _this2.emit("missileHit", {
             missile: missile,
             ship: ship
           });
         }
       });
-      this.on('postStep', this.reduceVisibleThrust.bind(this));
+      this.on("postStep", this.reduceVisibleThrust.bind(this));
     }
   }, {
     key: "processInput",
@@ -121,22 +121,22 @@ var SpaaaceGameEngine = /*#__PURE__*/function (_GameEngine) {
       });
 
       if (playerShip) {
-        if (inputData.input == 'up') {
+        if (inputData.input == "up") {
           playerShip.accelerate(0.05);
           playerShip.showThrust = 5; // show thrust for next steps.
-        } else if (inputData.input == 'right') {
+        } else if (inputData.input == "right") {
           playerShip.turnRight(2.5);
-        } else if (inputData.input == 'left') {
+        } else if (inputData.input == "left") {
           playerShip.turnLeft(2.5);
-        } else if (inputData.input == 'space') {
+        } else if (inputData.input == "space") {
           this.makeMissile(playerShip, inputData.messageIndex);
-          this.emit('fireMissile');
+          this.emit("fireMissile");
         }
       }
-    }
+    } // Makes a new ship, places it randomly and adds it to the game world
+
   }, {
     key: "makeShip",
-    // Makes a new ship, places it randomly and adds it to the game world
     value: function makeShip(playerId) {
       var newShipX = Math.floor(Math.random() * (this.worldSettings.width - 200)) + 200;
       var newShipY = Math.floor(Math.random() * (this.worldSettings.height - 200)) + 200;

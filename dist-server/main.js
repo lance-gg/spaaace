@@ -8,20 +8,20 @@ var _SpaaaceGameEngine = _interopRequireDefault(require("./common/SpaaaceGameEng
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var express = require('express');
+var express = require("express");
 
-var socketIO = require('socket.io');
+var socketIO = require("socket.io");
 
-var path = require('path');
+var path = require("path");
 
 var PORT = process.env.PORT || 3000;
-var INDEX = path.join(__dirname, '../dist/index.html'); // define routes and socket
+var INDEX = path.join(__dirname, "../dist/index.html"); // define routes and socket
 
 var server = express();
-server.get('/', function (req, res) {
+server.get("/", function (req, res) {
   res.sendFile(INDEX);
 });
-server.use('/', express["static"](path.join(__dirname, '../dist/')));
+server.use("/", express["static"](path.join(__dirname, "../dist/")));
 var requestHandler = server.listen(PORT, function () {
   return console.log("Listening on ".concat(PORT));
 });
