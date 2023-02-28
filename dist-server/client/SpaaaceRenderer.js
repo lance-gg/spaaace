@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _lanceGg = require("lance-gg");
 
@@ -11,25 +11,29 @@ var _Utils = _interopRequireDefault(require("./../common/Utils"));
 
 var _Ship = _interopRequireDefault(require("../common/Ship"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -40,22 +44,22 @@ var PIXI = null;
 /**
  * Renderer for the Spaaace client - based on Pixi.js
  */
-var SpaaaceRenderer =
-/*#__PURE__*/
-function (_Renderer) {
+var SpaaaceRenderer = /*#__PURE__*/function (_Renderer) {
   _inherits(SpaaaceRenderer, _Renderer);
+
+  var _super = _createSuper(SpaaaceRenderer);
 
   _createClass(SpaaaceRenderer, [{
     key: "ASSETPATHS",
     get: function get() {
       return {
-        ship: 'assets/ship1.png',
-        missile: 'assets/shot.png',
-        bg1: 'assets/space3.png',
-        bg2: 'assets/space2.png',
-        bg3: 'assets/clouds2.png',
-        bg4: 'assets/clouds1.png',
-        smokeParticle: 'assets/smokeparticle.png'
+        ship: "assets/ship1.png",
+        missile: "assets/shot.png",
+        bg1: "assets/space3.png",
+        bg2: "assets/space2.png",
+        bg3: "assets/clouds2.png",
+        bg4: "assets/clouds1.png",
+        smokeParticle: "assets/smokeparticle.png"
       };
     } // TODO: document
 
@@ -66,12 +70,12 @@ function (_Renderer) {
 
     _classCallCheck(this, SpaaaceRenderer);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SpaaaceRenderer).call(this, gameEngine, clientEngine));
-    PIXI = require('pixi.js');
+    _this = _super.call(this, gameEngine, clientEngine);
+    PIXI = require("pixi.js");
     _this.sprites = {};
     _this.isReady = false; // asset prefix
 
-    _this.assetPathPrefix = _this.gameEngine.options.assetPathPrefix ? _this.gameEngine.options.assetPathPrefix : ''; // these define how many gameWorlds the player ship has "scrolled" through
+    _this.assetPathPrefix = _this.gameEngine.options.assetPathPrefix ? _this.gameEngine.options.assetPathPrefix : ""; // these define how many gameWorlds the player ship has "scrolled" through
 
     _this.bgPhaseX = 0;
     _this.bgPhaseY = 0;
@@ -90,10 +94,10 @@ function (_Renderer) {
       this.layer2 = new PIXI.Container();
       this.stage.addChild(this.layer1, this.layer2);
 
-      if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
+      if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
         this.onDOMLoaded();
       } else {
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener("DOMContentLoaded", function () {
           _this2.onDOMLoaded();
         });
       }
@@ -109,17 +113,17 @@ function (_Renderer) {
 
           _this2.setupStage();
 
-          if (_Utils.default.isTouchDevice()) {
-            document.body.classList.add('touch');
+          if (_Utils["default"].isTouchDevice()) {
+            document.body.classList.add("touch");
           } else if (isMacintosh()) {
-            document.body.classList.add('mac');
+            document.body.classList.add("mac");
           } else if (isWindows()) {
-            document.body.classList.add('pc');
+            document.body.classList.add("pc");
           }
 
           resolve();
 
-          _this2.gameEngine.emit('renderer.ready');
+          _this2.gameEngine.emit("renderer.ready");
         });
       });
     }
@@ -127,14 +131,14 @@ function (_Renderer) {
     key: "onDOMLoaded",
     value: function onDOMLoaded() {
       this.renderer = PIXI.autoDetectRenderer(this.viewportWidth, this.viewportHeight);
-      document.body.querySelector('.pixiContainer').appendChild(this.renderer.view);
+      document.body.querySelector(".pixiContainer").appendChild(this.renderer.view);
     }
   }, {
     key: "setupStage",
     value: function setupStage() {
       var _this3 = this;
 
-      window.addEventListener('resize', function () {
+      window.addEventListener("resize", function () {
         _this3.setRendererSize();
       });
       this.lookingAt = {
@@ -162,9 +166,9 @@ function (_Renderer) {
 
       this.elapsedTime = Date.now(); // debug
 
-      if ('showworldbounds' in _Utils.default.getUrlVars()) {
+      if ("showworldbounds" in _Utils["default"].getUrlVars()) {
         var graphics = new PIXI.Graphics();
-        graphics.beginFill(0xFFFFFF);
+        graphics.beginFill(0xffffff);
         graphics.alpha = 0.1;
         graphics.drawRect(0, 0, this.gameEngine.worldSettings.width, this.gameEngine.worldSettings.height);
         this.camera.addChild(graphics);
@@ -200,10 +204,8 @@ function (_Renderer) {
       var viewportSeesTopBound = this.camera.y > 0;
       var viewportSeesBottomBound = this.camera.y < this.viewportHeight - worldHeight;
 
-      var _arr = Object.keys(this.sprites);
-
-      for (var _i = 0; _i < _arr.length; _i++) {
-        var objId = _arr[_i];
+      for (var _i = 0, _Object$keys = Object.keys(this.sprites); _i < _Object$keys.length; _i++) {
+        var objId = _Object$keys[_i];
         var objData = this.gameEngine.world.objects[objId];
         var sprite = this.sprites[objId];
 
@@ -213,14 +215,14 @@ function (_Renderer) {
             sprite.actor.thrustEmitter.emit = !!objData.showThrust;
           }
 
-          if (objData instanceof _Ship.default && sprite != this.playerShip) {
+          if (objData instanceof _Ship["default"] && sprite != this.playerShip) {
             this.updateOffscreenIndicator(objData);
           }
 
           sprite.x = objData.position.x;
           sprite.y = objData.position.y;
 
-          if (objData instanceof _Ship.default) {
+          if (objData instanceof _Ship["default"]) {
             sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI / 180;
           } else {
             sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI / 180;
@@ -317,24 +319,24 @@ function (_Renderer) {
     key: "addPlayerShip",
     value: function addPlayerShip(sprite) {
       this.playerShip = sprite;
-      sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
+      sprite.actor.shipSprite.tint = 0xff00ff; // color  player ship
 
-      document.body.classList.remove('lostGame');
+      document.body.classList.remove("lostGame");
 
-      if (!document.body.classList.contains('tutorialDone')) {
-        document.body.classList.add('tutorial');
+      if (!document.body.classList.contains("tutorialDone")) {
+        document.body.classList.add("tutorial");
       }
 
-      document.body.classList.remove('lostGame');
-      document.body.classList.add('gameActive');
-      document.querySelector('#tryAgain').disabled = true;
-      document.querySelector('#joinGame').disabled = true;
-      document.querySelector('#joinGame').style.opacity = 0;
+      document.body.classList.remove("lostGame");
+      document.body.classList.add("gameActive");
+      document.querySelector("#tryAgain").disabled = true;
+      document.querySelector("#joinGame").disabled = true;
+      document.querySelector("#joinGame").style.opacity = 0;
       this.gameStarted = true; // todo state shouldn't be saved in the renderer
       // remove the tutorial if required after a timeout
 
       setTimeout(function () {
-        document.body.classList.remove('tutorial');
+        document.body.classList.remove("tutorial");
       }, 10000);
     }
     /**
@@ -362,10 +364,10 @@ function (_Renderer) {
   }, {
     key: "addOffscreenIndicator",
     value: function addOffscreenIndicator(objData) {
-      var container = document.querySelector('#offscreenIndicatorContainer');
-      var indicatorEl = document.createElement('div');
-      indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
-      indicatorEl.classList.add('offscreenIndicator');
+      var container = document.querySelector("#offscreenIndicatorContainer");
+      var indicatorEl = document.createElement("div");
+      indicatorEl.setAttribute("id", "offscreenIndicator" + objData.id);
+      indicatorEl.classList.add("offscreenIndicator");
       container.appendChild(indicatorEl);
     }
   }, {
@@ -373,7 +375,7 @@ function (_Renderer) {
     value: function updateOffscreenIndicator(objData) {
       // player ship might have been destroyed
       if (!this.playerShip) return;
-      var indicatorEl = document.querySelector('#offscreenIndicator' + objData.id);
+      var indicatorEl = document.querySelector("#offscreenIndicator" + objData.id);
 
       if (!indicatorEl) {
         console.error("No indicatorEl found with id ".concat(objData.id));
@@ -418,27 +420,27 @@ function (_Renderer) {
   }, {
     key: "removeOffscreenIndicator",
     value: function removeOffscreenIndicator(objData) {
-      var indicatorEl = document.querySelector('#offscreenIndicator' + objData.id);
+      var indicatorEl = document.querySelector("#offscreenIndicator" + objData.id);
       if (indicatorEl && indicatorEl.parentNode) indicatorEl.parentNode.removeChild(indicatorEl);
     }
   }, {
     key: "updateHUD",
     value: function updateHUD(data) {
       if (data.RTT) {
-        qs('.latencyData').innerHTML = data.RTT;
+        qs(".latencyData").innerHTML = data.RTT;
       }
 
       if (data.RTTAverage) {
-        qs('.averageLatencyData').innerHTML = truncateDecimals(data.RTTAverage, 2);
+        qs(".averageLatencyData").innerHTML = truncateDecimals(data.RTTAverage, 2);
       }
     }
   }, {
     key: "updateScore",
     value: function updateScore(data) {
-      var scoreContainer = qs('.score');
+      var scoreContainer = qs(".score");
       var scoreArray = []; // remove score lines with objects that don't exist anymore
 
-      var scoreEls = scoreContainer.querySelectorAll('.line');
+      var scoreEls = scoreContainer.querySelectorAll(".line");
 
       for (var x = 0; x < scoreEls.length; x++) {
         if (data[scoreEls[x].dataset.objId] == null) {
@@ -446,16 +448,14 @@ function (_Renderer) {
         }
       }
 
-      var _arr2 = Object.keys(data);
-
-      for (var _i2 = 0; _i2 < _arr2.length; _i2++) {
-        var id = _arr2[_i2];
+      for (var _i2 = 0, _Object$keys2 = Object.keys(data); _i2 < _Object$keys2.length; _i2++) {
+        var id = _Object$keys2[_i2];
         var scoreEl = scoreContainer.querySelector("[data-obj-id='".concat(id, "']")); // create score line if it doesn't exist
 
         if (scoreEl == null) {
-          scoreEl = document.createElement('div');
-          scoreEl.classList.add('line');
-          if (this.playerShip && this.playerShip.id == parseInt(id)) scoreEl.classList.add('you');
+          scoreEl = document.createElement("div");
+          scoreEl.classList.add("line");
+          if (this.playerShip && this.playerShip.id == parseInt(id)) scoreEl.classList.add("you");
           scoreEl.dataset.objId = id;
           scoreContainer.appendChild(scoreEl);
         } // stupid string/number conversion
@@ -481,7 +481,7 @@ function (_Renderer) {
     key: "onKeyChange",
     value: function onKeyChange(e) {
       if (this.playerShip) {
-        if (e.keyName === 'up') {
+        if (e.keyName === "up") {
           this.playerShip.actor.thrustEmitter.emit = e.isDown;
         }
       }
@@ -525,7 +525,7 @@ function (_Renderer) {
   return SpaaaceRenderer;
 }(_lanceGg.Renderer);
 
-exports.default = SpaaaceRenderer;
+exports["default"] = SpaaaceRenderer;
 
 function getCentroid(objects) {
   var maxDistance = 500; // max distance to add to the centroid
@@ -537,13 +537,11 @@ function getCentroid(objects) {
   };
   var selectedShip = null;
 
-  var _arr3 = Object.keys(objects);
-
-  for (var _i3 = 0; _i3 < _arr3.length; _i3++) {
-    var id = _arr3[_i3];
+  for (var _i3 = 0, _Object$keys3 = Object.keys(objects); _i3 < _Object$keys3.length; _i3++) {
+    var id = _Object$keys3[_i3];
     var obj = objects[id];
 
-    if (obj instanceof _Ship.default) {
+    if (obj instanceof _Ship["default"]) {
       if (selectedShip == null) selectedShip = obj;
       var objDistance = Math.sqrt(Math.pow(selectedShip.position.x - obj.position.y, 2) + Math.pow(selectedShip.position.y - obj.position.y, 2));
 
@@ -568,18 +566,16 @@ function qs(selector) {
 function truncateDecimals(number, digits) {
   var multiplier = Math.pow(10, digits);
   var adjustedNum = number * multiplier;
-  var truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+  var truncatedNum = Math[adjustedNum < 0 ? "ceil" : "floor"](adjustedNum);
   return truncatedNum / multiplier;
 }
 
-;
-
 function isMacintosh() {
-  return navigator.platform.indexOf('Mac') > -1;
+  return navigator.platform.indexOf("Mac") > -1;
 }
 
 function isWindows() {
-  return navigator.platform.indexOf('Win') > -1;
+  return navigator.platform.indexOf("Win") > -1;
 }
 
 function isIPhoneIPad() {

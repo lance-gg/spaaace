@@ -10,9 +10,9 @@ var _SpaaaceGameEngine = _interopRequireDefault(require("../common/SpaaaceGameEn
 
 require("../../dist/assets/sass/main.scss");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var qsOptions = _queryString.default.parse(location.search); // sent to both game engine and client engine
+var qsOptions = _queryString["default"].parse(location.search); // sent to both game engine and client engine
 
 
 var defaults = {
@@ -27,7 +27,7 @@ var defaults = {
 };
 var options = Object.assign(defaults, qsOptions); // create a client engine and a game engine
 
-var gameEngine = new _SpaaaceGameEngine.default(options);
-var clientEngine = new _SpaaaceClientEngine.default(gameEngine, options);
+var gameEngine = new _SpaaaceGameEngine["default"](options);
+var clientEngine = new _SpaaaceClientEngine["default"](gameEngine, options);
 clientEngine.start();
 //# sourceMappingURL=clientEntryPoint.js.map
