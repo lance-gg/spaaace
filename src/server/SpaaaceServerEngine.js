@@ -1,4 +1,4 @@
-import url from "url";
+import { getRoomName } from "./RoomManager";
 import { ServerEngine } from "lance-gg";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
@@ -41,20 +41,18 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     // Get the query parameters out of the URL
     const URL = socket.handshake.headers.referer;
-    const parts = url.parse(URL, true);
-    const query = parts.query;
-    const assetId = query.assetId;
+    const roomName = getRoomName(URL);
 
-    super.createRoom(assetId);
-    super.assignPlayerToRoom(socket.playerId, assetId);
-    this.scoreData[assetId] = this.scoreData[assetId] || {};
+    super.createRoom(roomName);
+    super.assignPlayerToRoom(socket.playerId, roomName);
+    this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     let makePlayerShip = () => {
       console.log("Rooms", this.rooms);
       let ship = this.gameEngine.makeShip(socket.playerId);
-      this.assignObjectToRoom(ship, assetId);
+      this.assignObjectToRoom(ship, roomName);
 
-      this.scoreData[assetId][ship.id] = {
+      this.scoreData[roomName][ship.id] = {
         kills: 0,
         name: nameGenerator("general"),
       };

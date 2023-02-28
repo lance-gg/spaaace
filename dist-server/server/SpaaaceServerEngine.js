@@ -5,11 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _url = _interopRequireDefault(require("url"));
+var _RoomManager = require("./RoomManager");
 
 var _lanceGg = require("lance-gg");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -93,26 +91,22 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
 
       var URL = socket.handshake.headers.referer;
+      var roomName = (0, _RoomManager.getRoomName)(URL);
 
-      var parts = _url["default"].parse(URL, true);
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, roomName);
 
-      var query = parts.query;
-      var assetId = query.assetId;
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, assetId);
-
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, assetId);
-
-      this.scoreData[assetId] = this.scoreData[assetId] || {};
+      this.scoreData[roomName] = this.scoreData[roomName] || {};
 
       var makePlayerShip = function makePlayerShip() {
         console.log("Rooms", _this3.rooms);
 
         var ship = _this3.gameEngine.makeShip(socket.playerId);
 
-        _this3.assignObjectToRoom(ship, assetId);
+        _this3.assignObjectToRoom(ship, roomName);
 
-        _this3.scoreData[assetId][ship.id] = {
+        _this3.scoreData[roomName][ship.id] = {
           kills: 0,
           name: nameGenerator("general")
         };

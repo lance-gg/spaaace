@@ -17,6 +17,8 @@ var _Ship = _interopRequireDefault(require("../common/Ship"));
 
 var _Utils = _interopRequireDefault(require("../common/Utils"));
 
+var _RoomManager = require("../server/RoomManager");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -153,7 +155,7 @@ var SpaaaceClientEngine = /*#__PURE__*/function (_ClientEngine) {
               return searchParams.get(prop);
             }
           });
-          var value = params.assetId;
+          var value = params[(0, _RoomManager.roomBasedOn)()];
 
           _this2.renderer.updateScore(e[value]);
         });
