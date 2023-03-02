@@ -4,3 +4,5 @@ dist/bundle.js
 
 *.trace
 yarn.lock
+
+.env

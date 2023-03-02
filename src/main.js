@@ -1,8 +1,8 @@
-const express = require("express");
-const socketIO = require("socket.io");
-const path = require("path");
-const url = require("url");
-const querystring = require("querystring");
+import express from "express";
+import socketIO from "socket.io";
+import path from "path";
+// const url = require("url");
+// const querystring = require("querystring");
 import { Lib } from "lance-gg";
 // Game Server
 import SpaaaceServerEngine from "./server/SpaaaceServerEngine.js";
@@ -26,12 +26,11 @@ const serverEngine = new SpaaaceServerEngine(io, gameEngine, {
   updateRate: 6,
   timeoutInterval: 0, // no timeout
 });
+// start the game
+serverEngine.start();
 
 // server.get("/api/getroom", function (req, res) {
 //   //   const id = req;
 //   //   console.log("Server Asset ID", id);
 //   //   res.send(id);
 // });
-
-// start the game
-serverEngine.start();

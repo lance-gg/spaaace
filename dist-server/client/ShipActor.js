@@ -1,16 +1,15 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var ThrusterEmitterConfig = {
   alpha: {
     start: 0.62,
@@ -111,19 +110,18 @@ var ExplosionEmitterConfig = {
 };
 var PIXI = null;
 var PixiParticles = null;
-
 var ShipActor = /*#__PURE__*/function () {
   function ShipActor(renderer) {
     _classCallCheck(this, ShipActor);
-
     PIXI = require('pixi.js');
     PixiParticles = require('pixi-particles');
     this.gameEngine = renderer.gameEngine;
     this.backLayer = renderer.layer1;
     this.sprite = new PIXI.Container();
     this.shipContainerSprite = new PIXI.Container();
-    this.shipSprite = new PIXI.Sprite(PIXI.loader.resources.ship.texture); // keep a reference to the actor from the sprite
+    this.shipSprite = new PIXI.Sprite(PIXI.loader.resources.ship.texture);
 
+    // keep a reference to the actor from the sprite
     this.sprite.actor = this;
     this.shipSprite.anchor.set(0.5, 0.5);
     this.shipSprite.width = 50;
@@ -132,7 +130,6 @@ var ShipActor = /*#__PURE__*/function () {
     this.sprite.addChild(this.shipContainerSprite);
     this.shipContainerSprite.addChild(this.shipSprite);
   }
-
   _createClass(ShipActor, [{
     key: "renderStep",
     value: function renderStep(delta) {
@@ -143,7 +140,6 @@ var ShipActor = /*#__PURE__*/function () {
         this.thrustEmitter.minStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 - 1;
         this.thrustEmitter.maxStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 + 1;
       }
-
       if (this.explosionEmitter) {
         this.explosionEmitter.update(delta * 0.001);
       }
@@ -162,7 +158,6 @@ var ShipActor = /*#__PURE__*/function () {
       if (this.nameText != null) {
         this.nameText.destroy();
       }
-
       this.nameText = new PIXI.Text(name, {
         fontFamily: 'arial',
         fontSize: '12px',
@@ -177,7 +172,6 @@ var ShipActor = /*#__PURE__*/function () {
     key: "destroy",
     value: function destroy() {
       var _this = this;
-
       return new Promise(function (resolve) {
         _this.explosionEmitter.emit = true;
         if (_this.nameText) _this.nameText.destroy({
@@ -190,17 +184,13 @@ var ShipActor = /*#__PURE__*/function () {
         _this.shipSprite = null;
         setTimeout(function () {
           _this.shipContainerSprite.destroy();
-
           _this.explosionEmitter.destroy();
-
           resolve();
         }, 300);
       });
     }
   }]);
-
   return ShipActor;
 }();
-
 exports["default"] = ShipActor;
 //# sourceMappingURL=ShipActor.js.map

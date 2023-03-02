@@ -1,10 +1,8 @@
-module.exports = function(api) {
-    api.cache(true);
+module.exports = function (api) {
+  api.cache(true);
 
-    const presets = ['@babel/preset-env'];
-    const plugins = [
-        ['inline-json-import', {}]
-    ];
+  const presets = ["@babel/preset-env"];
+  const plugins = [["inline-json-import", {}]];
 
-    return { presets, plugins };
+  return { presets, plugins };
 };
