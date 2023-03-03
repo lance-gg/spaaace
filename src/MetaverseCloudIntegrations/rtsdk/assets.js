@@ -20,7 +20,7 @@ export const InteractiveAsset = async ({
     if (droppedAsset)
       await droppedAsset.setInteractiveSettings({
         isInteractive: true,
-        interactivePublicKey: process.env.INTERACTIVE_KEY,
+        // interactivePublicKey: process.env.INTERACTIVE_KEY,
       });
     return droppedAsset;
   } catch (e) {

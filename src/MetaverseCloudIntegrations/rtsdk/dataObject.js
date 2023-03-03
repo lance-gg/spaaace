@@ -1,4 +1,5 @@
 import { DroppedAsset } from "./index.js";
+import 'regenerator-runtime/runtime'
 
 // Middleware to get the asset and object
 export const getAssetAndDataObject = async (req) => {

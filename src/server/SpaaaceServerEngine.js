@@ -1,4 +1,4 @@
-import { getRoomName } from "./RoomManager";
+import { getRoomAndUsername } from "./RoomManager";
 import { ServerEngine } from "lance-gg";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
@@ -41,7 +41,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     // Get the query parameters out of the URL
     const URL = socket.handshake.headers.referer;
-    const roomName = getRoomName(URL);
+    const roomName = getRoomAndUsername(URL);
 
     super.createRoom(roomName);
     super.assignPlayerToRoom(socket.playerId, roomName);

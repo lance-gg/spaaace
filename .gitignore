@@ -6,3 +6,4 @@ dist/bundle.js
 yarn.lock
 
 .env
+.yalc

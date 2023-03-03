@@ -1,9 +1,10 @@
 const path = require("path");
 const fs = require("fs");
+const webpack = require('webpack');
 
 module.exports = {
   mode: "development",
-  entry: "./src/client/clientEntryPoint.js",
+  entry: ["regenerator-runtime/runtime.js", "./src/client/clientEntryPoint.js"],
   output: {
     path: path.join(__dirname, "dist"),
     filename: "bundle.js",
@@ -30,6 +31,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    // fix "process is not defined" error:
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+  ],
   resolve: {
     fallback: {
       path: require.resolve("path-browserify"),

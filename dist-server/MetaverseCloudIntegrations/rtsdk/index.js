@@ -3,6 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "getAssetAndDataObject", {
+  enumerable: true,
+  get: function get() {
+    return _dataObject.getAssetAndDataObject;
+  }
+});
+Object.defineProperty(exports, "InteractiveAsset", {
+  enumerable: true,
+  get: function get() {
+    return _assets.InteractiveAsset;
+  }
+});
 Object.defineProperty(exports, "Asset", {
   enumerable: true,
   get: function get() {
@@ -13,12 +25,6 @@ Object.defineProperty(exports, "DroppedAsset", {
   enumerable: true,
   get: function get() {
     return _topiaInit.DroppedAsset;
-  }
-});
-Object.defineProperty(exports, "InteractiveAsset", {
-  enumerable: true,
-  get: function get() {
-    return _assets.InteractiveAsset;
   }
 });
 Object.defineProperty(exports, "User", {
@@ -33,10 +39,10 @@ Object.defineProperty(exports, "World", {
     return _topiaInit.World;
   }
 });
-Object.defineProperty(exports, "getAssetAndDataObject", {
+Object.defineProperty(exports, "Visitor", {
   enumerable: true,
   get: function get() {
-    return _dataObject.getAssetAndDataObject;
+    return _topiaInit.Visitor;
   }
 });
 Object.defineProperty(exports, "getDataObject", {
@@ -57,8 +63,12 @@ Object.defineProperty(exports, "updateTextAsset", {
     return _droppedAssets.updateTextAsset;
   }
 });
+
 var _dataObject = require("./dataObject.js");
+
 var _assets = require("./assets.js");
+
 var _topiaInit = require("./topiaInit.js");
+
 var _droppedAssets = require("./droppedAssets.js");
 //# sourceMappingURL=index.js.map

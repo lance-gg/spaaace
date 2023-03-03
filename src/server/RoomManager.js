@@ -1,5 +1,6 @@
 import url from "url";
-import { getAssetAndDataObject } from "../MetaverseCloudIntegrations/rtsdk";
+import { getAssetAndDataObject, Visitor } from "../MetaverseCloudIntegrations/rtsdk";
+import 'regenerator-runtime/runtime'
 
 export const getRoomAndUsername = async (URL) => {
   const parts = url.parse(URL, true);
@@ -16,11 +17,23 @@ export const roomBasedOn = () => {
 const checkWhetherVisitorInWorld = async (query) => {
   // Check whether have access to interactive nonce, which means visitor is in world.
   const { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId } = query;
+  console.log("🚀 ~ file: RoomManager.js:20 ~ checkWhetherVisitorInWorld ~ query:", query)
   const req = {};
   req.body = { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId };
   // get Visitor Info to verify that visitor is actually in world.  Also get their username to populate into ship.
 
-  // const result = await getAssetAndDataObject(req);
+  if(assetId) {
+    const visitor = await Visitor.get(visitorId, urlSlug, { credentials: {
+      assetId,
+      interactiveNonce,
+      interactivePublicKey,
+      visitorId,
+    }})
+    console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor)
+
+    const result = await getAssetAndDataObject(req);
+    console.log("🚀 ~ file: RoomManager.js:25 ~ checkWhetherVisitorInWorld ~ result:", result)
+  }
   // if (!result || !result.inPrivateZone || result.inPrivateZone === assetId) {
   // Route to page that says "You don't have access to this experience.  Please enter the gaming zone and try again."
   // } else {

@@ -28,13 +28,15 @@
     "pixi.js": "^4.8.9",
     "query-string": "^4.2.3",
     "raw-loader": "^0.5.1",
+    "regenerator-runtime": "^0.13.11",
     "sass-loader": "^13.2.0",
     "socket.io": "^2.5.0",
     "stream-http": "^3.2.0",
     "style-loader": "^0.13.1",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
-    "webpack": "^5.75.0"
+    "webpack": "^5.75.0",
+    "yalc": "^1.0.0-pre.53"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -43,16 +45,19 @@
     "babel-plugin-inline-json-import": "^0.3.2",
     "eslint": "^8.28.0",
     "eslint-config-google": "^0.7.0",
+    "process": "^0.11.10",
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
-    "start": "node --experimental-modules dist-server/main.js",
+    "start": "node dist-server/main.js",
     "start-debug": "node --inspect-brk dist-server/main.js",
     "start-dev": "nodemon dist-server/main.js",
     "postinstall": "webpack && babel src --source-maps --out-dir dist-server",
     "build": "webpack && babel src --source-maps --out-dir dist-server",
     "stats": "webpack --env production --profile --json > stats.json",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "link-sdk": "yalc link @rtsdk/topia",
+    "unlink-sdk": "yalc remove @rtsdk/topia"
   },
   "repository": {
     "type": "git",
