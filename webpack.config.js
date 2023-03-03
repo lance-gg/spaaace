@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const webpack = require('webpack');
+const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -34,7 +34,7 @@ module.exports = {
   plugins: [
     // fix "process is not defined" error:
     new webpack.ProvidePlugin({
-      process: 'process/browser',
+      process: "process/browser",
     }),
   ],
   resolve: {
@@ -43,11 +43,12 @@ module.exports = {
       http: require.resolve("stream-http"),
       url: require.resolve("url/"),
       buffer: require.resolve("buffer/"),
+      util: require.resolve("util/"),
       zlib: false,
       os: false,
       crypto: false,
       https: false,
-      util: false,
+      // util: false,
       stream: false,
       assert: false,
       tty: false,
