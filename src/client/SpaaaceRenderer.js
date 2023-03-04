@@ -395,6 +395,7 @@ export default class SpaaaceRenderer extends Renderer {
   }
 
   updateScore(data) {
+    if (!data) return;
     let scoreContainer = qs(".score");
     let scoreArray = [];
 

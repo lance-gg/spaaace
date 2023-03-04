@@ -437,6 +437,7 @@ var SpaaaceRenderer = /*#__PURE__*/function (_Renderer) {
   }, {
     key: "updateScore",
     value: function updateScore(data) {
+      if (!data) return;
       var scoreContainer = qs(".score");
       var scoreArray = []; // remove score lines with objects that don't exist anymore
 

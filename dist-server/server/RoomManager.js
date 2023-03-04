@@ -26,17 +26,18 @@ var getRoomAndUsername = /*#__PURE__*/function () {
           case 0:
             parts = _url["default"].parse(URL, true);
             query = parts.query;
-            _context.next = 4;
+            console.log("Query", query);
+            _context.next = 5;
             return checkWhetherVisitorInWorld(query);
 
-          case 4:
+          case 5:
             username = _context.sent;
             return _context.abrupt("return", {
               roomName: query[roomBasedOn()],
               username: username
             });
 
-          case 6:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -60,7 +61,7 @@ exports.roomBasedOn = roomBasedOn;
 
 var checkWhetherVisitorInWorld = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(query) {
-    var assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId, req, visitor, result;
+    var assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId, req;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -77,35 +78,30 @@ var checkWhetherVisitorInWorld = /*#__PURE__*/function () {
               visitorId: visitorId
             }; // get Visitor Info to verify that visitor is actually in world.  Also get their username to populate into ship.
 
-            if (!assetId) {
-              _context2.next = 13;
-              break;
-            }
-
-            _context2.next = 7;
-            return _rtsdk.Visitor.get(visitorId, urlSlug, {
-              credentials: {
-                assetId: assetId,
-                interactiveNonce: interactiveNonce,
-                interactivePublicKey: interactivePublicKey,
-                visitorId: visitorId
+            if (assetId) {
+              try {// const visitor = await Visitor.get(visitorId, urlSlug, {
+                //   credentials: {
+                //     assetId,
+                //     interactiveNonce,
+                //     interactivePublicKey,
+                //     visitorId,
+                //   },
+                // });
+                // console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
+                // const result = await getAssetAndDataObject(req);
+                // console.log("🚀 ~ file: RoomManager.js:25 ~ checkWhetherVisitorInWorld ~ result:", result);
+              } catch (e) {
+                console.log("ERROR", e); // console.log(e.data);
               }
-            });
+            } // if (!result || !result.inPrivateZone || result.inPrivateZone === assetId) {
+            // Route to page that says "You don't have access to this experience.  Please enter the gaming zone and try again."
+            // } else {
+            // const { displayName } = result;
 
-          case 7:
-            visitor = _context2.sent;
-            console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
-            _context2.next = 11;
-            return (0, _rtsdk.getAssetAndDataObject)(req);
 
-          case 11:
-            result = _context2.sent;
-            console.log("🚀 ~ file: RoomManager.js:25 ~ checkWhetherVisitorInWorld ~ result:", result);
-
-          case 13:
             return _context2.abrupt("return", "User 1");
 
-          case 14:
+          case 6:
           case "end":
             return _context2.stop();
         }

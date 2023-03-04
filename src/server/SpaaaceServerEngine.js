@@ -38,23 +38,24 @@ export default class SpaaaceServerEngine extends ServerEngine {
   // a player has connected
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
+    this.joinRoom(socket);
+  }
 
-    // Get the query parameters out of the URL
+  async joinRoom(socket) {
     const URL = socket.handshake.headers.referer;
-    const roomName = getRoomAndUsername(URL);
+    const { roomName, username } = await getRoomAndUsername(URL);
 
     super.createRoom(roomName);
     super.assignPlayerToRoom(socket.playerId, roomName);
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     let makePlayerShip = () => {
-      console.log("Rooms", this.rooms);
       let ship = this.gameEngine.makeShip(socket.playerId);
       this.assignObjectToRoom(ship, roomName);
 
       this.scoreData[roomName][ship.id] = {
         kills: 0,
-        name: nameGenerator("general"),
+        name: username,
       };
       this.updateScore();
     };
