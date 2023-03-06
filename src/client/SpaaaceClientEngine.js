@@ -90,6 +90,12 @@ export default class SpaaaceClientEngine extends ClientEngine {
         document.querySelector("#joinGame").innerHTML = "Spectating";
       });
 
+      this.socket.on("notinroom", () => {
+        document.querySelector("#introText").innerHTML = "You can only enter a game from within a world";
+        document.querySelector("#joinGame").innerHTML =
+          "<a href=https://github.com/metaversecloud-com/multiplayer-iframe-game-example>Find me on GitHub</a>";
+      });
+
       this.socket.on("inzone", () => {
         document.querySelector("#introText").innerHTML = "You are in the Game Zone. Click Join Game to play";
         document.querySelector("#joinGame").innerHTML = "Join Game";

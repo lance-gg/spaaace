@@ -1,13 +1,12 @@
 import url from "url";
-import http from "http";
-import { getAssetAndDataObject, Visitor, WorldActivity } from "../MetaverseCloudIntegrations/rtsdk";
+import { Visitor, WorldActivity } from "../MetaverseCloudIntegrations/rtsdk";
 import "regenerator-runtime/runtime";
 
-export const getRoomAndUsername = async (URL, res) => {
+export const getRoomAndUsername = async (URL) => {
   // console.log(URL);
   const parts = url.parse(URL, true);
   const query = parts.query;
-  const username = await checkWhetherVisitorInWorld(query, res);
+  const username = await checkWhetherVisitorInWorld(query);
   return { roomName: query[roomBasedOn()], username };
 };
 
@@ -16,7 +15,7 @@ export const roomBasedOn = () => {
   return "assetId";
 };
 
-const checkWhetherVisitorInWorld = async (query, res) => {
+const checkWhetherVisitorInWorld = async (query) => {
   // Check whether have access to interactive nonce, which means visitor is in world.
   const { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId } = query;
   // console.log("🚀 ~ file: RoomManager.js:20 ~ checkWhetherVisitorInWorld ~ query:", query);
@@ -62,6 +61,6 @@ const checkWhetherVisitorInWorld = async (query, res) => {
   } catch (e) {
     // Not actually in the world.  Should prevent from seeing game.
     console.log("ERROR", e);
-    // if (res) res.redirect("https://topia.io");
+    return -1;
   }
 };

@@ -45,6 +45,11 @@ export default class SpaaaceServerEngine extends ServerEngine {
     const URL = socket.handshake.headers.referer;
     const { roomName, username } = await getRoomAndUsername(URL);
 
+    if (!roomName) {
+      socket.emit("notinroom");
+      return;
+    }
+
     super.createRoom(roomName);
     super.assignPlayerToRoom(socket.playerId, roomName);
     this.scoreData[roomName] = this.scoreData[roomName] || {};
@@ -78,8 +83,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
     let playerObjects = this.gameEngine.world.queryObjects({ playerId: playerId });
     playerObjects.forEach((obj) => {
       this.gameEngine.removeObjectFromWorld(obj.id);
-      console.log(obj);
-      //   // remove score associated with this ship
+      // remove score associated with this ship
       delete this.scoreData[obj._roomName][obj.id];
     });
 
