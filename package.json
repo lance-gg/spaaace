@@ -2,7 +2,7 @@
   "name": "spaaace",
   "version": "4.0.0",
   "engines": {
-    "node": "18.13.0"
+    "node": "18.14.2"
   },
   "description": "An HTML5 multiplayer space shooter based on Lance",
   "main": "src/main.js",

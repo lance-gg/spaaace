@@ -113,7 +113,6 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
                 _yield$getRoomAndUser = _context.sent;
                 roomName = _yield$getRoomAndUser.roomName;
                 username = _yield$getRoomAndUser.username;
-                console.log("roomName", roomName);
 
                 _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, roomName);
 
@@ -121,26 +120,31 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
                 this.scoreData[roomName] = this.scoreData[roomName] || {};
 
-                makePlayerShip = function makePlayerShip() {
-                  console.log("Rooms", _this3.rooms);
+                if (username) {
+                  socket.emit("inzone");
 
-                  var ship = _this3.gameEngine.makeShip(socket.playerId);
+                  makePlayerShip = function makePlayerShip() {
+                    var ship = _this3.gameEngine.makeShip(socket.playerId);
 
-                  _this3.assignObjectToRoom(ship, roomName);
+                    _this3.assignObjectToRoom(ship, roomName);
 
-                  _this3.scoreData[roomName][ship.id] = {
-                    kills: 0,
-                    name: username // name: nameGenerator("general"),
+                    _this3.scoreData[roomName][ship.id] = {
+                      kills: 0,
+                      name: username
+                    };
 
-                  };
-
-                  _this3.updateScore();
-                }; // handle client restart requests
+                    _this3.updateScore();
+                  }; // handle client restart requests
 
 
-                socket.on("requestRestart", makePlayerShip);
+                  socket.on("requestRestart", makePlayerShip);
+                } else {
+                  // User is spectating because not in private zone
+                  socket.emit("spectating");
+                  this.updateScore();
+                }
 
-              case 12:
+              case 10:
               case "end":
                 return _context.stop();
             }

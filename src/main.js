@@ -7,17 +7,13 @@ import { Lib } from "lance-gg";
 // Game Server
 import SpaaaceServerEngine from "./server/SpaaaceServerEngine.js";
 import SpaaaceGameEngine from "./common/SpaaaceGameEngine.js";
+import { getRoomAndUsername } from "./server/RoomManager.js";
 
-// const PORT = process.env.PORT || 3000;
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, "../dist/index.html");
 
 // define routes and socket
 const server = express();
-server.use("/", express.static(path.join(__dirname, "../dist/")));
-server.get("/", function (req, res) {
-  res.sendFile(INDEX);
-});
 let requestHandler = server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = socketIO(requestHandler);
 // Game Instances
@@ -27,8 +23,19 @@ const serverEngine = new SpaaaceServerEngine(io, gameEngine, {
   updateRate: 6,
   timeoutInterval: 0, // no timeout
 });
-// start the game
 serverEngine.start();
+
+server.use("/", async (req, res, next) => {
+  // Redirects to Topia if visitor not in the world
+  //   const name = await getRoomAndUsername(req.url, res);
+  next();
+  //   res.redirect("https://topia.io");
+});
+server.use("/", express.static(path.join(__dirname, "../dist/")));
+
+server.get("/", function (req, res) {
+  res.sendFile(INDEX);
+});
 
 // server.get("/api/getroom", function (req, res) {
 //   //   const id = req;

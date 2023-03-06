@@ -45,6 +45,12 @@ Object.defineProperty(exports, "Visitor", {
     return _topiaInit.Visitor;
   }
 });
+Object.defineProperty(exports, "WorldActivity", {
+  enumerable: true,
+  get: function get() {
+    return _topiaInit.WorldActivity;
+  }
+});
 Object.defineProperty(exports, "getDataObject", {
   enumerable: true,
   get: function get() {

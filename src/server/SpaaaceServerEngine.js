@@ -49,19 +49,25 @@ export default class SpaaaceServerEngine extends ServerEngine {
     super.assignPlayerToRoom(socket.playerId, roomName);
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
-    let makePlayerShip = () => {
-      let ship = this.gameEngine.makeShip(socket.playerId);
-      this.assignObjectToRoom(ship, roomName);
+    if (username) {
+      socket.emit("inzone");
+      let makePlayerShip = () => {
+        let ship = this.gameEngine.makeShip(socket.playerId);
+        this.assignObjectToRoom(ship, roomName);
 
-      this.scoreData[roomName][ship.id] = {
-        kills: 0,
-        name: username,
+        this.scoreData[roomName][ship.id] = {
+          kills: 0,
+          name: username,
+        };
+        this.updateScore();
       };
+      // handle client restart requests
+      socket.on("requestRestart", makePlayerShip);
+    } else {
+      // User is spectating because not in private zone
+      socket.emit("spectating");
       this.updateScore();
-    };
-
-    // handle client restart requests
-    socket.on("requestRestart", makePlayerShip);
+    }
   }
 
   // a player has disconnected

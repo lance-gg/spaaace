@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Visitor = exports.World = exports.User = exports.DroppedAsset = exports.Asset = void 0;
+exports.Visitor = exports.WorldActivity = exports.World = exports.User = exports.DroppedAsset = exports.Asset = void 0;
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 
@@ -17,7 +17,8 @@ var _require = require("@rtsdk/topia/dist/index.cjs"),
     Topia = _require.Topia,
     UserFactory = _require.UserFactory,
     WorldFactory = _require.WorldFactory,
-    VisitorFactory = _require.VisitorFactory;
+    VisitorFactory = _require.VisitorFactory,
+    WorldActivityFactory = _require.WorldActivityFactory;
 
 var config = {
   apiDomain: process.env.INSTANCE_DOMAIN || "https://api.topia.io/",
@@ -35,6 +36,8 @@ var User = new UserFactory(myTopiaInstance);
 exports.User = User;
 var World = new WorldFactory(myTopiaInstance);
 exports.World = World;
+var WorldActivity = new WorldActivityFactory(myTopiaInstance);
+exports.WorldActivity = WorldActivity;
 var Visitor = new VisitorFactory(myTopiaInstance);
 exports.Visitor = Visitor;
 //# sourceMappingURL=topiaInit.js.map

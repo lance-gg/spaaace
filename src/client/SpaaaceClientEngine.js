@@ -85,6 +85,15 @@ export default class SpaaaceClientEngine extends ClientEngine {
   // extend ClientEngine connect to add own events
   connect() {
     return super.connect().then(() => {
+      this.socket.on("spectating", () => {
+        document.querySelector("#introText").innerHTML = "Enter the Game Zone to Participate";
+        document.querySelector("#joinGame").innerHTML = "Spectating";
+      });
+
+      this.socket.on("inzone", () => {
+        document.querySelector("#introText").innerHTML = "You are in the Game Zone. Click Join Game to play";
+        document.querySelector("#joinGame").innerHTML = "Join Game";
+      });
       this.socket.on("scoreUpdate", (e) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
           get: (searchParams, prop) => searchParams.get(prop),

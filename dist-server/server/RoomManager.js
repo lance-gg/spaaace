@@ -7,6 +7,8 @@ exports.roomBasedOn = exports.getRoomAndUsername = void 0;
 
 var _url = _interopRequireDefault(require("url"));
 
+var _http = _interopRequireDefault(require("http"));
+
 var _rtsdk = require("../MetaverseCloudIntegrations/rtsdk");
 
 require("regenerator-runtime/runtime");
@@ -18,26 +20,26 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var getRoomAndUsername = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(URL) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(URL, res) {
     var parts, query, username;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            // console.log(URL);
             parts = _url["default"].parse(URL, true);
             query = parts.query;
-            console.log("Query", query);
-            _context.next = 5;
-            return checkWhetherVisitorInWorld(query);
+            _context.next = 4;
+            return checkWhetherVisitorInWorld(query, res);
 
-          case 5:
+          case 4:
             username = _context.sent;
             return _context.abrupt("return", {
               roomName: query[roomBasedOn()],
               username: username
             });
 
-          case 7:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -45,7 +47,7 @@ var getRoomAndUsername = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function getRoomAndUsername(_x) {
+  return function getRoomAndUsername(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -60,56 +62,89 @@ var roomBasedOn = function roomBasedOn() {
 exports.roomBasedOn = roomBasedOn;
 
 var checkWhetherVisitorInWorld = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(query) {
-    var assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId, req;
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(query, res) {
+    var assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId, worldActivity, currentVisitors, visitor, privateZoneId, username;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             // Check whether have access to interactive nonce, which means visitor is in world.
-            assetId = query.assetId, interactivePublicKey = query.interactivePublicKey, interactiveNonce = query.interactiveNonce, urlSlug = query.urlSlug, visitorId = query.visitorId;
-            console.log("🚀 ~ file: RoomManager.js:20 ~ checkWhetherVisitorInWorld ~ query:", query);
-            req = {};
-            req.body = {
-              assetId: assetId,
-              interactivePublicKey: interactivePublicKey,
-              interactiveNonce: interactiveNonce,
-              urlSlug: urlSlug,
-              visitorId: visitorId
-            }; // get Visitor Info to verify that visitor is actually in world.  Also get their username to populate into ship.
+            assetId = query.assetId, interactivePublicKey = query.interactivePublicKey, interactiveNonce = query.interactiveNonce, urlSlug = query.urlSlug, visitorId = query.visitorId; // console.log("🚀 ~ file: RoomManager.js:20 ~ checkWhetherVisitorInWorld ~ query:", query);
+            // const req = {};
+            // req.body = { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId };
+            // get Visitor Info to verify that visitor is actually in world.  Also get their username to populate into ship.
+            // if (assetId) {
 
-            if (assetId) {
-              try {// const visitor = await Visitor.get(visitorId, urlSlug, {
-                //   credentials: {
-                //     assetId,
-                //     interactiveNonce,
-                //     interactivePublicKey,
-                //     visitorId,
-                //   },
-                // });
-                // console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
-                // const result = await getAssetAndDataObject(req);
-                // console.log("🚀 ~ file: RoomManager.js:25 ~ checkWhetherVisitorInWorld ~ result:", result);
-              } catch (e) {
-                console.log("ERROR", e); // console.log(e.data);
+            _context2.prev = 1;
+            _context2.next = 4;
+            return _rtsdk.WorldActivity.create(urlSlug, {
+              credentials: {
+                assetId: assetId,
+                interactiveNonce: interactiveNonce,
+                interactivePublicKey: interactivePublicKey,
+                visitorId: visitorId
               }
-            } // if (!result || !result.inPrivateZone || result.inPrivateZone === assetId) {
-            // Route to page that says "You don't have access to this experience.  Please enter the gaming zone and try again."
-            // } else {
-            // const { displayName } = result;
+            });
 
+          case 4:
+            worldActivity = _context2.sent;
+            _context2.next = 7;
+            return worldActivity.currentVisitors();
 
-            return _context2.abrupt("return", "User 1");
+          case 7:
+            currentVisitors = _context2.sent;
+            // const visitor = await Visitor.get(visitorId, urlSlug, {
+            //   credentials: {
+            //     assetId,
+            //     interactiveNonce,
+            //     interactivePublicKey,
+            //     visitorId,
+            //   },
+            // });
+            // console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
+            // const privateZoneId = visitor.privateZoneId;
+            // const username = visitor.username;
+            visitor = currentVisitors[visitorId];
 
-          case 6:
+            if (!(!visitor || !visitor.username)) {
+              _context2.next = 11;
+              break;
+            }
+
+            throw "Not in world";
+
+          case 11:
+            privateZoneId = visitor.privateZoneId, username = visitor.username;
+
+            if (!(!privateZoneId || privateZoneId !== assetId)) {
+              _context2.next = 16;
+              break;
+            }
+
+            return _context2.abrupt("return", null);
+
+          case 16:
+            return _context2.abrupt("return", username);
+
+          case 17:
+            _context2.next = 22;
+            break;
+
+          case 19:
+            _context2.prev = 19;
+            _context2.t0 = _context2["catch"](1);
+            // Not actually in the world.  Should prevent from seeing game.
+            console.log("ERROR", _context2.t0); // if (res) res.redirect("https://topia.io");
+
+          case 22:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2);
+    }, _callee2, null, [[1, 19]]);
   }));
 
-  return function checkWhetherVisitorInWorld(_x2) {
+  return function checkWhetherVisitorInWorld(_x3, _x4) {
     return _ref2.apply(this, arguments);
   };
 }();
