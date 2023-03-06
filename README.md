@@ -8,7 +8,7 @@ An online HTML5 multiplayer space shooter built with [Lance](http://lance.gg) ga
 
 # MetaverseCloud SDK
 
-This integrates the [MetmaverseCloud SDK](https://github.com/metaversecloud-com/mc-sdk-js), which makes it possible to use it within topia.io worlds.
+This integrates the [MetaverseCloud SDK](https://github.com/metaversecloud-com/mc-sdk-js), which makes it possible to use it within topia.io worlds.
 
 Key features:
 
