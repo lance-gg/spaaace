@@ -425,18 +425,17 @@ var SpaaaceRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "updateHUD",
-    value: function updateHUD(data) {
-      if (data.RTT) {
-        qs(".latencyData").innerHTML = data.RTT;
-      }
-
-      if (data.RTTAverage) {
-        qs(".averageLatencyData").innerHTML = truncateDecimals(data.RTTAverage, 2);
-      }
+    value: function updateHUD(data) {// if (data.RTT) {
+      //   qs(".latencyData").innerHTML = data.RTT;
+      // }
+      // if (data.RTTAverage) {
+      //   qs(".averageLatencyData").innerHTML = truncateDecimals(data.RTTAverage, 2);
+      // }
     }
   }, {
     key: "updateScore",
     value: function updateScore(data) {
+      if (!data) return;
       var scoreContainer = qs(".score");
       var scoreArray = []; // remove score lines with objects that don't exist anymore
 

@@ -1,31 +1,29 @@
 <html>
-    <head>
-        <title>Spaaace | powered by Lance.gg</title>
-        <style>
-        html, body {
-            position: fixed;
-        }
-        </style>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <script src="https://use.typekit.net/lai1bbe.js"></script>
-    </head>
-    <body class="">
-        <div id="guiContainer">
-            <button id="joinGame">Join Game</button>
-            <button id="tryAgain" disabled>Try again</button>
-            <button id="reconnect" disabled>Reconnect</button>
+  <head>
+    <title>Spaaace | powered by Lance.gg</title>
+    <style>
+      html,
+      body {
+        position: fixed;
+      }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script src="https://use.typekit.net/lai1bbe.js"></script>
+  </head>
+  <body class="">
+    <div id="guiContainer">
+      <button id="joinGame"></button>
+      <button id="tryAgain" disabled>Try again</button>
+      <button id="reconnect" disabled>Reconnect</button>
 
-            <div class="hud">
-                <div>Latency: <span class="latencyData">N/A</span></div>
-                <div>Latency (avg): <span class="averageLatencyData">N/A</span></div>
-            </div>
-            <div class="score"></div>
-            <div id="offscreenIndicatorContainer"></div>
-            <div class="keysContainer"></div>
-            <div class="fireButton"></div>
-            <h2>This is a live JavaScript multiplayer game</h2>
-        </div>
-        <div class="pixiContainer"></div>
-        <script type="text/javascript" src="bundle.js"></script>
-    </body>
+      <div class="hud"></div>
+      <div class="score"></div>
+      <div id="offscreenIndicatorContainer"></div>
+      <div class="keysContainer"></div>
+      <div class="fireButton"></div>
+      <h2 id="introText"></h2>
+    </div>
+    <div class="pixiContainer"></div>
+    <script type="text/javascript" src="bundle.js"></script>
+  </body>
 </html>

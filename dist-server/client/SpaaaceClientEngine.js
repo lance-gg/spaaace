@@ -149,6 +149,16 @@ var SpaaaceClientEngine = /*#__PURE__*/function (_ClientEngine) {
       var _this2 = this;
 
       return _get(_getPrototypeOf(SpaaaceClientEngine.prototype), "connect", this).call(this).then(function () {
+        _this2.socket.on("spectating", function () {
+          document.querySelector("#introText").innerHTML = "Enter the Game Zone to Participate";
+          document.querySelector("#joinGame").innerHTML = "Spectating";
+        });
+
+        _this2.socket.on("inzone", function () {
+          document.querySelector("#introText").innerHTML = "You are in the Game Zone. Click Join Game to play";
+          document.querySelector("#joinGame").innerHTML = "Join Game";
+        });
+
         _this2.socket.on("scoreUpdate", function (e) {
           var params = new Proxy(new URLSearchParams(window.location.search), {
             get: function get(searchParams, prop) {

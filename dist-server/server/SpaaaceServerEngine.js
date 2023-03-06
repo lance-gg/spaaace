@@ -11,6 +11,10 @@ var _lanceGg = require("lance-gg");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -85,38 +89,75 @@ var SpaaaceServerEngine = /*#__PURE__*/function (_ServerEngine) {
   }, {
     key: "onPlayerConnected",
     value: function onPlayerConnected(socket) {
-      var _this3 = this;
+      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "onPlayerConnected", this).call(this, socket);
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "onPlayerConnected", this).call(this, socket); // Get the query parameters out of the URL
+      this.joinRoom(socket);
+    }
+  }, {
+    key: "joinRoom",
+    value: function () {
+      var _joinRoom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(socket) {
+        var _this3 = this;
+
+        var URL, _yield$getRoomAndUser, roomName, username, makePlayerShip;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                URL = socket.handshake.headers.referer;
+                _context.next = 3;
+                return (0, _RoomManager.getRoomAndUsername)(URL);
+
+              case 3:
+                _yield$getRoomAndUser = _context.sent;
+                roomName = _yield$getRoomAndUser.roomName;
+                username = _yield$getRoomAndUser.username;
+
+                _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, roomName);
+
+                _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
+
+                this.scoreData[roomName] = this.scoreData[roomName] || {};
+
+                if (username) {
+                  socket.emit("inzone");
+
+                  makePlayerShip = function makePlayerShip() {
+                    var ship = _this3.gameEngine.makeShip(socket.playerId);
+
+                    _this3.assignObjectToRoom(ship, roomName);
+
+                    _this3.scoreData[roomName][ship.id] = {
+                      kills: 0,
+                      name: username
+                    };
+
+                    _this3.updateScore();
+                  }; // handle client restart requests
 
 
-      var URL = socket.handshake.headers.referer;
-      var roomName = (0, _RoomManager.getRoomName)(URL);
+                  socket.on("requestRestart", makePlayerShip);
+                } else {
+                  // User is spectating because not in private zone
+                  socket.emit("spectating");
+                  this.updateScore();
+                }
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "createRoom", this).call(this, roomName);
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
 
-      _get(_getPrototypeOf(SpaaaceServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
+      function joinRoom(_x) {
+        return _joinRoom.apply(this, arguments);
+      }
 
-      this.scoreData[roomName] = this.scoreData[roomName] || {};
-
-      var makePlayerShip = function makePlayerShip() {
-        console.log("Rooms", _this3.rooms);
-
-        var ship = _this3.gameEngine.makeShip(socket.playerId);
-
-        _this3.assignObjectToRoom(ship, roomName);
-
-        _this3.scoreData[roomName][ship.id] = {
-          kills: 0,
-          name: nameGenerator("general")
-        };
-
-        _this3.updateScore();
-      }; // handle client restart requests
-
-
-      socket.on("requestRestart", makePlayerShip);
-    } // a player has disconnected
+      return joinRoom;
+    }() // a player has disconnected
 
   }, {
     key: "onPlayerDisconnected",

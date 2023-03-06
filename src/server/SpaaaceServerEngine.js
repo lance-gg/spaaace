@@ -1,4 +1,4 @@
-import { getRoomName } from "./RoomManager";
+import { getRoomAndUsername } from "./RoomManager";
 import { ServerEngine } from "lance-gg";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
@@ -38,29 +38,36 @@ export default class SpaaaceServerEngine extends ServerEngine {
   // a player has connected
   onPlayerConnected(socket) {
     super.onPlayerConnected(socket);
+    this.joinRoom(socket);
+  }
 
-    // Get the query parameters out of the URL
+  async joinRoom(socket) {
     const URL = socket.handshake.headers.referer;
-    const roomName = getRoomName(URL);
+    const { roomName, username } = await getRoomAndUsername(URL);
 
     super.createRoom(roomName);
     super.assignPlayerToRoom(socket.playerId, roomName);
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
-    let makePlayerShip = () => {
-      console.log("Rooms", this.rooms);
-      let ship = this.gameEngine.makeShip(socket.playerId);
-      this.assignObjectToRoom(ship, roomName);
+    if (username) {
+      socket.emit("inzone");
+      let makePlayerShip = () => {
+        let ship = this.gameEngine.makeShip(socket.playerId);
+        this.assignObjectToRoom(ship, roomName);
 
-      this.scoreData[roomName][ship.id] = {
-        kills: 0,
-        name: nameGenerator("general"),
+        this.scoreData[roomName][ship.id] = {
+          kills: 0,
+          name: username,
+        };
+        this.updateScore();
       };
+      // handle client restart requests
+      socket.on("requestRestart", makePlayerShip);
+    } else {
+      // User is spectating because not in private zone
+      socket.emit("spectating");
       this.updateScore();
-    };
-
-    // handle client restart requests
-    socket.on("requestRestart", makePlayerShip);
+    }
   }
 
   // a player has disconnected

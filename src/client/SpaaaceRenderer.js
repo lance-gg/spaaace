@@ -386,15 +386,16 @@ export default class SpaaaceRenderer extends Renderer {
   }
 
   updateHUD(data) {
-    if (data.RTT) {
-      qs(".latencyData").innerHTML = data.RTT;
-    }
-    if (data.RTTAverage) {
-      qs(".averageLatencyData").innerHTML = truncateDecimals(data.RTTAverage, 2);
-    }
+    // if (data.RTT) {
+    //   qs(".latencyData").innerHTML = data.RTT;
+    // }
+    // if (data.RTTAverage) {
+    //   qs(".averageLatencyData").innerHTML = truncateDecimals(data.RTTAverage, 2);
+    // }
   }
 
   updateScore(data) {
+    if (!data) return;
     let scoreContainer = qs(".score");
     let scoreArray = [];
 
