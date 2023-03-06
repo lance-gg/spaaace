@@ -50,6 +50,11 @@ export default class SpaaaceServerEngine extends ServerEngine {
       return;
     }
 
+    if (username === -1) {
+      socket.emit("error");
+      return;
+    }
+
     super.createRoom(roomName);
     super.assignPlayerToRoom(socket.playerId, roomName);
     this.scoreData[roomName] = this.scoreData[roomName] || {};

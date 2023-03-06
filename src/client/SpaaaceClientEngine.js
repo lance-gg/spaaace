@@ -100,6 +100,12 @@ export default class SpaaaceClientEngine extends ClientEngine {
         document.querySelector("#introText").innerHTML = "You are in the Game Zone. Click Join Game to play";
         document.querySelector("#joinGame").innerHTML = "Join Game";
       });
+
+      this.socket.on("error", () => {
+        document.querySelector("#introText").innerHTML = "There was an error loading the game.  Please try reloading";
+        document.querySelector("#joinGame").innerHTML = "<a href=.>Reload</a>";
+      });
+
       this.socket.on("scoreUpdate", (e) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
           get: (searchParams, prop) => searchParams.get(prop),
