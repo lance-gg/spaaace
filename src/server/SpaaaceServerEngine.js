@@ -1,5 +1,12 @@
-import { getRoomAndUsername } from "./RoomManager";
+import {
+  hideLeaderboard,
+  showLeaderboard,
+  // resetLeaderboard,
+  updateLeaderboard,
+} from "../MetaverseCloudIntegrations/TopiaComponents/LeaderboardManager";
+import { getRoomAndUsername } from "../MetaverseCloudIntegrations/TopiaComponents/RoomManager";
 import { ServerEngine } from "lance-gg";
+import url from "url";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
 
@@ -43,7 +50,20 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
   async joinRoom(socket) {
     const URL = socket.handshake.headers.referer;
-    const { roomName, username } = await getRoomAndUsername(URL);
+    const parts = url.parse(URL, true);
+    const query = parts.query;
+    const { assetId, urlSlug } = query;
+    const req = { body: query }; // Used for interactive assets
+
+    const { isAdmin, roomName, username } = await getRoomAndUsername(query);
+
+    if (isAdmin) {
+      socket.emit("isadmin"); // Shows admin controls on landing page
+
+      socket.on("showLeaderboard", () => showLeaderboard({ assetId, req, urlSlug }));
+      socket.on("hideLeaderboard", () => hideLeaderboard(req));
+      // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
+    }
 
     if (!roomName) {
       socket.emit("notinroom");
@@ -60,7 +80,9 @@ export default class SpaaaceServerEngine extends ServerEngine {
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     if (username) {
+      socket.on("updateLeaderboard", (leaderboardArray) => updateLeaderboard({ leaderboardArray, req }));
       socket.emit("inzone");
+
       let makePlayerShip = () => {
         let ship = this.gameEngine.makeShip(socket.playerId);
         this.assignObjectToRoom(ship, roomName);

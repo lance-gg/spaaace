@@ -299,6 +299,15 @@ export default class SpaaaceRenderer extends Renderer {
     document.querySelector("#joinGame").disabled = true;
     document.querySelector("#joinGame").style.opacity = 0;
 
+    document.querySelector("#showLeaderboard").disabled = true;
+    document.querySelector("#showLeaderboard").style.opacity = 0;
+
+    document.querySelector("#hideLeaderboard").disabled = true;
+    document.querySelector("#hideLeaderboard").style.opacity = 0;
+
+    document.querySelector("#resetLeaderboard").disabled = true;
+    document.querySelector("#resetLeaderboard").style.opacity = 0;
+
     this.gameStarted = true; // todo state shouldn't be saved in the renderer
 
     // remove the tutorial if required after a timeout

@@ -4,7 +4,7 @@ import SpaaaceRenderer from "../client/SpaaaceRenderer";
 import MobileControls from "./MobileControls";
 import Ship from "../common/Ship";
 import Utils from "../common/Utils";
-import { roomBasedOn } from "../server/RoomManager";
+import { roomBasedOn } from "../MetaverseCloudIntegrations/TopiaComponents/RoomManager";
 
 export default class SpaaaceClientEngine extends ClientEngine {
   constructor(gameEngine, options) {
@@ -101,6 +101,34 @@ export default class SpaaaceClientEngine extends ClientEngine {
         document.querySelector("#joinGame").innerHTML = "Join Game";
       });
 
+      this.socket.on("isadmin", () => {
+        function appendHtml(el, str) {
+          var div = document.createElement("button"); //container to append to
+          div.innerHTML = str;
+          while (div.children.length > 0) {
+            el.appendChild(div.children[0]);
+          }
+        }
+        appendHtml(document.querySelector("#adminControls"), "<button id='showLeaderboard'>Show Leaderboard</button>");
+        appendHtml(document.querySelector("#adminControls"), "<button id='hideLeaderboard'>Hide Leaderboard</button>");
+        appendHtml(
+          document.querySelector("#adminControls"),
+          "<button id='resetLeaderboard'>Reset Leaderboard</button>",
+        );
+
+        setTimeout(() => {
+          document.querySelector("#showLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("showLeaderboard");
+          });
+          document.querySelector("#hideLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("hideLeaderboard");
+          });
+          document.querySelector("#resetLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("resetLeaderboard");
+          });
+        }, 250);
+      });
+
       this.socket.on("error", () => {
         document.querySelector("#introText").innerHTML = "There was an error loading the game.  Please try reloading";
         document.querySelector("#joinGame").innerHTML = "<a href=.>Reload</a>";
@@ -112,6 +140,24 @@ export default class SpaaaceClientEngine extends ClientEngine {
         });
         let value = params[roomBasedOn()];
         this.renderer.updateScore(e[value]);
+
+        let scoreArray = [];
+        for (let id of Object.keys(e[value])) {
+          scoreArray.push({
+            id,
+            data: e[value][id],
+          });
+        }
+        scoreArray.sort((a, b) => {
+          return a.data.kills < b.data.kills;
+        });
+        // Only send update if you're in the lead
+        console.log("ShipID", this.renderer.playerShip.id);
+        console.log("0 Array", scoreArray[0]);
+        if (this.renderer.playerShip && this.renderer.playerShip.id == parseInt(scoreArray[0].id)) {
+          console.log("Emitting");
+          this.socket.emit("updateLeaderboard", scoreArray);
+        }
       });
 
       this.socket.on("disconnect", (e) => {

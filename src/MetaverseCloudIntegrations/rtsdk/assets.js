@@ -1,14 +1,10 @@
 import { Asset, DroppedAsset } from "./index.js";
 
-export const InteractiveAsset = async ({
-  id,
-  req,
-  position,
-  uniqueName,
-  urlSlug,
-}) => {
+export const InteractiveAsset = async ({ id, req, position, uniqueName, urlSlug }) => {
   try {
     const asset = Asset.create(id, { credentials: req.body });
+
+    console.log(position, uniqueName, urlSlug);
 
     const droppedAsset = await DroppedAsset.drop(asset, {
       position,
@@ -24,6 +20,6 @@ export const InteractiveAsset = async ({
       });
     return droppedAsset;
   } catch (e) {
-    console.log("Error creating interactive asset", e);
+    console.log("Error creating interactive asset", e?.data?.errors);
   }
 };
