@@ -59,8 +59,8 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
-      const posOffset = { x: 100, y: -50 };
-      socket.on("showLeaderboard", () => showLeaderboard({ assetId, posOffset, req, urlSlug }));
+
+      socket.on("showLeaderboard", () => showLeaderboard({ assetId, req, urlSlug }));
       socket.on("hideLeaderboard", () => hideLeaderboard(req));
       // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
     }

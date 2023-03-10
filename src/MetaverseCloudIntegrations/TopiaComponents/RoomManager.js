@@ -36,7 +36,7 @@ const checkWhetherVisitorInWorld = async (query) => {
     }
   } catch (e) {
     // Not actually in the world.  Should prevent from seeing game.
-    console.log("ERROR", e?.data?.errors);
+    console.log("Error getting visitor", e?.data?.errors);
     return { isAdmin: false, username: -1 };
   }
 };
