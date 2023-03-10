@@ -1,4 +1,10 @@
-import { getRoomAndUsername } from "./RoomManager";
+import {
+  hideLeaderboard,
+  showLeaderboard,
+  resetLeaderboard,
+  updateLeaderboard,
+} from "../MetaverseCloudIntegrations/TopiaComponents/LeaderboardManager";
+import { getRoomAndUsername } from "../MetaverseCloudIntegrations/TopiaComponents/RoomManager";
 import { ServerEngine } from "lance-gg";
 const nameGenerator = require("./NameGenerator");
 const NUM_BOTS = 0;
@@ -45,7 +51,12 @@ export default class SpaaaceServerEngine extends ServerEngine {
     const URL = socket.handshake.headers.referer;
     const { isAdmin, roomName, username } = await getRoomAndUsername(URL);
 
-    if (isAdmin) socket.emit("isadmin"); // Shows admin controls on landing page
+    if (isAdmin) {
+      socket.emit("isadmin"); // Shows admin controls on landing page
+      socket.on("showLeaderboard", showLeaderboard);
+      socket.on("hideLeaderboard", hideLeaderboard);
+      socket.on("resetLeaderboard", resetLeaderboard);
+    }
 
     if (!roomName) {
       socket.emit("notinroom");

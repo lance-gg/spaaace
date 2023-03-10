@@ -1,5 +1,5 @@
 import url from "url";
-import { Visitor, WorldActivity } from "../MetaverseCloudIntegrations/rtsdk";
+import { Visitor } from "../rtsdk";
 import "regenerator-runtime/runtime";
 
 export const getRoomAndUsername = async (URL) => {

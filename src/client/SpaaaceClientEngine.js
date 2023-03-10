@@ -4,7 +4,7 @@ import SpaaaceRenderer from "../client/SpaaaceRenderer";
 import MobileControls from "./MobileControls";
 import Ship from "../common/Ship";
 import Utils from "../common/Utils";
-import { roomBasedOn } from "../server/RoomManager";
+import { roomBasedOn } from "../MetaverseCloudIntegrations/TopiaComponents/RoomManager";
 
 export default class SpaaaceClientEngine extends ClientEngine {
   constructor(gameEngine, options) {
