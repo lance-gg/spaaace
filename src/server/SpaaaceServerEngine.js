@@ -43,7 +43,9 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
   async joinRoom(socket) {
     const URL = socket.handshake.headers.referer;
-    const { roomName, username } = await getRoomAndUsername(URL);
+    const { isAdmin, roomName, username } = await getRoomAndUsername(URL);
+
+    if (isAdmin) socket.emit("isadmin"); // Shows admin controls on landing page
 
     if (!roomName) {
       socket.emit("notinroom");
@@ -61,6 +63,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     if (username) {
       socket.emit("inzone");
+
       let makePlayerShip = () => {
         let ship = this.gameEngine.makeShip(socket.playerId);
         this.assignObjectToRoom(ship, roomName);

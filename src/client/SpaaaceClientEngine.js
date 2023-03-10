@@ -101,6 +101,34 @@ export default class SpaaaceClientEngine extends ClientEngine {
         document.querySelector("#joinGame").innerHTML = "Join Game";
       });
 
+      this.socket.on("isadmin", () => {
+        function appendHtml(el, str) {
+          var div = document.createElement("button"); //container to append to
+          div.innerHTML = str;
+          while (div.children.length > 0) {
+            el.appendChild(div.children[0]);
+          }
+        }
+        appendHtml(document.querySelector("#adminControls"), "<button id='showLeaderboard'>Show Leaderboard</button>");
+        appendHtml(document.querySelector("#adminControls"), "<button id='hideLeaderboard'>Hide Leaderboard</button>");
+        appendHtml(
+          document.querySelector("#adminControls"),
+          "<button id='resetLeaderboard'>Reset Leaderboard</button>",
+        );
+
+        setTimeout(() => {
+          document.querySelector("#showLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("showLeaderboard");
+          });
+          document.querySelector("#hideLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("hideLeaderboard");
+          });
+          document.querySelector("#resetLeaderboard").addEventListener("click", (clickEvent) => {
+            this.socket.emit("resetLeaderboard");
+          });
+        }, 250);
+      });
+
       this.socket.on("error", () => {
         document.querySelector("#introText").innerHTML = "There was an error loading the game.  Please try reloading";
         document.querySelector("#joinGame").innerHTML = "<a href=.>Reload</a>";

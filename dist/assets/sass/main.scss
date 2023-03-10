@@ -65,6 +65,26 @@ body {
   opacity: 1;
 }
 
+#adminControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200;
+  position: absolute;
+  left: 50%;
+  bottom: 0%;
+  opacity: 1;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+#showLeaderboard,
+#hideLeaderboard,
+#resetLeaderboard {
+  pointer-events: all;
+  opacity: 1;
+}
+
 button {
   position: relative;
   background-color: rgba(#68b2f8, 0.2);

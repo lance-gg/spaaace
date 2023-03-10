@@ -6,8 +6,8 @@ export const getRoomAndUsername = async (URL) => {
   // console.log(URL);
   const parts = url.parse(URL, true);
   const query = parts.query;
-  const username = await checkWhetherVisitorInWorld(query);
-  return { roomName: query[roomBasedOn()], username };
+  const { isAdmin, username } = await checkWhetherVisitorInWorld(query);
+  return { isAdmin, roomName: query[roomBasedOn()], username };
 };
 
 export const roomBasedOn = () => {
@@ -25,17 +25,7 @@ const checkWhetherVisitorInWorld = async (query) => {
 
   // if (assetId) {
   try {
-    const worldActivity = await WorldActivity.create(urlSlug, {
-      credentials: {
-        assetId,
-        interactiveNonce,
-        interactivePublicKey,
-        visitorId,
-      },
-    });
-    const currentVisitors = await worldActivity.currentVisitors();
-
-    // const visitor = await Visitor.get(visitorId, urlSlug, {
+    // const worldActivity = await WorldActivity.create(urlSlug, {
     //   credentials: {
     //     assetId,
     //     interactiveNonce,
@@ -43,24 +33,34 @@ const checkWhetherVisitorInWorld = async (query) => {
     //     visitorId,
     //   },
     // });
+    // const currentVisitors = await worldActivity.currentVisitors();
+
+    const visitor = await Visitor.get(visitorId, urlSlug, {
+      credentials: {
+        assetId,
+        interactiveNonce,
+        interactivePublicKey,
+        visitorId,
+      },
+    });
     // console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
     // const privateZoneId = visitor.privateZoneId;
     // const username = visitor.username;
 
-    const visitor = currentVisitors[visitorId];
+    // const visitor = currentVisitors[visitorId];
     if (!visitor || !visitor.username) throw "Not in world";
 
-    const { privateZoneId, username } = visitor;
+    const { privateZoneId, username, isAdmin } = visitor;
 
     if (!privateZoneId || privateZoneId !== assetId) {
       // Not in the private Zone.  Can watch ships fly around, but can't play.
-      return null;
+      return { username: null, isAdmin };
     } else {
-      return username;
+      return { isAdmin, username };
     }
   } catch (e) {
     // Not actually in the world.  Should prevent from seeing game.
     console.log("ERROR", e);
-    return -1;
+    return { isAdmin: false, username: -1 };
   }
 };

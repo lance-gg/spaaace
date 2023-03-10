@@ -8,7 +8,7 @@
   "main": "src/main.js",
   "dependencies": {
     "@babel/node": "^7.8.7",
-    "@rtsdk/topia": "^0.0.26",
+    "@rtsdk/topia": "^0.0.27",
     "axios": "^1.3.4",
     "babel-loader": "^8.1.0",
     "breakpoint-sass": "^2.7.1",
