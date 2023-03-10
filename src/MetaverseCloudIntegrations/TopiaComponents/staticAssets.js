@@ -1,3 +1,5 @@
+import { InteractiveAsset } from "../rtsdk";
+
 export const addFrame = async ({ assetId, pos, req, urlSlug }) => {
   try {
     // const frameAsset = await
@@ -6,7 +8,7 @@ export const addFrame = async ({ assetId, pos, req, urlSlug }) => {
       req,
       position: {
         x: pos ? pos.x : 0,
-        y: pos ? pos.y + 570 : 570,
+        y: pos ? pos.y : 0,
       },
       uniqueName: `multiplayer_leaderboard_${assetId}_frame`,
       urlSlug,

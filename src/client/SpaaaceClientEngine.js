@@ -140,6 +140,24 @@ export default class SpaaaceClientEngine extends ClientEngine {
         });
         let value = params[roomBasedOn()];
         this.renderer.updateScore(e[value]);
+
+        let scoreArray = [];
+        for (let id of Object.keys(e[value])) {
+          scoreArray.push({
+            id,
+            data: e[value][id],
+          });
+        }
+        scoreArray.sort((a, b) => {
+          return a.data.kills < b.data.kills;
+        });
+        // Only send update if you're in the lead
+        console.log("ShipID", this.renderer.playerShip.id);
+        console.log("0 Array", scoreArray[0]);
+        if (this.renderer.playerShip && this.renderer.playerShip.id == parseInt(scoreArray[0].id)) {
+          console.log("Emitting");
+          this.socket.emit("updateLeaderboard", scoreArray);
+        }
       });
 
       this.socket.on("disconnect", (e) => {

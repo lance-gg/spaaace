@@ -1,11 +1,7 @@
-import url from "url";
 import { Visitor } from "../rtsdk";
 import "regenerator-runtime/runtime";
 
-export const getRoomAndUsername = async (URL) => {
-  // console.log(URL);
-  const parts = url.parse(URL, true);
-  const query = parts.query;
+export const getRoomAndUsername = async (query) => {
   const { isAdmin, username } = await checkWhetherVisitorInWorld(query);
   return { isAdmin, roomName: query[roomBasedOn()], username };
 };
@@ -18,23 +14,8 @@ export const roomBasedOn = () => {
 const checkWhetherVisitorInWorld = async (query) => {
   // Check whether have access to interactive nonce, which means visitor is in world.
   const { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId } = query;
-  // console.log("🚀 ~ file: RoomManager.js:20 ~ checkWhetherVisitorInWorld ~ query:", query);
-  // const req = {};
-  // req.body = { assetId, interactivePublicKey, interactiveNonce, urlSlug, visitorId };
-  // get Visitor Info to verify that visitor is actually in world.  Also get their username to populate into ship.
 
-  // if (assetId) {
   try {
-    // const worldActivity = await WorldActivity.create(urlSlug, {
-    //   credentials: {
-    //     assetId,
-    //     interactiveNonce,
-    //     interactivePublicKey,
-    //     visitorId,
-    //   },
-    // });
-    // const currentVisitors = await worldActivity.currentVisitors();
-
     const visitor = await Visitor.get(visitorId, urlSlug, {
       credentials: {
         assetId,
@@ -43,11 +24,6 @@ const checkWhetherVisitorInWorld = async (query) => {
         visitorId,
       },
     });
-    // console.log("🚀 ~ file: RoomManager.js:27 ~ checkWhetherVisitorInWorld ~ visitor:", visitor);
-    // const privateZoneId = visitor.privateZoneId;
-    // const username = visitor.username;
-
-    // const visitor = currentVisitors[visitorId];
     if (!visitor || !visitor.username) throw "Not in world";
 
     const { privateZoneId, username, isAdmin } = visitor;
@@ -60,7 +36,7 @@ const checkWhetherVisitorInWorld = async (query) => {
     }
   } catch (e) {
     // Not actually in the world.  Should prevent from seeing game.
-    console.log("ERROR", e);
+    console.log("ERROR", e?.data?.errors);
     return { isAdmin: false, username: -1 };
   }
 };

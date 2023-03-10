@@ -12,7 +12,7 @@ const {
 } = require("@rtsdk/topia/dist/index.cjs");
 
 const config = {
-  apiDomain: process.env.INSTANCE_DOMAIN || "https://api.topia.io/",
+  apiDomain: process.env.INSTANCE_DOMAIN || "api.topia.io/",
   // apiKey: process.env.API_KEY,
   apiProtocol: process.env.INSTANCE_PROTOCOL || "https",
   interactiveKey: process.env.INTERACTIVE_KEY,

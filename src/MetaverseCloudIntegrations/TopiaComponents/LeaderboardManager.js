@@ -2,7 +2,7 @@ import { World } from "../rtsdk";
 import { createText, updateText } from "./text";
 import { addFrame } from "./staticAssets";
 
-const leaderboardLength = 5;
+const leaderboardLength = 1;
 
 export const showLeaderboard = ({ assetId, posOffset, req, urlSlug }) => {
   // Check to see if leaderboard already exists.
@@ -25,13 +25,13 @@ export const showLeaderboard = ({ assetId, posOffset, req, urlSlug }) => {
     // Player Names
     const { x, y } = posOffset;
     createLeaderText({
-      pos: { x: x - 50, y: y + i * 10 },
+      pos: { x: x - 25, y: y + i * 10 },
       uniqueNameId: `playerName`,
     });
 
     // Scores
     createLeaderText({
-      pos: { x: x + 50, y: y + i * 10 },
+      pos: { x: x + 25, y: y + i * 10 },
       uniqueNameId: `score`,
     });
   }
@@ -39,6 +39,7 @@ export const showLeaderboard = ({ assetId, posOffset, req, urlSlug }) => {
 
 export const hideLeaderboard = async (req) => {
   const { assetId, urlSlug } = req.body;
+  console.log(req);
   try {
     const world = World.create(urlSlug, { credentials: req.body });
     const droppedAssets = await world.fetchDroppedAssetsWithUniqueName({
@@ -54,7 +55,7 @@ export const hideLeaderboard = async (req) => {
         }
       });
   } catch (e) {
-    console.log("Error removing leaderboard", e?.response?.status || e);
+    console.log("Error removing leaderboard", e?.response?.status || e?.data?.errors);
   }
 };
 
@@ -65,16 +66,17 @@ export const resetLeaderboard = () => {
 export const updateLeaderboard = async ({ leaderboardArray, req }) => {
   for (var i = 0; i < leaderboardLength; i++) {
     // Update players
+    const { name, kills } = leaderboardArray[i]?.data;
     updateText({
       req,
-      text: leaderboardArray[i]?.player || "-",
-      uniqueName: `multiplayer_leaderboard_${assetId}_player_${i}`,
+      text: name || "-",
+      uniqueName: `multiplayer_leaderboard_${req.body.assetId}_playerName_${i}`,
     });
     // Update scores
     updateText({
       req,
-      text: leaderboardArray[i]?.score || "-",
-      uniqueName: `multiplayer_leaderboard_${assetId}_score_${i}`,
+      text: kills ? kills.toString() : "-",
+      uniqueName: `multiplayer_leaderboard_${req.body.assetId}_score_${i}`,
     });
   }
 };
