@@ -1,14 +1,11 @@
 import { Visitor } from "../rtsdk";
 import "regenerator-runtime/runtime";
 
+const roomBasedOn = "assetId";
+
 export const getRoomAndUsername = async (query) => {
   const { isAdmin, username } = await checkWhetherVisitorInWorld(query);
-  return { isAdmin, roomName: query[roomBasedOn()], username };
-};
-
-export const roomBasedOn = () => {
-  // Can be changed to dynamically alter the query being used as basis of room name.
-  return "assetId";
+  return { isAdmin, roomName: query[roomBasedOn], username };
 };
 
 const checkWhetherVisitorInWorld = async (query) => {
