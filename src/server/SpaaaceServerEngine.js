@@ -1,3 +1,4 @@
+import { debounce } from "throttle-debounce";
 import {
   hideLeaderboard,
   showLeaderboard,
@@ -40,6 +41,15 @@ export default class SpaaaceServerEngine extends ServerEngine {
       //     setTimeout(() => this.makeBot(), 5000);
       //   }
     });
+
+    // Only update leaderboard once every 5 seconds.
+    this.debounceLeaderboard = debounce(
+      5000,
+      (leaderboardArray, req) => {
+        updateLeaderboard({ leaderboardArray, req });
+      },
+      { atBegin: true },
+    );
   }
 
   // a player has connected
@@ -86,7 +96,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     if (username) {
-      socket.on("updateLeaderboard", (leaderboardArray) => updateLeaderboard({ leaderboardArray, req }));
+      socket.on("updateLeaderboard", (leaderboardArray) => this.debounceLeaderboard(leaderboardArray, req));
       socket.emit("inzone");
 
       let makePlayerShip = () => {
