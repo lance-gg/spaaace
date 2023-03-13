@@ -1,7 +1,7 @@
 import { Visitor } from "../rtsdk";
 import "regenerator-runtime/runtime";
 
-const roomBasedOn = "assetId";
+export const roomBasedOn = "assetId";
 
 export const getRoomAndUsername = async (query) => {
   const { isAdmin, username } = await checkWhetherVisitorInWorld(query);

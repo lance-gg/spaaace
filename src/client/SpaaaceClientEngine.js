@@ -138,7 +138,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
         const params = new Proxy(new URLSearchParams(window.location.search), {
           get: (searchParams, prop) => searchParams.get(prop),
         });
-        let value = params[roomBasedOn()];
+        let value = params[roomBasedOn];
         this.renderer.updateScore(e[value]);
 
         let scoreArray = [];
