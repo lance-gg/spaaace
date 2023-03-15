@@ -41,15 +41,6 @@ export default class SpaaaceServerEngine extends ServerEngine {
       //     setTimeout(() => this.makeBot(), 5000);
       //   }
     });
-
-    // Only update leaderboard once every 5 seconds.
-    this.debounceLeaderboard = debounce(
-      5000,
-      (leaderboardArray, req) => {
-        updateLeaderboard({ leaderboardArray, req });
-      },
-      { atBegin: true },
-    );
   }
 
   // a player has connected
@@ -64,6 +55,16 @@ export default class SpaaaceServerEngine extends ServerEngine {
     const query = parts.query;
     const { assetId, urlSlug } = query;
     const req = { body: query }; // Used for interactive assets
+
+    // Only update leaderboard once every 5 seconds.
+    const debounceLeaderboard = debounce(
+      5000,
+      (leaderboardArray, req, username) => {
+        console.log(`${username} updating leaderboard`, leaderboardArray);
+        updateLeaderboard({ leaderboardArray, req });
+      },
+      { atBegin: true },
+    );
 
     const { isAdmin, roomName, username } = await getRoomAndUsername(query);
 
@@ -96,7 +97,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
     this.scoreData[roomName] = this.scoreData[roomName] || {};
 
     if (username) {
-      socket.on("updateLeaderboard", (leaderboardArray) => this.debounceLeaderboard(leaderboardArray, req));
+      socket.on("updateLeaderboard", (leaderboardArray) => debounceLeaderboard(leaderboardArray, req, username));
       socket.emit("inzone");
 
       let makePlayerShip = () => {
