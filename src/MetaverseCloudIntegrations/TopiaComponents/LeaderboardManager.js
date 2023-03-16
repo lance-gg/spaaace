@@ -81,6 +81,7 @@ export const updateLeaderboard = async ({ leaderboardArray, req }) => {
       name = leaderboardArray[i].data.name;
       kills = leaderboardArray[i].data.kills.toString() || "0";
     }
+    console.log(`Updating text for pos ${i}`, { name, kills });
     updateText({
       req,
       text: name,
