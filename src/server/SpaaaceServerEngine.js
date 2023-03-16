@@ -58,12 +58,12 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     // Only update leaderboard once every 5 seconds.
     const debounceLeaderboard = debounce(
-      5000,
+      1000,
       (leaderboardArray, req, username) => {
         console.log(`${username} updating leaderboard`, leaderboardArray);
         updateLeaderboard({ leaderboardArray, req });
       },
-      { atBegin: true },
+      { atBegin: false },
     );
 
     const { isAdmin, roomName, username } = await getRoomAndUsername(query);
