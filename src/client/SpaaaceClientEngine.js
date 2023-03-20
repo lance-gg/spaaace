@@ -151,7 +151,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
         scoreArray.sort((a, b) => {
           return b.data.kills - a.data.kills;
         });
-        console.log(`What player ${this.renderer.playerShip.id} sees`, scoreArray);
+        if (this.renderer.playerShip) console.log(`What player ${this.renderer.playerShip.id} sees`, scoreArray);
         // Only send update if you're in the lead
         if (this.renderer.playerShip && this.renderer.playerShip.id == parseInt(scoreArray[0].id)) {
           this.socket.emit("updateLeaderboard", scoreArray);

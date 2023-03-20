@@ -9,17 +9,19 @@ export const showLeaderboard = async ({ assetId, req, urlSlug }) => {
 
   const arcadeAsset = await getAssetAndDataObject(req);
   const assetPos = arcadeAsset.position;
+  const dataObject = arcadeAsset.dataObject;
+  const { highScores } = dataObject;
   const posOffset = { x: assetPos.x, y: assetPos.y + 500 };
 
   addFrame({ assetId, pos: posOffset, req, urlSlug });
 
   // Doing this because we don't yet have layering in SDK.
   setTimeout(() => {
-    const createLeaderText = ({ pos, uniqueNameId }) => {
+    const createLeaderText = ({ pos, uniqueNameId, text }) => {
       createText({
         pos,
         req,
-        text: "-",
+        text: text || "-",
         textColor: "#000000",
         textSize: 12,
         textWidth: 300,
@@ -27,12 +29,15 @@ export const showLeaderboard = async ({ assetId, req, urlSlug }) => {
         urlSlug,
       });
     };
+    const distBetweenRows = 23;
+    const distBetweenColumns = 150;
+
     for (var i = 0; i < leaderboardLength; i++) {
       // Player Names
       const { x, y } = posOffset;
-      const topOfLeaderboard = -160;
-      const distBetweenRows = 30;
-      const distBetweenColumns = 150;
+      const topOfLeaderboard = -10;
+      // const topOfLeaderboard = -160;
+
       createLeaderText({
         pos: { x: x - distBetweenColumns / 2, y: topOfLeaderboard + y + i * distBetweenRows },
         uniqueNameId: `playerName`,
@@ -42,6 +47,36 @@ export const showLeaderboard = async ({ assetId, req, urlSlug }) => {
       createLeaderText({
         pos: { x: x + distBetweenColumns / 2, y: topOfLeaderboard + y + i * distBetweenRows },
         uniqueNameId: `score`,
+      });
+    }
+
+    for (var i = 0; i < 3; i++) {
+      // Player Names
+      const { x, y } = posOffset;
+      const topOfLeaderboard = -125;
+
+      let scoreObj = { name: "-", date: "-", score: "-" };
+      if (highScores && highScores[i]) {
+        scoreObj = highScores[i];
+      }
+
+      createLeaderText({
+        pos: { x: x - distBetweenColumns / 2, y: topOfLeaderboard + y + i * distBetweenRows },
+        uniqueNameId: `topPlayerName`,
+        text: scoreObj.name,
+      });
+
+      createLeaderText({
+        pos: { x: x, y: topOfLeaderboard + y + i * distBetweenRows },
+        uniqueNameId: `topDate`,
+        text: scoreObj.date,
+      });
+
+      // Scores
+      createLeaderText({
+        pos: { x: x + distBetweenColumns / 2, y: topOfLeaderboard + y + i * distBetweenRows },
+        uniqueNameId: `topScore`,
+        text: scoreObj.score,
       });
     }
   }, 500);

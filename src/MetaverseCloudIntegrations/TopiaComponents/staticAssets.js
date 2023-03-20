@@ -4,7 +4,8 @@ export const addFrame = async ({ assetId, pos, req, urlSlug }) => {
   try {
     // const frameAsset = await
     InteractiveAsset({
-      id: "5OLYa5QDTos6qupPp26X",
+      id: "UaJENXLHNkuBI4pzFH50",
+      // id: "NpPd9WTiQMJxoOspx6w1",
       req,
       position: {
         x: pos ? pos.x : 0,

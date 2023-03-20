@@ -91,7 +91,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
     } else {
       super.createRoom(roomName);
       // Prevent race condition of creating room above.
-      setTimeout(() => super.assignPlayerToRoom(socket.playerId, roomName), 250);
+      setTimeout(() => super.assignPlayerToRoom(socket.playerId, roomName), 500);
     }
 
     this.scoreData[roomName] = this.scoreData[roomName] || {};
