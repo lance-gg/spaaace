@@ -70,7 +70,6 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
     if (isAdmin) {
       socket.emit("isadmin"); // Shows admin controls on landing page
-
       socket.on("showLeaderboard", () => showLeaderboard({ assetId, req, urlSlug }));
       socket.on("hideLeaderboard", () => hideLeaderboard(req));
       // socket.on("resetLeaderboard", resetLeaderboard); // Used to reset high score.
@@ -81,9 +80,8 @@ export default class SpaaaceServerEngine extends ServerEngine {
       return;
     }
 
-    if (username === -1) {
-      socket.emit("error");
-      return;
+    if (!username || username === -1) {
+      return socket.emit("error");
     }
 
     if (this.rooms[roomName]) {

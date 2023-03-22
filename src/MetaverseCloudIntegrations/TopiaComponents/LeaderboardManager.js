@@ -1,4 +1,5 @@
-import { getAssetAndDataObject, World } from "../rtsdk";
+import moment from "moment";
+import { getAssetAndDataObject, getDroppedAsset, World } from "../rtsdk";
 import { createText, updateText } from "./text";
 import { addFrame } from "./staticAssets";
 
@@ -7,10 +8,13 @@ const leaderboardLength = 10;
 export const showLeaderboard = async ({ assetId, req, urlSlug }) => {
   // Check to see if leaderboard already exists.
 
-  const arcadeAsset = await getAssetAndDataObject(req);
+  // const arcadeAsset = await getAssetAndDataObject(req);
+  const arcadeAsset = await getDroppedAsset(req);
   const assetPos = arcadeAsset.position;
-  const dataObject = arcadeAsset.dataObject;
-  const { highScores } = dataObject;
+  // const assetPos = { x: 500, y: -75 };
+  // const dataObject = arcadeAsset.dataObject;
+  // const { highScores } = dataObject;
+  const highScores = null;
   const posOffset = { x: assetPos.x, y: assetPos.y + 500 };
 
   addFrame({ assetId, pos: posOffset, req, urlSlug });
@@ -58,6 +62,7 @@ export const showLeaderboard = async ({ assetId, req, urlSlug }) => {
       let scoreObj = { name: "-", date: "-", score: "-" };
       if (highScores && highScores[i]) {
         scoreObj = highScores[i];
+        scoreObj.date = moment(parseInt(highScores[i].date)).fromNow(); // Use moment to format
       }
 
       createLeaderText({
@@ -108,15 +113,20 @@ export const resetLeaderboard = () => {
 };
 
 export const updateLeaderboard = async ({ leaderboardArray, req }) => {
+  let sanitizedArray = [];
+  const date = new Date().valueOf();
   for (var i = 0; i < leaderboardLength; i++) {
     // Update players
     let name = "-";
     let kills = "-";
     if (leaderboardArray[i]) {
+      const score = leaderboardArray[i].data.kills;
+      const id = leaderboardArray[i].id;
       name = leaderboardArray[i].data.name;
-      kills = leaderboardArray[i].data.kills.toString() || "0";
+      kills = score.toString() || "0";
+      sanitizedArray.push({ id, score, name, date });
     }
-    console.log(`Updating text for pos ${i}`, { name, kills });
+    // console.log(`Updating text for pos ${i}`, { name, kills });
     updateText({
       req,
       text: name,
@@ -129,4 +139,85 @@ export const updateLeaderboard = async ({ leaderboardArray, req }) => {
       uniqueName: `multiplayer_leaderboard_${req.body.assetId}_score_${i}`,
     });
   }
+  // Issue with API if don't have timeout.
+  // Error without timeout: Firebase Database (${JSCORE_VERSION}) INTERNAL ASSERT FAILED: listen() called twice for same path/queryId.
+  // setTimeout(() => updateHighScores(req, sanitizedArray), 2000);
+};
+
+// const checkHighScores = async ({ score, id, name, highScores }) => {
+//   if (highScores && score) {
+//     for (i = 0; i < highScores.length; i++) {
+//       const item = highScores[i];
+//       if (score > parseInt(item.score) && id !== item.id) {
+//       }
+//     }
+//   }
+// };
+
+// Convert to object to dedupe
+function dedupe(arr) {
+  var rv = {};
+  for (var i = 0; i < arr.length; ++i) {
+    const item = arr[i];
+    if (item) {
+      const id = item.id;
+      // Remove duplicate player IDs
+      if (!rv[id]) rv[id] = item;
+    }
+  }
+  const dedupedArray = Object.keys(rv).map((id) => rv[id]);
+  return dedupedArray.sort((a, b) => {
+    return b.score - a.score;
+  });
+}
+
+const updateHighScores = async (req, sanitizedArray) => {
+  const arcadeAsset = await getAssetAndDataObject(req); // This seems to be creating issues with API
+  if (!arcadeAsset) return;
+  const { dataObject } = arcadeAsset;
+  const { highScores } = dataObject;
+
+  if (highScores[2] && sanitizedArray[0].score < highScores[2].score) return;
+
+  let newArray = sanitizedArray.concat(highScores);
+  let sortedArray = newArray.sort((a, b) => {
+    return b.score - a.score;
+  });
+
+  const objectArray = dedupe(sortedArray);
+  const highScoreArray = objectArray.slice(0, 2);
+  // If they are the same, no need to update object or text.
+  if (highScores === highScoreArray) return;
+
+  for (let i = 0; i < highScoreArray.length; i++) {
+    let name = "-";
+    let date = "-";
+    let scoreString = "-";
+    if (highScoreArray[i]) {
+      const score = highScoreArray[i].score;
+      name = highScoreArray[i].name;
+      scoreString = score.toString() || "0";
+      date = moment(parseInt(highScoreArray[i].date)).fromNow();
+    }
+
+    updateText({
+      req,
+      text: name,
+      uniqueName: `multiplayer_leaderboard_${req.body.assetId}_topPlayerName_${i}`,
+    });
+
+    updateText({
+      req,
+      text: date,
+      uniqueName: `multiplayer_leaderboard_${req.body.assetId}_topDate_${i}`,
+    });
+    // Update scores
+    updateText({
+      req,
+      text: scoreString,
+      uniqueName: `multiplayer_leaderboard_${req.body.assetId}_topScore_${i}`,
+    });
+  }
+
+  arcadeAsset.updateDroppedAssetDataObject({ highScores: highScoreArray });
 };
